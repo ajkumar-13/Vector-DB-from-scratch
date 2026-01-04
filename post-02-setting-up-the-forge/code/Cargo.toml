@@ -1,0 +1,103 @@
+# Cargo.toml - The Project Manifest
+#
+# This file defines your project's metadata and dependencies.
+# Documentation: https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[package]
+name = "vectordb"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "A production-grade vector database built from scratch in Rust"
+repository = "https://github.com/yourusername/vectordb"
+license = "MIT"
+readme = "README.md"
+keywords = ["vector", "database", "embeddings", "search", "ai"]
+categories = ["database", "algorithms"]
+
+# Minimum Supported Rust Version
+# We use features from Rust 1.75+
+rust-version = "1.75"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# DEPENDENCIES (Runtime)
+# ═══════════════════════════════════════════════════════════════════════════
+
+[dependencies]
+# ───────────────────────────────────────────────────────────────────────────
+# ASYNC RUNTIME
+# ───────────────────────────────────────────────────────────────────────────
+# Tokio is the async runtime that powers our server.
+# Features breakdown:
+#   - rt-multi-thread: Multi-threaded scheduler (uses all CPU cores)
+#   - io-util: Async read/write traits
+#   - net: Async TCP/UDP
+#   - time: Timers, sleep, intervals
+#   - sync: Async mutexes, channels
+#   - macros: #[tokio::main] and #[tokio::test]
+#   - fs: Async file system operations
+# "full" enables all of the above.
+tokio = { version = "1", features = ["full"] }
+
+# ───────────────────────────────────────────────────────────────────────────
+# SERIALIZATION / DESERIALIZATION
+# ───────────────────────────────────────────────────────────────────────────
+# Serde is Rust's standard serialization framework.
+# "derive" enables #[derive(Serialize, Deserialize)] on our types.
+serde = { version = "1", features = ["derive"] }
+
+# JSON support for Serde
+serde_json = "1"
+
+# ───────────────────────────────────────────────────────────────────────────
+# FUTURE DEPENDENCIES (Commented out - we'll enable these in later posts)
+# ───────────────────────────────────────────────────────────────────────────
+
+# Web framework (Post #5)
+# axum = "0.7"
+
+# Memory mapping for zero-copy file access (Post #7)
+# memmap2 = "0.9"
+
+# Full-text search / inverted index (Post #16)
+# tantivy = "0.21"
+
+# Better error handling (Post #4)
+# thiserror = "1"
+# anyhow = "1"
+
+# Logging
+# tracing = "0.1"
+# tracing-subscriber = "0.3"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# DEV DEPENDENCIES (Only for tests and development)
+# ═══════════════════════════════════════════════════════════════════════════
+
+[dev-dependencies]
+# For benchmarking (Post #14)
+# criterion = { version = "0.5", features = ["html_reports"] }
+
+# For property-based testing
+# proptest = "1"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PROFILES (Build configurations)
+# ═══════════════════════════════════════════════════════════════════════════
+
+# Development builds: Fast compilation, slow runtime
+[profile.dev]
+opt-level = 0      # No optimization
+debug = true       # Full debug info
+
+# Release builds: Slow compilation, fast runtime
+[profile.release]
+opt-level = 3      # Maximum optimization
+lto = true         # Link-Time Optimization (smaller, faster binary)
+codegen-units = 1  # Single codegen unit for better optimization
+strip = true       # Strip debug symbols from binary
+
+# Benchmark profile: Like release, but with debug symbols for profiling
+[profile.bench]
+inherits = "release"
+debug = true

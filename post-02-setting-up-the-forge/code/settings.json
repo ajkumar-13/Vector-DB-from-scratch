@@ -1,0 +1,93 @@
+{
+    // ═══════════════════════════════════════════════════════════════════════
+    // VS CODE SETTINGS FOR RUST DEVELOPMENT
+    // ═══════════════════════════════════════════════════════════════════════
+    // Place this file in .vscode/settings.json in your project root,
+    // or apply these settings globally via VS Code's settings UI.
+
+    // ───────────────────────────────────────────────────────────────────────
+    // RUST-ANALYZER CORE SETTINGS
+    // ───────────────────────────────────────────────────────────────────────
+    
+    // Use Clippy instead of basic "cargo check" for on-save checking.
+    // Clippy catches more issues and teaches idiomatic Rust.
+    "rust-analyzer.check.command": "clippy",
+    
+    // Check all targets (tests, examples, benches) not just the main binary
+    "rust-analyzer.check.allTargets": true,
+    
+    // Enable all features when checking (important if you use feature flags)
+    "rust-analyzer.cargo.features": "all",
+
+    // ───────────────────────────────────────────────────────────────────────
+    // INLAY HINTS (The "ghost text" that shows types)
+    // ───────────────────────────────────────────────────────────────────────
+    
+    // Show inferred types for let bindings
+    // e.g., let results = search();  → let results: Vec<Match> = search();
+    "rust-analyzer.inlayHints.typeHints.enable": true,
+    
+    // Show parameter names in function calls
+    // e.g., search(query, 10) → search(query: query, limit: 10)
+    "rust-analyzer.inlayHints.parameterHints.enable": true,
+    
+    // Show types in method chains
+    // e.g., iter().map().filter() → shows intermediate types
+    "rust-analyzer.inlayHints.chainingHints.enable": true,
+    
+    // Show return types for closures
+    "rust-analyzer.inlayHints.closureReturnTypeHints.enable": "with_block",
+
+    // ───────────────────────────────────────────────────────────────────────
+    // FORMATTING
+    // ───────────────────────────────────────────────────────────────────────
+    
+    // Auto-format on save (uses rustfmt)
+    "editor.formatOnSave": true,
+    
+    // Rust-specific formatting settings
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer",
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true
+    },
+
+    // ───────────────────────────────────────────────────────────────────────
+    // CODE ACTIONS & ASSISTS
+    // ───────────────────────────────────────────────────────────────────────
+    
+    // Automatically add imports when completing symbols
+    "rust-analyzer.completion.autoimport.enable": true,
+    
+    // Show snippets in completions (e.g., for loops, match arms)
+    "rust-analyzer.completion.postfix.enable": true,
+
+    // ───────────────────────────────────────────────────────────────────────
+    // DIAGNOSTICS
+    // ───────────────────────────────────────────────────────────────────────
+    
+    // Show all diagnostics, including those from disabled code
+    "rust-analyzer.diagnostics.disabled": [],
+    
+    // Enable experimental diagnostics (type mismatch suggestions, etc.)
+    "rust-analyzer.diagnostics.experimental.enable": true,
+
+    // ───────────────────────────────────────────────────────────────────────
+    // PERFORMANCE (Adjust if rust-analyzer feels slow on large projects)
+    // ───────────────────────────────────────────────────────────────────────
+    
+    // Number of threads for rust-analyzer (0 = auto-detect)
+    // "rust-analyzer.numThreads": 0,
+    
+    // Limit proc-macro expansion (can be memory-intensive)
+    // "rust-analyzer.procMacro.enable": true,
+
+    // ───────────────────────────────────────────────────────────────────────
+    // TOML SUPPORT (for Cargo.toml)
+    // ───────────────────────────────────────────────────────────────────────
+    
+    // If you install the "Even Better TOML" extension:
+    "[toml]": {
+        "editor.defaultFormatter": "tamasfe.even-better-toml"
+    }
+}
