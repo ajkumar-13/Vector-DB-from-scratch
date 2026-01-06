@@ -16,6 +16,8 @@ If you come from C or C++, you're used to **manual memory management** (`malloc`
 
 Rust chooses a third path: **Ownership**.
 
+<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-9-memory-management-comparison -->
+
 Ownership is a set of rules that the compiler checks *at compile time*. If you follow them, you get:
 
 1. **Zero GC pauses** (predictable performance for our DB)
@@ -30,7 +32,8 @@ In this post, we will master these rules. We aren't just learning syntax, we're 
 
 To understand Ownership, you must visualize where your data lives.
 
-<!-- See diagrams/stack-heap.md for visual representation -->
+<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-1-stack-vs-heap-memory-layout -->
+<!-- See also: diagrams/stack-heap.md for ASCII representation -->
 
 ### The Stack
 
@@ -121,7 +124,8 @@ fn main() {
 }
 ```
 
-<!-- See diagrams/ownership-move.md for visual representation -->
+<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-2-ownership-move -->
+<!-- See also: diagrams/ownership-move.md for ASCII representation -->
 
 **What happened?**
 
@@ -148,6 +152,8 @@ let s2 = s1.clone(); // Deep copy: new heap allocation!
 println!("s1 = {}, s2 = {}", s1, s2); // Both valid
 ```
 
+<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-3-clone-vs-move -->
+
 **System Engineer Warning:** Cloning is expensive. In our Vector DB, cloning a 768-dimensional embedding means copying 3KB of data. For a batch of 10,000 vectors, that's 30MB of unnecessary copying. We'll avoid this with **borrowing**.
 
 ### Copy Types (The Exception)
@@ -160,6 +166,8 @@ let y = x; // x is COPIED, not moved
 
 println!("x = {}, y = {}", x, y); // Both valid!
 ```
+
+<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-4-copy-types-vs-move-types -->
 
 Copy types include: `i32`, `f32`, `bool`, `char`, `&T` (immutable references), tuples of Copy types, and fixed-size arrays of Copy types.
 
@@ -226,6 +234,8 @@ This is the most important rule for concurrency safety:
 >
 > Rust just enforces this "locking" at compile time with zero runtime cost.
 
+<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-5-borrowing-rules-rwlock-analogy -->
+
 This prevents **data races** at compile time. A data race occurs when:
 
 1. Two or more pointers access the same data
@@ -247,6 +257,8 @@ println!("{}, {}, {}", r1, r2, r3);
 **Why the error?** `r1` and `r2` expect the data to remain unchanged while they hold their references. `r3` wants to modify it. Rust says: "No. Pick one."
 
 ### Non-Lexical Lifetimes (NLL)
+
+<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-6-reference-lifecycle-with-nll -->
 
 Modern Rust is smart about when borrows *actually* end:
 
@@ -286,6 +298,8 @@ println!("{} {}", hello, world); // "hello world"
 A `&str` is just a pointer + length. It doesn't own any data.
 
 ### Vector Slices (`&[T]`)
+
+<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-7-slice-zero-copy-view -->
 
 This is crucial for our vector database:
 
@@ -378,6 +392,8 @@ If you ever see an error like `missing lifetime specifier`, we'll tackle it when
 | **Slice (`&[T]`)** | "A lightweight window into contiguous memory" |
 
 ### The Ownership Flowchart
+
+<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-8-ownership-decision-flowchart -->
 
 ```
 Do you need to modify the data?
