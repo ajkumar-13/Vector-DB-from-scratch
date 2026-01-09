@@ -1,0 +1,87 @@
+# Cargo.toml for Post #5
+#
+# Web server dependencies for VectorDB.
+# Copy this to your vectordb/Cargo.toml
+
+[package]
+name = "vectordb"
+version = "0.1.0"
+edition = "2024"
+description = "A vector database built from scratch in Rust"
+authors = ["Your Name"]
+
+[dependencies]
+# ───────────────────────────────────────────────────────────────────
+# SERIALIZATION
+# ───────────────────────────────────────────────────────────────────
+# serde: The de-facto standard for serialization in Rust
+# - "derive" feature enables #[derive(Serialize, Deserialize)]
+serde = { version = "1.0", features = ["derive"] }
+
+# serde_json: JSON parsing and generation
+serde_json = "1.0"
+
+# ───────────────────────────────────────────────────────────────────
+# ASYNC RUNTIME
+# ───────────────────────────────────────────────────────────────────
+# tokio: The async runtime that powers everything
+# - "full" enables all features: runtime, io, net, sync, time, etc.
+tokio = { version = "1", features = ["full"] }
+
+# ───────────────────────────────────────────────────────────────────
+# WEB FRAMEWORK
+# ───────────────────────────────────────────────────────────────────
+# axum: Modern, ergonomic web framework built on tokio/hyper
+# - Type-safe extractors
+# - Tower middleware compatible
+axum = "0.7"
+
+# tower: Service trait and middleware (used by axum)
+tower = "0.4"
+
+# tower-http: HTTP-specific middleware (CORS, compression, etc.)
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+
+# ───────────────────────────────────────────────────────────────────
+# LOGGING & TRACING
+# ───────────────────────────────────────────────────────────────────
+# tracing: Structured logging and diagnostics
+tracing = "0.1"
+
+# tracing-subscriber: Collects and outputs tracing data
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# ───────────────────────────────────────────────────────────────────
+# FUTURE DEPENDENCIES (commented out for now)
+# ───────────────────────────────────────────────────────────────────
+# These will be added in later posts:
+
+# memmap2: Memory-mapped files (Post #6-7)
+# memmap2 = "0.9"
+
+# bytemuck: Safe transmutation for binary formats (Post #6)
+# bytemuck = { version = "1.14", features = ["derive"] }
+
+# uuid: Unique identifiers for vectors (Post #8)
+# uuid = { version = "1.0", features = ["v4", "serde"] }
+
+# thiserror: Derive macro for error types (Post #9)
+# thiserror = "1.0"
+
+# anyhow: Flexible error handling (Post #9)
+# anyhow = "1.0"
+
+[dev-dependencies]
+# For testing HTTP endpoints
+reqwest = { version = "0.11", features = ["json"] }
+
+# Property-based testing
+proptest = "1.4"
+
+[profile.release]
+# Optimize for speed
+opt-level = 3
+# Enable LTO for smaller, faster binaries
+lto = true
+# Single codegen unit for better optimization
+codegen-units = 1
