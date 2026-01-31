@@ -8,17 +8,17 @@
 
 ## 1. Introduction: The "Zero to Master" Promise
 
-The AI revolution is here. ChatGPT, Claude, Gemini—they're everywhere. And powering the "memory" behind these systems? **Vector Databases**.
+The AI revolution is here. ChatGPT, Claude, Gemini, they're everywhere. And powering the "memory" behind these systems? **Vector Databases**.
 
 You've probably heard the buzzwords: *"RAG pipelines"*, *"semantic search"*, *"embeddings"*. Maybe you've even used Pinecone, Weaviate, or Qdrant. But here's the uncomfortable truth:
 
 > **Everyone uses Vector DBs, but few know how they work under the hood.**
 
-That changes today.
+We are going change it.
 
 ### What You'll Build
 
-By the end of this 20-part series, you won't just know *how* to use a Vector Database, **you will have built one from scratch in Rust**. A real, working system with:
+By the end of this series, you won't just know *how* to use a Vector Database, **you will have built one from scratch in Rust**. A real, working system with:
 
 - Memory-mapped file storage (like LMDB)
 - Write-Ahead Logging for crash recovery (like PostgreSQL)
@@ -63,7 +63,6 @@ What about papers titled **"Understanding Cat Psychology"**? Or **"Kitten Develo
 
 The word "feline" appears nowhere, yet these papers are *exactly* what the user wants.
 
-<!-- DIAGRAM: sql-vs-vector.excalidraw -->
 <!-- Shows two paths: SQL doing exact string match (missing results) vs Vector DB finding semantic matches -->
 ![SQL vs Vector Search Comparison](diagrams/sql-vs-vector.png)
 
@@ -93,7 +92,7 @@ The magic is in *how* these models are trained: they learn to place **similar th
 
 Imagine a 2D coordinate system (we'll use 2D for visualization, but real embeddings use 768+ dimensions).
 
-<!-- DIAGRAM: embedding-space.excalidraw -->
+
 <!-- Shows a 2D plot with: King, Queen, Man, Woman plotted as points. Arrows showing King-Man+Woman≈Queen -->
 ![Word Embeddings in 2D Space](diagrams/embedding-space.png)
 
@@ -148,6 +147,15 @@ The result is a number between -1 and 1:
 
 Don't worry if this doesn't fully click yet. We'll implement this from scratch with detailed explanations in Phase 3.
 
+**Try it yourself:** See [`code/cosine-similarity-preview.rs`](code/cosine-similarity-preview.rs) for a runnable example:
+
+```bash
+cd post-01-the-blueprint/code
+cargo run --bin cosine-similarity-preview
+```
+
+This preview shows how cosine similarity works with simple 3D vectors. We'll build the full production version in Post #11.
+
 ---
 
 ## 3. High-Level Architecture
@@ -158,7 +166,6 @@ We're building a **Single-Node, Persistent Vector Database**. "Single-node" mean
 
 Our database has three layers:
 
-<!-- DIAGRAM: architecture.excalidraw -->
 <!-- Block diagram: HTTP Request → Transport Layer → Core Engine → Storage Layer (WAL + Segments) -->
 ![Architecture Block Diagram](diagrams/architecture.png)
 
@@ -240,7 +247,7 @@ Before writing code, good engineers define interfaces. Here's the complete API w
 
 ### 4.1 Create a Collection
 
-A "collection" is like a SQL table—a named container for related vectors.
+A "collection" is like a SQL table, a named container for related vectors.
 
 ```http
 POST /collections
@@ -389,7 +396,7 @@ A vector search computes distance millions of times per query. Here's what the h
 ```rust
 // This runs millions of times per search
 fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
-    // ⚠️ In production, we MUST verify a.len() == b.len()
+    // In production, we MUST verify a.len() == b.len()
     // Rust's zip() silently truncates to the shorter iterator!
     // We'll handle this properly with Result<T, E> in Post #11.
     
@@ -405,11 +412,11 @@ fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
 
 "But wait," you might say, "Python has NumPy! `numpy.dot()` calls optimized C code and is nearly as fast as Rust for pure math."
 
-You're right. The advantage of Rust isn't just raw arithmetic speed—it's **everything else**:
+You're right. The advantage of Rust isn't just raw arithmetic speed, it's **everything else**:
 
 1. **No GIL (Global Interpreter Lock):** Python's GIL prevents true multi-threaded parallelism. When 1000 clients hit your search server simultaneously, Python processes them one-by-one. Rust handles them in parallel across all CPU cores.
 
-2. **Zero glue-code overhead:** In Python, every function call, object allocation, and type check has overhead. Rust compiles to bare-metal machine code—the math, the networking, and the query planning are *all* fast.
+2. **Zero glue-code overhead:** In Python, every function call, object allocation, and type check has overhead. Rust compiles to bare-metal machine code, the math, the networking, and the query planning are *all* fast.
 
 3. **Predictable latency:** Python's garbage collector can pause your server at the worst moment. Rust has no GC; memory is freed deterministically.
 
@@ -449,13 +456,13 @@ These libraries handle the 80% that's "already solved," so we can focus on the 2
 
 ## 6. The Roadmap: Your Learning Path
 
-Here's what the next 19 posts will cover:
+Here's what the next posts will cover:
 
 ### Phase 1: The Rust & Systems Foundation (Posts 2-5)
 *Goal: Go from "I don't know Rust" to "I can build a high-performance HTTP server."*
 
 - **Post 2:** Setting up Rust, project structure, Cargo basics
-- **Post 3:** Ownership, Borrowing, and Memory—the core of Rust
+- **Post 3:** Ownership, Borrowing, and Memory, the core of Rust
 - **Post 4:** Structs, Enums, Error Handling with `Result` and `Option`
 - **Post 5:** Async programming with Tokio, building our first Axum server
 
@@ -463,15 +470,15 @@ Here's what the next 19 posts will cover:
 *Goal: Master file I/O and binary formats. How do databases actually persist data?*
 
 - **Post 6:** Binary file formats, endianness, serialization
-- **Post 7:** Memory mapping (`mmap`)—reading files at RAM speed
+- **Post 7:** Memory mapping (`mmap`), reading files at RAM speed
 - **Post 8:** Write-Ahead Logging for crash safety
-- **Post 9:** Crash recovery—replaying logs on startup
+- **Post 9:** Crash recovery, replaying logs on startup
 - **Post 10:** Concurrency with `Arc`, `RwLock`, and `Mutex`
 
 ### Phase 3: The Search Engine (Posts 11-14)
 *Goal: Master the "Vector" part of Vector DB.*
 
-- **Post 11:** Linear algebra basics—dot product, cosine similarity, norms
+- **Post 11:** Linear algebra basics, dot product, cosine similarity, norms
 - **Post 12:** Brute-force k-NN search (the naive approach)
 - **Post 13:** Optimizing top-K retrieval with binary heaps
 - **Post 14:** Building a benchmark suite for performance testing
@@ -479,14 +486,14 @@ Here's what the next 19 posts will cover:
 ### Phase 4: The Intelligent Database (Posts 15-17)
 *Goal: Add metadata filtering like the pros.*
 
-- **Post 15:** Inverted indexes explained—how text search works
+- **Post 15:** Inverted indexes explained, how text search works
 - **Post 16:** Integrating Tantivy for hybrid search
-- **Post 17:** Query planning—choosing optimal execution paths
+- **Post 17:** Query planning, choosing optimal execution paths
 
 ### Phase 5: Scale & Production (Posts 18-20)
 *Goal: HNSW graphs and deployment.*
 
-- **Post 18:** Approximate nearest neighbors—the theory of ANN
+- **Post 18:** Approximate nearest neighbors, the theory of ANN
 - **Post 19:** Implementing HNSW for sub-millisecond search
 - **Post 20:** Docker, CI/CD, and production deployment
 
@@ -507,7 +514,7 @@ In **Post #2: Setting Up the Forge**, we'll:
 3. Write our first Rust program
 4. Set up VS Code with the rust-analyzer extension
 
-No more theory—it's time to write code.
+No more theory, it's time to write code.
 
 ---
 

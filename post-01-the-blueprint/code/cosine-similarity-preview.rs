@@ -4,6 +4,8 @@
 // We'll implement this fully in Post #11 (Vector Math for Developers).
 // 
 // This code is shown in Post #1 to illustrate why Rust is fast.
+//
+// To run: cargo run --bin cosine-similarity-preview
 
 /// Calculate the cosine similarity between two vectors.
 /// 
@@ -71,29 +73,43 @@ fn main() {
     // Example: Compare "King" and "Queen" embeddings (simplified 3D)
     // Note: We explicitly annotate Vec<f32> because Rust defaults float 
     // literals to f64, which would cause a type mismatch with our function.
-    let king: Vec<f32> = vec![0.8, 0.1, 0.9];   // High royalty, low femininity, high power
-    let queen: Vec<f32> = vec![0.7, 0.9, 0.85]; // High royalty, high femininity, high power
-    let car: Vec<f32> = vec![0.1, 0.05, 0.2];   // Low on all "human" dimensions
+    //
+    // These vectors represent semantic embeddings in 3D space:
+    let king: Vec<f32> = vec![0.9, 0.2, 0.8];    // Royalty-focused
+    let queen: Vec<f32> = vec![0.85, 0.75, 0.7]; // Also royalty, but with different attributes
+    let car: Vec<f32> = vec![0.1, 0.9, 0.1];     // Completely different concept (transportation)
     
     let king_queen_similarity = cosine_similarity(&king, &queen);
     let king_car_similarity = cosine_similarity(&king, &car);
     
     println!("Cosine Similarity Examples:");
     println!("─────────────────────────────");
-    println!("King vs Queen: {:.4}", king_queen_similarity);  // Should be high (~0.9)
-    println!("King vs Car:   {:.4}", king_car_similarity);    // Should be low (~0.6)
+    println!("King vs Queen: {:.4}", king_queen_similarity);
+    println!("King vs Car:   {:.4}", king_car_similarity);
     println!();
     println!("Interpretation:");
-    println!("- King and Queen are semantically similar (both royalty)");
-    println!("- King and Car are semantically different");
+    println!("- Similarity ranges from -1.0 (opposite) to 1.0 (identical)");
+    println!("- King vs Queen: {:.4} → High similarity (both are royalty)", king_queen_similarity);
+    println!("- King vs Car:   {:.4} → Low similarity (unrelated concepts)", king_car_similarity);
+    println!();
+    println!("Why the difference?");
+    println!("- King and Queen vectors point in similar directions (royalty domain)");
+    println!("- Car vector points in a different direction (transportation domain)");
+    println!("- Cosine similarity measures the ANGLE between vectors, not magnitude");
 }
 
-// Expected output:
+// Expected output (approximate):
 // Cosine Similarity Examples:
 // ─────────────────────────────
-// King vs Queen: 0.9231
-// King vs Car:   0.6547
+// King vs Queen: 0.9070
+// King vs Car:   0.3147
 //
 // Interpretation:
-// - King and Queen are semantically similar (both royalty)
-// - King and Car are semantically different
+// - Similarity ranges from -1.0 (opposite) to 1.0 (identical)
+// - King vs Queen: 0.9070 → High similarity (both are royalty)
+// - King vs Car:   0.3147 → Low similarity (unrelated concepts)
+//
+// Why the difference?
+// - King and Queen vectors point in similar directions (royalty domain)
+// - Car vector points in a different direction (transportation domain)
+// - Cosine similarity measures the ANGLE between vectors, not magnitude

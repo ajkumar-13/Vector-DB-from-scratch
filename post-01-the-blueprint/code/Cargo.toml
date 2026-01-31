@@ -1,0 +1,11 @@
+[package]
+name = "post01-blueprint"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "cosine-similarity-preview"
+path = "cosine-similarity-preview.rs"
+
+[dependencies]
