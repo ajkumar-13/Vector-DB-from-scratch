@@ -3,8 +3,9 @@
 // This is the "Systems Hello World" from Post #2.
 // It verifies that the Tokio async runtime is working correctly.
 //
-// To run this, place it in src/main.rs of a Cargo project with:
-//   tokio = { version = "1", features = ["full"] }
+// To run:
+//   cd post-02-setting-up-the-forge/code
+//   cargo run --bin hello-async
 
 use tokio::time::{sleep, Duration};
 

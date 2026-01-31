@@ -4,20 +4,19 @@
 # Documentation: https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [package]
-name = "vectordb"
+name = "post02-forge"
 version = "0.1.0"
 edition = "2021"
 authors = ["Your Name <your.email@example.com>"]
-description = "A production-grade vector database built from scratch in Rust"
-repository = "https://github.com/yourusername/vectordb"
-license = "MIT"
-readme = "README.md"
-keywords = ["vector", "database", "embeddings", "search", "ai"]
-categories = ["database", "algorithms"]
+description = "Post #2: Setting up the Forge - Async runtime verification"
+keywords = ["vector", "database", "async", "tokio"]
 
 # Minimum Supported Rust Version
-# We use features from Rust 1.75+
-rust-version = "1.75"
+rust-version = "1.70"
+
+[[bin]]
+name = "hello-async"
+path = "hello-async.rs"
 
 # ═══════════════════════════════════════════════════════════════════════════
 # DEPENDENCIES (Runtime)

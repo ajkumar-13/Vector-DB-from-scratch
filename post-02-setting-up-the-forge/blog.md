@@ -41,7 +41,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 Download and run `rustup-init.exe` from [rust-lang.org/tools/install](https://www.rust-lang.org/tools/install).
 
-> **Windows Users:** When prompted, choose the default installation. If you don't have the Visual Studio C++ Build Tools installed, the installer will guide you to install them—they're required for linking.
+> **Windows Users:** When prompted, choose the default installation. If you don't have the Visual Studio C++ Build Tools installed, the installer will guide you to install them, they're required for linking.
 
 ### Step 2.2: Verify Installation
 
@@ -49,10 +49,10 @@ Close your terminal and reopen it to load the new PATH variables. Then check:
 
 ```bash
 rustc --version
-# Expected: rustc 1.75.0 (or newer)
+# Expected: rustc 1.90.0 (or newer)
 
 cargo --version
-# Expected: cargo 1.75.0 (or newer)
+# Expected: cargo 1.90.0 (or newer)
 ```
 
 ### What Did We Just Install?
@@ -188,7 +188,19 @@ edition = "2024"
 [dependencies]
 ```
 
-Add the following dependencies:
+**Important:** Change `edition = "2024"` to `edition = "2021"`:
+
+> **Why Edition 2021 instead of 2024?**
+> 
+> When you run `cargo new`, newer Rust versions default to `edition = "2024"`. However:
+> - **Edition 2021** is stable and battle-tested
+> - All ecosystem crates fully support it
+> - Editions are backwards compatible - 2021 code works in 2024
+> - We get all modern Rust features (async/await, etc.) without any limitations
+> 
+> The main differences in Edition 2024 are new reserved keywords and minor syntax changes that don't affect our database project. We use 2021 for maximum stability with zero trade-offs.
+
+Now add the following dependencies:
 
 ```toml
 [package]
@@ -251,7 +263,18 @@ Tokio makes this possible with zero threads-per-connection overhead.
 
 ### Step 6.1: Write the Code
 
-Open `src/main.rs` and replace it with:
+The complete example is in [`code/hello-async.rs`](code/hello-async.rs). You can either:
+
+**Option A: Run the standalone example (recommended for this post):**
+
+```bash
+cd post-02-setting-up-the-forge/code
+cargo run --bin hello-async
+```
+
+**Option B: Copy to your main vectordb project:**
+
+Open `vectordb/src/main.rs` and add:
 
 ```rust
 use tokio::time::{sleep, Duration};
@@ -386,7 +409,29 @@ We won't create all of this today. We'll build it incrementally as we need each 
 
 ---
 
-## 9. Summary
+## 9. Running the Code Examples
+
+Each post in this series has a `code/` directory with standalone, runnable examples:
+
+**For this post:**
+
+```bash
+cd post-02-setting-up-the-forge/code
+cargo run --bin hello-async
+```
+
+**For Post #1 (cosine similarity preview):**
+
+```bash
+cd post-01-the-blueprint/code
+cargo run --bin cosine-similarity-preview
+```
+
+This lets you experiment with each concept independently before integrating it into the main `vectordb` project.
+
+---
+
+## 10. Summary
 
 We are ready.
 
