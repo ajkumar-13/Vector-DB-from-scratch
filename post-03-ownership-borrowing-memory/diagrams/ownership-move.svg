@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <marker id="moveArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#495057"/>
+    </marker>
+    <marker id="ownArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#40c057"/>
+    </marker>
+    <marker id="invalidArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#fa5252"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">Ownership Move: let s2 = s1;</text>
+  <text x="400" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">Ownership transfers, original becomes invalid</text>
+  
+  <!-- BEFORE Section -->
+  <rect x="40" y="70" width="320" height="280" rx="10" fill="white" stroke="#dee2e6" stroke-width="2"/>
+  <rect x="40" y="70" width="320" height="35" rx="10" fill="#e9ecef"/>
+  <rect x="40" y="93" width="320" height="12" fill="#e9ecef"/>
+  <text x="200" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#495057" font-weight="bold">BEFORE</text>
+  <text x="200" y="125" text-anchor="middle" font-family="monospace" font-size="11" fill="#495057">let s1 = String::from("hello");</text>
+  
+  <!-- s1 variable (valid) -->
+  <rect x="70" y="145" width="130" height="85" rx="6" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  <text x="135" y="167" text-anchor="middle" font-family="monospace" font-size="12" fill="#212529" font-weight="bold">s1: String</text>
+  <text x="85" y="187" font-family="monospace" font-size="9" fill="#495057">├─ ptr</text>
+  <text x="85" y="203" font-family="monospace" font-size="9" fill="#495057">├─ len: 5</text>
+  <text x="85" y="219" font-family="monospace" font-size="9" fill="#495057">└─ cap: 5</text>
+  
+  <!-- Heap data (before) -->
+  <rect x="230" y="165" width="110" height="45" rx="6" fill="#e7f5ff" stroke="#339af0" stroke-width="1"/>
+  <text x="285" y="193" text-anchor="middle" font-family="monospace" font-size="12" fill="#1971c2">"hello"</text>
+  
+  <!-- Ownership arrow (before) -->
+  <line x1="200" y1="187" x2="228" y2="187" stroke="#40c057" stroke-width="2" marker-end="url(#ownArrow)"/>
+  <text x="214" y="175" font-family="Arial, sans-serif" font-size="8" fill="#2b8a3e">owns</text>
+  
+  <!-- Arrow between sections -->
+  <line x1="370" y1="210" x2="420" y2="210" stroke="#495057" stroke-width="3" marker-end="url(#moveArrow)"/>
+  <text x="395" y="195" text-anchor="middle" font-family="monospace" font-size="10" fill="#495057">let s2 = s1;</text>
+  
+  <!-- AFTER Section -->
+  <rect x="440" y="70" width="320" height="280" rx="10" fill="white" stroke="#dee2e6" stroke-width="2"/>
+  <rect x="440" y="70" width="320" height="35" rx="10" fill="#e9ecef"/>
+  <rect x="440" y="93" width="320" height="12" fill="#e9ecef"/>
+  <text x="600" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#495057" font-weight="bold">AFTER</text>
+  <text x="600" y="125" text-anchor="middle" font-family="monospace" font-size="11" fill="#495057">s1 moved to s2</text>
+  
+  <!-- s1 variable (INVALID) -->
+  <rect x="470" y="145" width="130" height="85" rx="6" fill="#ffe3e3" stroke="#fa5252" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="535" y="167" text-anchor="middle" font-family="monospace" font-size="12" fill="#c92a2a" font-weight="bold">s1: INVALID</text>
+  <text x="535" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#e03131">⚠️ moved</text>
+  <text x="535" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#868e96">Cannot be used</text>
+  
+  <!-- Invalid arrow -->
+  <line x1="600" y1="187" x2="628" y2="187" stroke="#fa5252" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#invalidArrow)"/>
+  <text x="614" y="175" font-family="Arial, sans-serif" font-size="8" fill="#c92a2a">❌</text>
+  
+  <!-- s2 variable (valid) -->
+  <rect x="470" y="250" width="130" height="85" rx="6" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  <text x="535" y="272" text-anchor="middle" font-family="monospace" font-size="12" fill="#212529" font-weight="bold">s2: String</text>
+  <text x="485" y="292" font-family="monospace" font-size="9" fill="#495057">├─ ptr</text>
+  <text x="485" y="308" font-family="monospace" font-size="9" fill="#495057">├─ len: 5</text>
+  <text x="485" y="324" font-family="monospace" font-size="9" fill="#495057">└─ cap: 5</text>
+  
+  <!-- Heap data (after) -->
+  <rect x="630" y="250" width="110" height="45" rx="6" fill="#e7f5ff" stroke="#339af0" stroke-width="1"/>
+  <text x="685" y="278" text-anchor="middle" font-family="monospace" font-size="12" fill="#1971c2">"hello"</text>
+  
+  <!-- Ownership arrow (after) -->
+  <line x1="600" y1="292" x2="628" y2="273" stroke="#40c057" stroke-width="2" marker-end="url(#ownArrow)"/>
+  <text x="618" y="295" font-family="Arial, sans-serif" font-size="8" fill="#2b8a3e">owns</text>
+  
+  <!-- Key insight box -->
+  <rect x="215" y="355" width="370" height="35" rx="6" fill="#fff3bf" stroke="#fcc419" stroke-width="1"/>
+  <text x="400" y="377" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#e67700" font-weight="bold">💡 No double-free: Only one owner can drop the data!</text>
+</svg>

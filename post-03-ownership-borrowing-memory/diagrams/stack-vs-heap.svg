@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 350">
+  <defs>
+    <linearGradient id="stackGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#69db7c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#40c057;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="heapGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#74c0fc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#339af0;stop-opacity:1" />
+    </linearGradient>
+    <marker id="ptrArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#f76707"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="750" height="350" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">Stack vs Heap Memory</text>
+  <text x="375" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">How Rust manages different types of data</text>
+  
+  <!-- Stack Section -->
+  <rect x="50" y="70" width="280" height="250" rx="10" fill="white" stroke="#40c057" stroke-width="3"/>
+  <rect x="50" y="70" width="280" height="35" rx="10" fill="url(#stackGrad)"/>
+  <rect x="50" y="93" width="280" height="12" fill="url(#stackGrad)"/>
+  <text x="190" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="white" font-weight="bold">📚 STACK</text>
+  <text x="190" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#2b8a3e">Fast • Fixed Size • LIFO</text>
+  
+  <!-- Stack variable 1: simple value -->
+  <rect x="70" y="145" width="240" height="55" rx="6" fill="#d3f9d8" stroke="#69db7c" stroke-width="1"/>
+  <text x="85" y="167" font-family="monospace" font-size="11" fill="#212529" font-weight="bold">single_value: f32</text>
+  <text x="85" y="185" font-family="monospace" font-size="10" fill="#495057">= 0.12345</text>
+  <text x="260" y="185" font-family="Arial, sans-serif" font-size="9" fill="#868e96">4 bytes</text>
+  
+  <!-- Stack variable 2: Vec metadata -->
+  <rect x="70" y="210" width="240" height="95" rx="6" fill="#fff9db" stroke="#fcc419" stroke-width="1"/>
+  <text x="85" y="232" font-family="monospace" font-size="11" fill="#212529" font-weight="bold">embedding: Vec&lt;f32&gt;</text>
+  <text x="85" y="252" font-family="monospace" font-size="9" fill="#495057">├─ ptr: 0x7f...</text>
+  <text x="85" y="268" font-family="monospace" font-size="9" fill="#495057">├─ len: 768</text>
+  <text x="85" y="284" font-family="monospace" font-size="9" fill="#495057">└─ cap: 768</text>
+  <text x="230" y="275" font-family="Arial, sans-serif" font-size="9" fill="#868e96">24 bytes</text>
+  <text x="230" y="288" font-family="Arial, sans-serif" font-size="8" fill="#868e96">(metadata only)</text>
+  
+  <!-- Pointer Arrow -->
+  <line x1="310" y1="252" x2="415" y2="180" stroke="#f76707" stroke-width="3" marker-end="url(#ptrArrow)"/>
+  <text x="350" y="200" font-family="Arial, sans-serif" font-size="10" fill="#f76707" font-weight="bold">pointer</text>
+  
+  <!-- Heap Section -->
+  <rect x="420" y="70" width="280" height="250" rx="10" fill="white" stroke="#339af0" stroke-width="3"/>
+  <rect x="420" y="70" width="280" height="35" rx="10" fill="url(#heapGrad)"/>
+  <rect x="420" y="93" width="280" height="12" fill="url(#heapGrad)"/>
+  <text x="560" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="white" font-weight="bold">🗄️ HEAP</text>
+  <text x="560" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1971c2">Flexible • Dynamic • Random Access</text>
+  
+  <!-- Heap data -->
+  <rect x="440" y="145" width="240" height="100" rx="6" fill="#e7f5ff" stroke="#74c0fc" stroke-width="1"/>
+  <text x="455" y="170" font-family="monospace" font-size="11" fill="#212529" font-weight="bold">Actual Vector Data:</text>
+  <text x="455" y="195" font-family="monospace" font-size="9" fill="#495057">[0.1, 0.2, 0.3, 0.4, ...]</text>
+  <text x="455" y="215" font-family="monospace" font-size="9" fill="#495057">... 768 floats total ...</text>
+  <text x="455" y="235" font-family="Arial, sans-serif" font-size="10" fill="#1971c2" font-weight="bold">768 × 4 = 3,072 bytes</text>
+  
+  <!-- Explanations -->
+  <rect x="440" y="260" width="240" height="50" rx="6" fill="#f1f3f5"/>
+  <text x="560" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Stack holds fixed-size metadata</text>
+  <text x="560" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Heap holds variable-size data</text>
+</svg>

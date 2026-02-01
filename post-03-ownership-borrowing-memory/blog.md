@@ -16,7 +16,7 @@ If you come from C or C++, you're used to **manual memory management** (`malloc`
 
 Rust chooses a third path: **Ownership**.
 
-<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-9-memory-management-comparison -->
+
 
 Ownership is a set of rules that the compiler checks *at compile time*. If you follow them, you get:
 
@@ -28,12 +28,92 @@ In this post, we will master these rules. We aren't just learning syntax, we're 
 
 ---
 
+## 1.5 Quick Rust Syntax Primer
+
+If you've never written Rust before, here's the essential syntax you need:
+
+### Variables and Bindings
+
+```rust
+let x = 5;              // Immutable variable (inferred type: i32)
+let y: i32 = 10;       // Explicit type annotation
+let mut z = 15;        // Mutable variable (can be reassigned)
+
+z = 20;                // OK - z is mutable
+// x = 30;             // ERROR - x is immutable
+```
+
+**Compiler Error:**
+```
+error[E0384]: cannot assign twice to immutable variable `x`
+   |
+2  | let x = 5;
+   |     - first assignment to `x`
+3  | x = 10;
+   |     ^^ cannot assign twice to immutable variable
+```
+
+**Key Point:** Rust defaults to immutability. You must explicitly declare `mut` to allow changes.
+
+### Basic Types
+
+```rust
+let count: i32 = 42;              // Signed 32-bit integer
+let distance: f32 = 3.14;         // 32-bit float (good for embeddings)
+let is_valid: bool = true;        // Boolean
+let name: String = String::from("VectorDB");  // Owned string
+let s: &str = "hello";            // String slice (borrowed)
+```
+
+### Functions
+
+```rust
+fn add(a: i32, b: i32) -> i32 {   // Parameters have explicit types
+    a + b                          // No semicolon = return value
+}
+
+fn main() {
+    let result = add(5, 3);        // Call the function
+    println!("Result: {}", result);
+}
+```
+
+**Note:** In Rust, functions must declare parameter types and return types explicitly.
+
+### Collections
+
+```rust
+let numbers: Vec<i32> = vec![1, 2, 3, 4, 5];  // Growable array (on heap)
+let first = numbers[0];                        // Access element
+
+let embedding: [f32; 3] = [0.1, 0.2, 0.3];    // Fixed-size array (on stack)
+```
+
+### The `println!` Macro
+
+```rust
+let x = 42;
+println!("The answer is {}", x);      // {} = placeholder for value
+println!("Debug: {:?}", x);           // {:?} = debug format
+
+let v = vec![1, 2, 3];
+println!("{:?}", v);                  // Prints: [1, 2, 3]
+```
+
+**Common Error:**
+```
+error[E0425]: cannot find value `name` in this scope
+   |
+5  | println!("Hello {}", name);
+   |                      ^^^ not found in this scope
+```
+
+---
+
 ## 2. Systems 101: Stack vs. Heap
 
 To understand Ownership, you must visualize where your data lives.
 
-<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-1-stack-vs-heap-memory-layout -->
-<!-- See also: diagrams/stack-heap.md for ASCII representation -->
 
 ### The Stack
 
@@ -119,20 +199,35 @@ fn main() {
     let s1 = String::from("hello"); // s1 owns the heap memory
     let s2 = s1;                    // Ownership MOVES to s2
     
-    // println!("{}", s1); // ERROR: borrow of moved value: `s1`
-    println!("{}", s2);    // s2 is the owner now
+    println!("{}", s1);  //  ERROR: borrow of moved value: `s1`
+    println!("{}", s2);  //  s2 is the owner now
 }
 ```
 
-<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-2-ownership-move -->
-<!-- See also: diagrams/ownership-move.md for ASCII representation -->
+**Compiler Error:**
+```
+error[E0382]: borrow of moved value: `s1`
+   |
+2  | let s1 = String::from("hello");
+   |     -- move occurs because `s1` has type `String`, 
+   |        which does not implement the `Copy` trait
+3  | let s2 = s1;
+   |          -- value moved here
+4  | println!("{}", s1);
+   |                ^^ value borrowed after move
+   |
+help: consider cloning the value if the ownership is needed
+   |
+3  | let s2 = s1.clone();
+```
+
 
 **What happened?**
 
 | Language | Behavior of `s2 = s1` |
 |----------|----------------------|
 | Python/Java | Both variables point to the same object (reference counting or GC tracks it) |
-| C++ | Depends—might copy, might reference, might move |
+| C++ | Depends, might copy, might reference, might move |
 | **Rust** | **Move**: s1's ownership transfers to s2. s1 becomes invalid. |
 
 **Why does Rust do this?**
@@ -152,7 +247,6 @@ let s2 = s1.clone(); // Deep copy: new heap allocation!
 println!("s1 = {}, s2 = {}", s1, s2); // Both valid
 ```
 
-<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-3-clone-vs-move -->
 
 **System Engineer Warning:** Cloning is expensive. In our Vector DB, cloning a 768-dimensional embedding means copying 3KB of data. For a batch of 10,000 vectors, that's 30MB of unnecessary copying. We'll avoid this with **borrowing**.
 
@@ -164,10 +258,10 @@ Simple types that live entirely on the stack implement the `Copy` trait. They're
 let x: i32 = 5;
 let y = x; // x is COPIED, not moved
 
-println!("x = {}, y = {}", x, y); // Both valid!
+println!("x = {}, y = {}", x, y); // Both valid! No error.
 ```
 
-<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-4-copy-types-vs-move-types -->
+![Copy Types vs Move Types Decision](diagrams/ownership-flowchart.svg)
 
 Copy types include: `i32`, `f32`, `bool`, `char`, `&T` (immutable references), tuples of Copy types, and fixed-size arrays of Copy types.
 
@@ -234,7 +328,7 @@ This is the most important rule for concurrency safety:
 >
 > Rust just enforces this "locking" at compile time with zero runtime cost.
 
-<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-5-borrowing-rules-rwlock-analogy -->
+![Borrowing Rules - RwLock Analogy](diagrams/borrowing-rules.svg)
 
 This prevents **data races** at compile time. A data race occurs when:
 
@@ -247,18 +341,30 @@ This prevents **data races** at compile time. A data race occurs when:
 ```rust
 let mut s = String::from("hello");
 
-let r1 = &s;     //  immutable borrow #1
-let r2 = &s;     //  immutable borrow #2
-let r3 = &mut s; //  ERROR: cannot borrow `s` as mutable
+let r1 = &s;     // immutable borrow #1
+let r2 = &s;     // immutable borrow #2
+let r3 = &mut s; // ❌ ERROR: cannot borrow `s` as mutable
 
 println!("{}, {}, {}", r1, r2, r3);
+```
+
+**Compiler Error:**
+```
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+   |
+3  | let r1 = &s;
+   |          -- immutable borrow occurs here
+4  | let r2 = &s;
+   |          -- immutable borrow occurs here
+5  | let r3 = &mut s;
+   |          ^^^^^^ mutable borrow occurs here
+7  | println!("{}, {}, {}", r1, r2, r3);
+   |          -- immutable borrows later used here
 ```
 
 **Why the error?** `r1` and `r2` expect the data to remain unchanged while they hold their references. `r3` wants to modify it. Rust says: "No. Pick one."
 
 ### Non-Lexical Lifetimes (NLL)
-
-<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-6-reference-lifecycle-with-nll -->
 
 Modern Rust is smart about when borrows *actually* end:
 
@@ -282,7 +388,7 @@ The borrow ends when the reference is last *used*, not when it goes out of scope
 
 In our Vector DB, we'll work with massive arrays of floats. We don't want to copy them. We don't want to transfer ownership just to read them.
 
-We use **slices**—lightweight views into contiguous memory.
+We use **slices**, lightweight views into contiguous memory.
 
 ### String Slices (`&str`)
 
@@ -299,9 +405,8 @@ A `&str` is just a pointer + length. It doesn't own any data.
 
 ### Vector Slices (`&[T]`)
 
-<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-7-slice-zero-copy-view -->
 
-This is crucial for our vector database:
+![Slices - Zero Copy Views](diagrams/slices-zero-copy.svg)
 
 ```rust
 fn main() {
@@ -314,6 +419,51 @@ fn main() {
     let partial_sum = sum_slice(&embedding[0..3]); // Just first 3 elements
     
     println!("Full sum: {}, Partial: {}", sum, partial_sum);
+}
+
+fn sum_slice(values: &[f32]) -> f32 {
+    let mut total = 0.0;
+    for &val in values {
+        total += val;
+    }
+    total
+}
+```
+
+**Try This:** What happens if you try to modify the data through an immutable slice?
+
+```rust
+fn main() {
+    let embedding: Vec<f32> = vec![0.1, 0.2, 0.3];
+    modify_slice(&embedding);  // ERROR
+}
+
+fn modify_slice(values: &[f32]) {
+    values[0] = 0.5;  // Trying to modify through immutable slice
+}
+```
+
+**Compiler Error:**
+```
+error[E0596]: cannot borrow `*values` as mutable, as it is behind a shared reference
+   |
+8  | fn modify_slice(values: &[f32]) {
+   |                          ------ this parameter is an immutable shared reference
+9  |     values[0] = 0.5;
+   |     ^^^^^^^^^ cannot assign through an immutable slice
+```
+
+**Solution:** Use a mutable slice:
+
+```rust
+fn main() {
+    let mut embedding: Vec<f32> = vec![0.1, 0.2, 0.3];
+    modify_slice(&mut embedding);  // Pass mutable slice
+    println!("{:?}", embedding);   // [0.5, 0.2, 0.3]
+}
+
+fn modify_slice(values: &mut [f32]) {
+    values[0] = 0.5;  // Now it works
 }
 
 fn sum_slice(values: &[f32]) -> f32 {
@@ -393,7 +543,8 @@ If you ever see an error like `missing lifetime specifier`, we'll tackle it when
 
 ### The Ownership Flowchart
 
-<!-- DIAGRAM: diagrams/mermaid-diagrams.md#diagram-8-ownership-decision-flowchart -->
+
+![Ownership Decision Flowchart](diagrams/ownership-flowchart.svg)
 
 ```
 Do you need to modify the data?
@@ -415,7 +566,7 @@ Do you need to modify the data?
 
 ## 8. What's Next?
 
-You've survived the borrow checker—conceptually, at least. Now we need to put this knowledge into practice.
+You've survived the borrow checker conceptually, at least. Now we need to put this knowledge into practice.
 
 In **Post #4**, we'll design the core data structures for our database:
 
@@ -431,5 +582,5 @@ We'll write real code for our database, and the borrow checker will guide us.
 
 ---
 
-*The borrow checker isn't your enemy—it's a senior engineer reviewing your memory management at compile time. Learn to listen to it.*
+*The borrow checker isn't your enemy, it's a senior engineer reviewing your memory management at compile time. Learn to listen to it.*
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400">
+  <defs>
+    <marker id="viewArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#339af0"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="700" height="400" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">Borrowing Rules: RwLock Analogy</text>
+  <text x="350" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">Multiple readers OR single writer, never both</text>
+  
+  <!-- VALID Section -->
+  <rect x="40" y="75" width="400" height="145" rx="10" fill="white" stroke="#40c057" stroke-width="2"/>
+  <rect x="40" y="75" width="400" height="30" rx="10" fill="#d3f9d8"/>
+  <rect x="40" y="93" width="400" height="12" fill="#d3f9d8"/>
+  <text x="60" y="97" font-family="Arial, sans-serif" font-size="13" fill="#2b8a3e" font-weight="bold">✅ VALID STATES</text>
+  
+  <!-- Multiple readers -->
+  <rect x="60" y="120" width="170" height="85" rx="6" fill="#ebfbee" stroke="#69db7c" stroke-width="1"/>
+  <text x="145" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2b8a3e" font-weight="bold">Multiple Readers</text>
+  <text x="145" y="168" text-anchor="middle" font-family="monospace" font-size="12" fill="#495057">&amp;T, &amp;T, &amp;T</text>
+  <text x="145" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#868e96">Shared Lock</text>
+  
+  <!-- OR divider -->
+  <text x="250" y="165" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#495057" font-weight="bold">OR</text>
+  
+  <!-- Single writer -->
+  <rect x="270" y="120" width="150" height="85" rx="6" fill="#e7f5ff" stroke="#74c0fc" stroke-width="1"/>
+  <text x="345" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#1971c2" font-weight="bold">Single Writer</text>
+  <text x="345" y="168" text-anchor="middle" font-family="monospace" font-size="12" fill="#495057">&amp;mut T</text>
+  <text x="345" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#868e96">Exclusive Lock</text>
+  
+  <!-- INVALID Section -->
+  <rect x="40" y="235" width="400" height="145" rx="10" fill="white" stroke="#fa5252" stroke-width="2"/>
+  <rect x="40" y="235" width="400" height="30" rx="10" fill="#ffe3e3"/>
+  <rect x="40" y="253" width="400" height="12" fill="#ffe3e3"/>
+  <text x="60" y="257" font-family="Arial, sans-serif" font-size="13" fill="#c92a2a" font-weight="bold">❌ INVALID STATE - Compile Error!</text>
+  
+  <!-- Reader + Writer -->
+  <rect x="100" y="280" width="280" height="85" rx="6" fill="#fff5f5" stroke="#ffc9c9" stroke-width="1"/>
+  <text x="240" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#c92a2a" font-weight="bold">Reader + Writer Together</text>
+  <text x="240" y="328" text-anchor="middle" font-family="monospace" font-size="12" fill="#495057">&amp;T + &amp;mut T</text>
+  <text x="240" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#e03131">⚠️ Data Race! Rust prevents this at compile time</text>
+  
+  <!-- Data box -->
+  <rect x="500" y="150" width="160" height="100" rx="8" fill="#fff9db" stroke="#fcc419" stroke-width="2"/>
+  <text x="580" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e67700" font-weight="bold">Data</text>
+  <text x="580" y="205" text-anchor="middle" font-family="monospace" font-size="11" fill="#495057">String</text>
+  <text x="580" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#868e96">(the owned value)</text>
+  
+  <!-- Arrows from valid states to data -->
+  <line x1="420" y1="162" x2="498" y2="185" stroke="#40c057" stroke-width="2" stroke-dasharray="4,2"/>
+  
+  <!-- Dashed arrow from invalid to data (blocked) -->
+  <line x1="380" y1="322" x2="498" y2="230" stroke="#fa5252" stroke-width="2" stroke-dasharray="4,2"/>
+  <text x="450" y="285" font-family="Arial, sans-serif" font-size="16" fill="#fa5252">🚫</text>
+  
+  <!-- Compiler quote -->
+  <rect x="480" y="280" width="200" height="60" rx="6" fill="#f1f3f5" stroke="#ced4da" stroke-width="1"/>
+  <text x="580" y="302" text-anchor="middle" font-family="monospace" font-size="9" fill="#495057">error[E0502]:</text>
+  <text x="580" y="318" text-anchor="middle" font-family="monospace" font-size="8" fill="#c92a2a">cannot borrow as mutable</text>
+  <text x="580" y="332" text-anchor="middle" font-family="monospace" font-size="8" fill="#c92a2a">because also borrowed</text>
+</svg>
