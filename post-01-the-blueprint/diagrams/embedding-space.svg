@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8f9fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e9ecef;stop-opacity:1" />
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#495057"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#339af0"/>
+    </marker>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="700" height="500" fill="url(#bgGrad)"/>
+  
+  <!-- Title -->
+  <text x="350" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">Word Embeddings in 2D Space</text>
+  <text x="350" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#868e96">Demonstrating: King - Man + Woman ≈ Queen</text>
+  
+  <!-- Coordinate System -->
+  <rect x="100" y="80" width="400" height="350" fill="white" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  
+  <!-- Grid lines -->
+  <g stroke="#e9ecef" stroke-width="1">
+    <line x1="100" y1="168" x2="500" y2="168"/>
+    <line x1="100" y1="255" x2="500" y2="255"/>
+    <line x1="100" y1="343" x2="500" y2="343"/>
+    <line x1="200" y1="80" x2="200" y2="430"/>
+    <line x1="300" y1="80" x2="300" y2="430"/>
+    <line x1="400" y1="80" x2="400" y2="430"/>
+  </g>
+  
+  <!-- Axes -->
+  <line x1="100" y1="430" x2="500" y2="430" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="100" y1="430" x2="100" y2="80" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Axis Labels -->
+  <text x="300" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#495057" font-weight="bold">Gender Dimension →</text>
+  <text x="60" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#495057" font-weight="bold" transform="rotate(-90 60 255)">Royalty Dimension →</text>
+  
+  <!-- Quadrant Labels -->
+  <text x="180" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">Male Royalty</text>
+  <text x="420" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">Female Royalty</text>
+  <text x="180" y="415" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">Male Commoner</text>
+  <text x="420" y="415" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">Female Commoner</text>
+  
+  <!-- Relationship Arrows (dotted) -->
+  <line x1="180" y1="150" x2="420" y2="150" stroke="#339af0" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowBlue)"/>
+  <line x1="180" y1="360" x2="420" y2="360" stroke="#339af0" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowBlue)"/>
+  
+  <!-- Vertical relationship arrows -->
+  <line x1="180" y1="360" x2="180" y2="160" stroke="#f76707" stroke-width="2" stroke-dasharray="3,3"/>
+  <line x1="420" y1="360" x2="420" y2="160" stroke="#f76707" stroke-width="2" stroke-dasharray="3,3"/>
+  
+  <!-- Points -->
+  <!-- King -->
+  <circle cx="180" cy="150" r="20" fill="#845ef7" filter="url(#glow)"/>
+  <text x="180" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">👑</text>
+  <text x="180" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#5f3dc4" font-weight="bold">King</text>
+  
+  <!-- Queen -->
+  <circle cx="420" cy="150" r="20" fill="#f06595" filter="url(#glow)"/>
+  <text x="420" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">👑</text>
+  <text x="420" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#d6336c" font-weight="bold">Queen</text>
+  
+  <!-- Man -->
+  <circle cx="180" cy="360" r="18" fill="#495057"/>
+  <text x="180" y="365" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">👤</text>
+  <text x="180" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#343a40" font-weight="bold">Man</text>
+  
+  <!-- Woman -->
+  <circle cx="420" cy="360" r="18" fill="#495057"/>
+  <text x="420" y="365" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">👤</text>
+  <text x="420" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#343a40" font-weight="bold">Woman</text>
+  
+  <!-- Legend Box -->
+  <rect x="530" y="120" width="150" height="180" rx="8" fill="white" stroke="#dee2e6" stroke-width="1"/>
+  <text x="605" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#212529" font-weight="bold">Key Insight</text>
+  
+  <line x1="545" y1="165" x2="585" y2="165" stroke="#339af0" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="595" y="168" font-family="Arial, sans-serif" font-size="11" fill="#495057">Gender shift</text>
+  
+  <line x1="545" y1="190" x2="585" y2="190" stroke="#f76707" stroke-width="2" stroke-dasharray="3,3"/>
+  <text x="595" y="193" font-family="Arial, sans-serif" font-size="11" fill="#495057">Royalty shift</text>
+  
+  <text x="605" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#495057">The vector from</text>
+  <text x="605" y="248" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#495057" font-weight="bold">Man → Woman</text>
+  <text x="605" y="266" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#495057">is parallel to</text>
+  <text x="605" y="284" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#495057" font-weight="bold">King → Queen</text>
+  
+  <!-- Formula Box -->
+  <rect x="530" y="320" width="150" height="60" rx="8" fill="#e7f5ff" stroke="#339af0" stroke-width="2"/>
+  <text x="605" y="348" text-anchor="middle" font-family="monospace" font-size="12" fill="#1971c2" font-weight="bold">King - Man</text>
+  <text x="605" y="368" text-anchor="middle" font-family="monospace" font-size="12" fill="#1971c2" font-weight="bold">+ Woman ≈ Queen</text>
+</svg>

@@ -63,8 +63,7 @@ What about papers titled **"Understanding Cat Psychology"**? Or **"Kitten Develo
 
 The word "feline" appears nowhere, yet these papers are *exactly* what the user wants.
 
-<!-- Shows two paths: SQL doing exact string match (missing results) vs Vector DB finding semantic matches -->
-![SQL vs Vector Search Comparison](diagrams/sql-vs-vector.png)
+![SQL vs Vector Search Comparison](diagrams/sql-vs-vector.svg)
 
 **SQL databases search by *spelling*. Vector databases search by *meaning*.**
 
@@ -93,8 +92,7 @@ The magic is in *how* these models are trained: they learn to place **similar th
 Imagine a 2D coordinate system (we'll use 2D for visualization, but real embeddings use 768+ dimensions).
 
 
-<!-- Shows a 2D plot with: King, Queen, Man, Woman plotted as points. Arrows showing King-Man+Woman≈Queen -->
-![Word Embeddings in 2D Space](diagrams/embedding-space.png)
+![Word Embeddings in 2D Space](diagrams/embedding-space.svg)
 
 Look at this famous example from Word2Vec research:
 
@@ -167,8 +165,7 @@ We're building a **Single-Node, Persistent Vector Database**. "Single-node" mean
 Our database has three layers:
 
 <!-- Block diagram: HTTP Request → Transport Layer → Core Engine → Storage Layer (WAL + Segments) -->
-![Architecture Block Diagram](diagrams/architecture.png)
-
+![Architecture Block Diagram](diagrams/architecture.sv
 ### Layer 1: The Transport Layer (The Doorman)
 
 **Role:** The front door of our database. It speaks HTTP and JSON.
@@ -237,7 +234,7 @@ Periodically, we compact the WAL into read-optimized binary files called "segmen
 
 We'll implement WAL in Post #8, crash recovery in Post #9, and memory mapping in Post #7.
 
-![Architecture Block Diagram](diagrams/Request_flow_diagram.png)
+![Request Flow Diagram](diagrams/request-flow.svg)
 
 ---
 
@@ -317,7 +314,7 @@ Content-Type: application/json
   "upserted": 2
 }
 ```
-![Insert Operation Diagram](diagrams/insert_operation.png)
+![Insert Operation Diagram](diagrams/insert-operation.svg)
 
 ### 4.3 Search
 
@@ -450,7 +447,7 @@ We won't build everything from scratch. We'll use battle-tested libraries:
 
 These libraries handle the 80% that's "already solved," so we can focus on the 20% that makes a vector database unique.
 
-![Components Diagram](diagrams/Component_dependencies.png)
+![Component Dependencies](diagrams/component-dependencies.svg)
 
 ---
 

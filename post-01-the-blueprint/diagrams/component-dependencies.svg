@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="crateGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff922b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fd7e14;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="buildGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#748ffc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5c7cfa;stop-opacity:1" />
+    </linearGradient>
+    <marker id="depArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#868e96"/>
+    </marker>
+    <filter id="boxShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="500" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">Component Dependencies</text>
+  <text x="400" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">External Crates (Rust Libraries) → What We'll Build</text>
+  
+  <!-- Left Section: Rust Crates -->
+  <rect x="40" y="70" width="330" height="400" rx="12" fill="white" stroke="#fd7e14" stroke-width="2" filter="url(#boxShadow)"/>
+  <rect x="40" y="70" width="330" height="35" rx="12" fill="url(#crateGrad)"/>
+  <rect x="40" y="93" width="330" height="12" fill="url(#crateGrad)"/>
+  <text x="205" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="white" font-weight="bold">📦 Rust Crates We'll Use</text>
+  
+  <!-- Tokio -->
+  <rect x="60" y="120" width="130" height="65" rx="8" fill="#fff4e6" stroke="#ffa94d" stroke-width="1"/>
+  <text x="125" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e8590c" font-weight="bold">tokio</text>
+  <text x="125" y="163" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Async Runtime</text>
+  <text x="125" y="178" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">≈ asyncio (Python)</text>
+  
+  <!-- Axum -->
+  <rect x="220" y="120" width="130" height="65" rx="8" fill="#fff4e6" stroke="#ffa94d" stroke-width="1"/>
+  <text x="285" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e8590c" font-weight="bold">axum</text>
+  <text x="285" y="163" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Web Framework</text>
+  <text x="285" y="178" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">≈ Flask/FastAPI</text>
+  
+  <!-- Arrow: tokio -> axum -->
+  <line x1="190" y1="152" x2="218" y2="152" stroke="#868e96" stroke-width="1.5" marker-end="url(#depArrow)"/>
+  
+  <!-- Serde -->
+  <rect x="60" y="210" width="130" height="65" rx="8" fill="#fff4e6" stroke="#ffa94d" stroke-width="1"/>
+  <text x="125" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e8590c" font-weight="bold">serde</text>
+  <text x="125" y="253" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Serialization</text>
+  <text x="125" y="268" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">JSON/Binary parsing</text>
+  
+  <!-- Tantivy -->
+  <rect x="220" y="210" width="130" height="65" rx="8" fill="#fff4e6" stroke="#ffa94d" stroke-width="1"/>
+  <text x="285" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e8590c" font-weight="bold">tantivy</text>
+  <text x="285" y="253" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Search Engine</text>
+  <text x="285" y="268" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">≈ Elasticsearch</text>
+  
+  <!-- Memmap2 -->
+  <rect x="140" y="300" width="130" height="65" rx="8" fill="#fff4e6" stroke="#ffa94d" stroke-width="1"/>
+  <text x="205" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e8590c" font-weight="bold">memmap2</text>
+  <text x="205" y="343" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Memory Mapping</text>
+  <text x="205" y="358" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Zero-copy file I/O</text>
+  
+  <!-- Parking Lot -->
+  <rect x="140" y="385" width="130" height="65" rx="8" fill="#fff4e6" stroke="#ffa94d" stroke-width="1"/>
+  <text x="205" y="410" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e8590c" font-weight="bold">parking_lot</text>
+  <text x="205" y="428" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Fast Locks</text>
+  <text x="205" y="443" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Mutex, RwLock</text>
+  
+  <!-- Right Section: What We'll Build -->
+  <rect x="430" y="70" width="330" height="400" rx="12" fill="white" stroke="#5c7cfa" stroke-width="2" filter="url(#boxShadow)"/>
+  <rect x="430" y="70" width="330" height="35" rx="12" fill="url(#buildGrad)"/>
+  <rect x="430" y="93" width="330" height="12" fill="url(#buildGrad)"/>
+  <text x="595" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="white" font-weight="bold">🔨 What We'll Build</text>
+  
+  <!-- HNSW Index -->
+  <rect x="450" y="120" width="140" height="70" rx="8" fill="#e7f5ff" stroke="#74c0fc" stroke-width="2"/>
+  <text x="520" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#1971c2" font-weight="bold">HNSW Index</text>
+  <text x="520" y="163" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Vector Search</text>
+  <text x="520" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Posts #13-15</text>
+  
+  <!-- WAL -->
+  <rect x="610" y="120" width="140" height="70" rx="8" fill="#e7f5ff" stroke="#74c0fc" stroke-width="2"/>
+  <text x="680" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#1971c2" font-weight="bold">WAL</text>
+  <text x="680" y="163" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Durability</text>
+  <text x="680" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Posts #8-9</text>
+  
+  <!-- Query Engine -->
+  <rect x="530" y="220" width="160" height="70" rx="8" fill="#e7f5ff" stroke="#74c0fc" stroke-width="2"/>
+  <text x="610" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#1971c2" font-weight="bold">Query Engine</text>
+  <text x="610" y="263" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Orchestration</text>
+  <text x="610" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Post #19</text>
+  
+  <!-- REST API -->
+  <rect x="530" y="320" width="160" height="70" rx="8" fill="#d3f9d8" stroke="#51cf66" stroke-width="2"/>
+  <text x="610" y="345" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#2b8a3e" font-weight="bold">REST API</text>
+  <text x="610" y="363" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Interface</text>
+  <text x="610" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Post #5</text>
+  
+  <!-- Dependency Arrows -->
+  <!-- axum -> API -->
+  <path d="M350 152 C 400 152, 400 355, 528 355" stroke="#868e96" stroke-width="1.5" fill="none" marker-end="url(#depArrow)"/>
+  
+  <!-- serde -> API -->
+  <path d="M190 242 C 250 242, 430 330, 528 340" stroke="#868e96" stroke-width="1.5" fill="none" marker-end="url(#depArrow)"/>
+  
+  <!-- serde -> WAL -->
+  <path d="M190 220 Q 380 150, 608 145" stroke="#868e96" stroke-width="1.5" fill="none" marker-end="url(#depArrow)"/>
+  
+  <!-- memmap -> WAL -->
+  <path d="M270 332 Q 440 250, 608 160" stroke="#868e96" stroke-width="1.5" fill="none" marker-end="url(#depArrow)"/>
+  
+  <!-- memmap -> HNSW -->
+  <path d="M270 315 Q 380 200, 448 152" stroke="#868e96" stroke-width="1.5" fill="none" marker-end="url(#depArrow)"/>
+  
+  <!-- tantivy -> Engine -->
+  <path d="M350 242 Q 450 242, 528 255" stroke="#868e96" stroke-width="1.5" fill="none" marker-end="url(#depArrow)"/>
+  
+  <!-- HNSW -> Engine -->
+  <line x1="520" y1="190" x2="555" y2="218" stroke="#868e96" stroke-width="1.5" marker-end="url(#depArrow)"/>
+  
+  <!-- WAL -> Engine -->
+  <line x1="680" y1="190" x2="665" y2="218" stroke="#868e96" stroke-width="1.5" marker-end="url(#depArrow)"/>
+  
+  <!-- Engine -> API -->
+  <line x1="610" y1="290" x2="610" y2="318" stroke="#868e96" stroke-width="1.5" marker-end="url(#depArrow)"/>
+</svg>

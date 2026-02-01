@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 500">
+  <defs>
+    <linearGradient id="clientGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#748ffc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5c7cfa;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="transportGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#74c0fc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#339af0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="engineGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd43b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fab005;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="storageGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#69db7c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#40c057;stop-opacity:1" />
+    </linearGradient>
+    <marker id="arrowRight" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#495057"/>
+    </marker>
+    <marker id="arrowLeft" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto">
+      <path d="M9,0 L9,6 L0,3 z" fill="#51cf66"/>
+    </marker>
+    <filter id="shadow2" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="850" height="500" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="425" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">Search Request Flow</text>
+  <text x="425" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">POST /collections/{name}/search</text>
+  
+  <!-- Actor Boxes (vertical lanes) -->
+  <!-- Client -->
+  <rect x="60" y="70" width="100" height="40" rx="8" fill="url(#clientGrad)" filter="url(#shadow2)"/>
+  <text x="110" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">Client</text>
+  <line x1="110" y1="110" x2="110" y2="470" stroke="#748ffc" stroke-width="2" stroke-dasharray="4,4"/>
+  
+  <!-- Transport -->
+  <rect x="235" y="70" width="100" height="40" rx="8" fill="url(#transportGrad2)" filter="url(#shadow2)"/>
+  <text x="285" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">Transport</text>
+  <line x1="285" y1="110" x2="285" y2="470" stroke="#339af0" stroke-width="2" stroke-dasharray="4,4"/>
+  
+  <!-- Engine -->
+  <rect x="410" y="70" width="100" height="40" rx="8" fill="url(#engineGrad2)" filter="url(#shadow2)"/>
+  <text x="460" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#212529" font-weight="bold">Engine</text>
+  <line x1="460" y1="110" x2="460" y2="470" stroke="#fab005" stroke-width="2" stroke-dasharray="4,4"/>
+  
+  <!-- Storage -->
+  <rect x="585" y="70" width="100" height="40" rx="8" fill="url(#storageGrad2)" filter="url(#shadow2)"/>
+  <text x="635" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">Storage</text>
+  <line x1="635" y1="110" x2="635" y2="470" stroke="#40c057" stroke-width="2" stroke-dasharray="4,4"/>
+  
+  <!-- Index Labels -->
+  <rect x="750" y="70" width="80" height="40" rx="8" fill="#f1f3f5" stroke="#dee2e6" stroke-width="1"/>
+  <text x="790" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#495057" font-weight="bold">Indexes</text>
+  
+  <!-- Step 1: Client sends request -->
+  <circle cx="110" cy="140" r="12" fill="#748ffc"/>
+  <text x="110" y="144" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">1</text>
+  <line x1="122" y1="140" x2="273" y2="140" stroke="#495057" stroke-width="2" marker-end="url(#arrowRight)"/>
+  <rect x="140" y="125" width="110" height="22" rx="4" fill="white" stroke="#dee2e6" stroke-width="1"/>
+  <text x="195" y="140" text-anchor="middle" font-family="monospace" font-size="9" fill="#495057">POST /search</text>
+  
+  <!-- Step 2: Parse & Validate -->
+  <circle cx="285" cy="175" r="12" fill="#339af0"/>
+  <text x="285" y="179" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">2</text>
+  <rect x="305" y="163" width="90" height="24" rx="4" fill="#e7f5ff" stroke="#74c0fc" stroke-width="1"/>
+  <text x="350" y="179" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#1971c2">Parse JSON</text>
+  
+  <!-- Step 3: Forward to Engine -->
+  <circle cx="285" cy="210" r="12" fill="#339af0"/>
+  <text x="285" y="214" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">3</text>
+  <line x1="297" y1="210" x2="448" y2="210" stroke="#495057" stroke-width="2" marker-end="url(#arrowRight)"/>
+  
+  <!-- Step 4: Query Planning -->
+  <circle cx="460" cy="245" r="12" fill="#fab005"/>
+  <text x="460" y="249" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">4</text>
+  <rect x="480" y="233" width="100" height="24" rx="4" fill="#fff9db" stroke="#fcc419" stroke-width="1"/>
+  <text x="530" y="249" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#e67700">Query Planning</text>
+  
+  <!-- Decision: Strategy Choice -->
+  <rect x="420" y="280" width="80" height="30" rx="4" fill="#fff3bf" stroke="#f59f00" stroke-width="2"/>
+  <text x="460" y="299" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#e67700">Strategy?</text>
+  
+  <!-- Step 5a: Vector-First Path -->
+  <line x1="460" y1="310" x2="460" y2="330" stroke="#495057" stroke-width="1"/>
+  <text x="545" y="325" font-family="Arial, sans-serif" font-size="9" fill="#868e96">Vector-First</text>
+  <line x1="472" y1="340" x2="623" y2="340" stroke="#495057" stroke-width="2" marker-end="url(#arrowRight)"/>
+  
+  <circle cx="635" cy="340" r="12" fill="#40c057"/>
+  <text x="635" y="344" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">5</text>
+  <rect x="665" y="328" width="75" height="24" rx="4" fill="#ebfbee" stroke="#69db7c" stroke-width="1"/>
+  <text x="702" y="344" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2b8a3e">HNSW</text>
+  
+  <!-- Return candidates -->
+  <line x1="623" y1="370" x2="472" y2="370" stroke="#51cf66" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arrowLeft)"/>
+  <text x="548" y="385" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Top 100 candidates</text>
+  
+  <!-- Step 6: Filter -->
+  <circle cx="460" cy="400" r="12" fill="#fab005"/>
+  <text x="460" y="404" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">6</text>
+  <line x1="472" y1="400" x2="623" y2="400" stroke="#495057" stroke-width="2" marker-end="url(#arrowRight)"/>
+  
+  <circle cx="635" cy="400" r="12" fill="#40c057"/>
+  <text x="635" y="404" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">7</text>
+  <rect x="665" y="388" width="75" height="24" rx="4" fill="#ebfbee" stroke="#69db7c" stroke-width="1"/>
+  <text x="702" y="404" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2b8a3e">Filter</text>
+  
+  <!-- Return filtered results -->
+  <line x1="623" y1="430" x2="472" y2="430" stroke="#51cf66" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arrowLeft)"/>
+  <text x="548" y="445" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Top K results</text>
+  
+  <!-- Step 8: Return to Transport -->
+  <circle cx="460" cy="460" r="12" fill="#fab005"/>
+  <text x="460" y="464" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">8</text>
+  <line x1="448" y1="460" x2="297" y2="460" stroke="#51cf66" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arrowLeft)"/>
+  
+  <!-- Step 9: Return to Client -->
+  <circle cx="285" cy="460" r="12" fill="#339af0"/>
+  <text x="285" y="464" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">9</text>
+  <line x1="273" y1="460" x2="122" y2="460" stroke="#51cf66" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arrowLeft)"/>
+  <rect x="140" y="445" width="110" height="22" rx="4" fill="#d3f9d8" stroke="#69db7c" stroke-width="1"/>
+  <text x="195" y="460" text-anchor="middle" font-family="monospace" font-size="9" fill="#2b8a3e">JSON Response</text>
+</svg>
