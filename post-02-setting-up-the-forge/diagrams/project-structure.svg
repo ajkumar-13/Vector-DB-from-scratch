@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 650">
+  <defs>
+    <linearGradient id="folderGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd43b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fab005;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="fileGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#748ffc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5c7cfa;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="rustGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff922b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fd7e14;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="700" height="650" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">VectorDB Project Structure</text>
+  <text x="350" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">Three-Layer Architecture: Transport → Engine → Storage</text>
+  
+  <!-- Root folder -->
+  <rect x="60" y="70" width="580" height="560" rx="8" fill="white" stroke="#dee2e6" stroke-width="1" filter="url(#shadow)"/>
+  
+  <!-- vectordb/ header -->
+  <rect x="60" y="70" width="580" height="35" rx="8" fill="url(#folderGrad)"/>
+  <rect x="60" y="93" width="580" height="12" fill="url(#folderGrad)"/>
+  <text x="85" y="93" font-family="monospace" font-size="14" fill="#212529" font-weight="bold">📁 vectordb/</text>
+  
+  <!-- Root files -->
+  <text x="90" y="130" font-family="monospace" font-size="11" fill="#495057">├── 📄 Cargo.toml</text>
+  <text x="280" y="130" font-family="Arial, sans-serif" font-size="9" fill="#868e96">Project manifest (dependencies)</text>
+  
+  <text x="90" y="150" font-family="monospace" font-size="11" fill="#495057">├── 📄 Cargo.lock</text>
+  <text x="280" y="150" font-family="Arial, sans-serif" font-size="9" fill="#868e96">Lockfile (auto-generated)</text>
+  
+  <text x="90" y="170" font-family="monospace" font-size="11" fill="#495057">├── 📄 README.md</text>
+  <text x="280" y="170" font-family="Arial, sans-serif" font-size="9" fill="#868e96">Documentation</text>
+  
+  <!-- src/ folder -->
+  <text x="90" y="200" font-family="monospace" font-size="11" fill="#495057">└── 📁 src/</text>
+  
+  <!-- main.rs and lib.rs -->
+  <text x="120" y="225" font-family="monospace" font-size="11" fill="#495057">├── 📄 main.rs</text>
+  <text x="280" y="225" font-family="Arial, sans-serif" font-size="9" fill="#868e96">Entry point: CLI, starts server</text>
+  
+  <text x="120" y="245" font-family="monospace" font-size="11" fill="#495057">├── 📄 lib.rs</text>
+  <text x="280" y="245" font-family="Arial, sans-serif" font-size="9" fill="#868e96">Library root: public API</text>
+  
+  <!-- LAYER 1: Transport -->
+  <rect x="115" y="265" width="510" height="95" rx="6" fill="#e7f5ff" stroke="#339af0" stroke-width="2"/>
+  <text x="130" y="285" font-family="Arial, sans-serif" font-size="10" fill="#1971c2" font-weight="bold">LAYER 1: TRANSPORT (HTTP Interface)</text>
+  
+  <text x="130" y="305" font-family="monospace" font-size="10" fill="#495057">├── 📁 transport/</text>
+  <text x="160" y="322" font-family="monospace" font-size="9" fill="#495057">├── mod.rs</text>
+  <text x="290" y="322" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Module declaration</text>
+  <text x="160" y="337" font-family="monospace" font-size="9" fill="#495057">├── routes.rs</text>
+  <text x="290" y="337" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Axum route definitions</text>
+  <text x="160" y="352" font-family="monospace" font-size="9" fill="#495057">├── handlers.rs</text>
+  <text x="290" y="352" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Request handlers</text>
+  
+  <!-- LAYER 2: Engine -->
+  <rect x="115" y="370" width="510" height="95" rx="6" fill="#fff9db" stroke="#fab005" stroke-width="2"/>
+  <text x="130" y="390" font-family="Arial, sans-serif" font-size="10" fill="#e67700" font-weight="bold">LAYER 2: CORE ENGINE (Business Logic)</text>
+  
+  <text x="130" y="410" font-family="monospace" font-size="10" fill="#495057">├── 📁 engine/</text>
+  <text x="160" y="427" font-family="monospace" font-size="9" fill="#495057">├── mod.rs</text>
+  <text x="290" y="427" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Module declaration</text>
+  <text x="160" y="442" font-family="monospace" font-size="9" fill="#495057">├── query.rs</text>
+  <text x="290" y="442" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Query planning &amp; execution</text>
+  <text x="160" y="457" font-family="monospace" font-size="9" fill="#495057">├── vector_index.rs</text>
+  <text x="290" y="457" font-family="Arial, sans-serif" font-size="8" fill="#868e96">HNSW graph for similarity search</text>
+  
+  <!-- LAYER 3: Storage -->
+  <rect x="115" y="475" width="510" height="110" rx="6" fill="#ebfbee" stroke="#40c057" stroke-width="2"/>
+  <text x="130" y="495" font-family="Arial, sans-serif" font-size="10" fill="#2b8a3e" font-weight="bold">LAYER 3: STORAGE (Persistence)</text>
+  
+  <text x="130" y="515" font-family="monospace" font-size="10" fill="#495057">└── 📁 storage/</text>
+  <text x="160" y="532" font-family="monospace" font-size="9" fill="#495057">├── mod.rs</text>
+  <text x="290" y="532" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Module declaration</text>
+  <text x="160" y="547" font-family="monospace" font-size="9" fill="#495057">├── wal.rs</text>
+  <text x="290" y="547" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Write-Ahead Log implementation</text>
+  <text x="160" y="562" font-family="monospace" font-size="9" fill="#495057">├── segment.rs</text>
+  <text x="290" y="562" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Memory-mapped segment files</text>
+  <text x="160" y="577" font-family="monospace" font-size="9" fill="#495057">└── recovery.rs</text>
+  <text x="290" y="577" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Crash recovery logic</text>
+  
+  <!-- Legend -->
+  <rect x="440" y="595" width="180" height="50" rx="4" fill="#f1f3f5" stroke="#ced4da" stroke-width="1"/>
+  <text x="455" y="612" font-family="Arial, sans-serif" font-size="9" fill="#495057" font-weight="bold">Legend:</text>
+  <text x="455" y="627" font-family="monospace" font-size="9" fill="#495057">📁 Folder  📄 File</text>
+  <text x="455" y="640" font-family="monospace" font-size="9" fill="#495057">mod.rs = Module entry</text>
+</svg>

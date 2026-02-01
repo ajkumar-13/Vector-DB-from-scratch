@@ -155,7 +155,7 @@ vectordb/
     └── main.rs     # Entry point for the binary
 ```
 
-<!-- See diagrams/project-structure.md for detailed breakdown -->
+![Rust Project Structure](diagrams/project-structure.svg)
 
 **Why This Matters:**
 
