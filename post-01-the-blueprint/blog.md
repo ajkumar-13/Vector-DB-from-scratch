@@ -165,7 +165,7 @@ We're building a **Single-Node, Persistent Vector Database**. "Single-node" mean
 Our database has three layers:
 
 <!-- Block diagram: HTTP Request → Transport Layer → Core Engine → Storage Layer (WAL + Segments) -->
-![Architecture Block Diagram](diagrams/architecture.sv
+![Architecture Block Diagram](diagrams/architecture.svg)
 ### Layer 1: The Transport Layer (The Doorman)
 
 **Role:** The front door of our database. It speaks HTTP and JSON.
@@ -318,7 +318,7 @@ Content-Type: application/json
 
 ### 4.3 Search
 
-The core operation—find similar vectors.
+The core operation, find similar vectors.
 
 ```http
 POST /collections/research_papers/search
@@ -455,44 +455,46 @@ These libraries handle the 80% that's "already solved," so we can focus on the 2
 
 Here's what the next posts will cover:
 
-### Phase 1: The Rust & Systems Foundation (Posts 2-5)
-*Goal: Go from "I don't know Rust" to "I can build a high-performance HTTP server."*
+### Phase 1: Foundation (Posts 1-4)
+*Goal: Go from "I don't know Rust" to "I can model a database's type system."*
 
+- **Post 1:** Architecture design, vectors, embeddings, cosine similarity (you are here)
 - **Post 2:** Setting up Rust, project structure, Cargo basics
-- **Post 3:** Ownership, Borrowing, and Memory, the core of Rust
+- **Post 3:** Ownership, Borrowing, and Memory — the core of Rust
 - **Post 4:** Structs, Enums, Error Handling with `Result` and `Option`
+
+### Phase 2: Storage Layer (Posts 5-10)
+*Goal: Build an HTTP server and persistent storage. How do databases actually persist data?*
+
 - **Post 5:** Async programming with Tokio, building our first Axum server
-
-### Phase 2: The Storage Engine (Posts 6-10)
-*Goal: Master file I/O and binary formats. How do databases actually persist data?*
-
 - **Post 6:** Binary file formats, endianness, serialization
 - **Post 7:** Memory mapping (`mmap`), reading files at RAM speed
 - **Post 8:** Write-Ahead Logging for crash safety
 - **Post 9:** Crash recovery, replaying logs on startup
 - **Post 10:** Concurrency with `Arc`, `RwLock`, and `Mutex`
 
-### Phase 3: The Search Engine (Posts 11-14)
+### Phase 3: Vector Search (Posts 11-16)
 *Goal: Master the "Vector" part of Vector DB.*
 
 - **Post 11:** Linear algebra basics, dot product, cosine similarity, norms
 - **Post 12:** Brute-force k-NN search (the naive approach)
-- **Post 13:** Optimizing top-K retrieval with binary heaps
-- **Post 14:** Building a benchmark suite for performance testing
+- **Post 12.5:** Optimizing top-K retrieval with binary heaps
+- **Post 13:** HNSW — the theory of approximate nearest neighbors
+- **Post 14:** Implementing HNSW part 1 — graph construction
+- **Post 15:** Implementing HNSW part 2 — search algorithm
+- **Post 16:** Building a benchmark suite for performance testing
 
-### Phase 4: The Intelligent Database (Posts 15-17)
+### Phase 4: Hybrid Search (Posts 17-19)
 *Goal: Add metadata filtering like the pros.*
 
-- **Post 15:** Inverted indexes explained, how text search works
-- **Post 16:** Integrating Tantivy for hybrid search
-- **Post 17:** Query planning, choosing optimal execution paths
+- **Post 17:** Inverted indexes explained, how text search works
+- **Post 18:** Integrating Tantivy for hybrid search
+- **Post 19:** Query planning, choosing optimal execution paths
 
-### Phase 5: Scale & Production (Posts 18-20)
-*Goal: HNSW graphs and deployment.*
+### Phase 5: Production (Post 20)
+*Goal: Ship it.*
 
-- **Post 18:** Approximate nearest neighbors, the theory of ANN
-- **Post 19:** Implementing HNSW for sub-millisecond search
-- **Post 20:** Docker, CI/CD, and production deployment
+- **Post 20:** Quantization, Docker, CI/CD, SIMD optimizations
 
 ---
 
