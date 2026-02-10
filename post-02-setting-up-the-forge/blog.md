@@ -169,6 +169,28 @@ Unlike Python or JavaScript (where project structure is often debated), Rust has
 
 This consistency means any Rust project feels immediately familiar.
 
+### Step 4.3: Verify `.gitignore`
+
+`cargo new` creates a `.gitignore` that excludes the `target/` directory. Verify it exists:
+
+```bash
+cat .gitignore
+# Should show: /target
+```
+
+If you're using the top-level repo (not just the `vectordb/` folder), make sure your root `.gitignore` also includes:
+
+```gitignore
+# Compiled output (every Rust project)
+**/target/
+
+# OS files
+.DS_Store
+Thumbs.db
+```
+
+> **Why this matters:** The `target/` directory contains compiled binaries and intermediate build files. It can grow to **hundreds of megabytes**. Committing it to git is a common beginner mistake that bloats your repository.
+
 ---
 
 ## 5. Adding Our Core Dependencies
@@ -377,7 +399,50 @@ This formats, lints, and tests in one go. If all pass, you're safe to push.
 
 ---
 
-## 8. Project Structure Going Forward
+## 8. Troubleshooting Common Issues
+
+If things didn't go smoothly, here are the most common problems:
+
+### `cargo` or `rustc` not found
+
+**Cause:** PATH wasn't updated after installation.
+
+**Fix:**
+- **Windows:** Close and reopen your terminal. If still broken, check that `%USERPROFILE%\.cargo\bin` is in your PATH.
+- **macOS/Linux:** Run `source $HOME/.cargo/env` or restart your shell.
+
+### Windows: `linker 'link.exe' not found`
+
+**Cause:** Missing Visual Studio C++ Build Tools.
+
+**Fix:** Download "Build Tools for Visual Studio" from [visualstudio.microsoft.com](https://visualstudio.microsoft.com/visual-cpp-build-tools/). During installation, select **"Desktop development with C++"**. Restart your terminal after installation.
+
+### `cargo build` fails with network errors
+
+**Cause:** Firewall or proxy blocking [crates.io](https://crates.io).
+
+**Fix:** If you're behind a corporate proxy, set the environment variables:
+```bash
+export HTTPS_PROXY=http://your-proxy:port  # Linux/macOS
+$env:HTTPS_PROXY = "http://your-proxy:port"  # PowerShell
+```
+
+### rust-analyzer not working in VS Code
+
+**Cause:** Usually the extension can't find `cargo` or the project.
+
+**Fix:**
+1. Make sure you opened the **folder containing `Cargo.toml`** in VS Code (not a parent folder).
+2. Check Output → rust-analyzer for error messages.
+3. Run `Ctrl+Shift+P` → "rust-analyzer: Restart Server".
+
+### First `cargo build` is extremely slow
+
+**This is normal.** The first build compiles all dependencies from source (~60 crates for Tokio). Subsequent builds only recompile your code and are much faster. Use `cargo check` during development for faster feedback.
+
+---
+
+## 9. Project Structure Going Forward
 
 As we build our database, the structure will grow:
 
@@ -409,7 +474,7 @@ We won't create all of this today. We'll build it incrementally as we need each 
 
 ---
 
-## 9. Running the Code Examples
+## 10. Running the Code Examples
 
 Each post in this series has a `code/` directory with standalone, runnable examples:
 
@@ -431,7 +496,7 @@ This lets you experiment with each concept independently before integrating it i
 
 ---
 
-## 10. Summary
+## 11. Summary
 
 We are ready.
 
@@ -441,6 +506,28 @@ We are ready.
 | **VS Code + rust-analyzer** |  Configured with Clippy |
 | **Project Structure** |  `vectordb` created |
 | **Async Runtime** |  Tokio running concurrent tasks |
+
+
+### End-of-Post Checkpoint
+
+Before moving to Post #3, verify:
+
+```bash
+cd vectordb
+cargo run
+```
+
+You should see `[Main]` and `[Background]` messages interleaved, ending with "All systems operational." If `cargo run` works, your toolchain, dependencies, and async runtime are all set.
+
+Your project structure should be:
+```text
+vectordb/
+├── Cargo.toml      # tokio + serde + serde_json
+├── Cargo.lock      # auto-generated
+├── .gitignore      # /target
+└── src/
+    └── main.rs     # async hello world
+```
 
 In the next post, we dive into the **Rust Ownership Model**. This is the infamous "hump" where most beginners quit. But we'll conquer it by thinking like systems engineers:
 
