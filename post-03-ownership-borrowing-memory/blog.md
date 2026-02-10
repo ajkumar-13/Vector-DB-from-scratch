@@ -35,7 +35,7 @@ If you've never written Rust before, here's the essential syntax you need:
 ### Variables and Bindings
 
 ```rust
-let x = 5;              // Immutable variable (inferred type: i32)
+let x = 5;             // Immutable variable (inferred type: i32)
 let y: i32 = 10;       // Explicit type annotation
 let mut z = 15;        // Mutable variable (can be reassigned)
 
@@ -49,7 +49,7 @@ error[E0384]: cannot assign twice to immutable variable `x`
    |
 2  | let x = 5;
    |     - first assignment to `x`
-3  | x = 10;
+3  | x = 30;
    |     ^^ cannot assign twice to immutable variable
 ```
 
@@ -58,17 +58,17 @@ error[E0384]: cannot assign twice to immutable variable `x`
 ### Basic Types
 
 ```rust
-let count: i32 = 42;              // Signed 32-bit integer
-let distance: f32 = 3.14;         // 32-bit float (good for embeddings)
-let is_valid: bool = true;        // Boolean
-let name: String = String::from("VectorDB");  // Owned string
-let s: &str = "hello";            // String slice (borrowed)
+let count: i32 = 42;                          // Signed 32-bit integer
+let distance: f32 = 3.14;                     // 32-bit float (good for embeddings)
+let is_valid: bool = true;                    // Boolean
+let name: String = String::from("VectorDB");  // Growable, heap-allocated string
+let s: &str = "hello";                        // String literal (fixed text)
 ```
 
 ### Functions
 
 ```rust
-fn add(a: i32, b: i32) -> i32 {   // Parameters have explicit types
+fn add(a: i32, b: i32) -> i32 {    // Parameters have explicit types
     a + b                          // No semicolon = return value
 }
 
@@ -83,10 +83,10 @@ fn main() {
 ### Collections
 
 ```rust
-let numbers: Vec<i32> = vec![1, 2, 3, 4, 5];  // Growable array (on heap)
+let numbers: Vec<i32> = vec![1, 2, 3, 4, 5];   // Growable array (on heap)
 let first = numbers[0];                        // Access element
 
-let embedding: [f32; 3] = [0.1, 0.2, 0.3];    // Fixed-size array (on stack)
+let embedding: [f32; 3] = [0.1, 0.2, 0.3];     // Fixed-size array (on stack)
 ```
 
 ### The `println!` Macro
@@ -256,7 +256,7 @@ Simple types that live entirely on the stack implement the `Copy` trait. They're
 
 ```rust
 let x: i32 = 5;
-let y = x; // x is COPIED, not moved
+let y = x;                        // x is COPIED, not moved
 
 println!("x = {}, y = {}", x, y); // Both valid! No error.
 ```
@@ -301,9 +301,9 @@ A mutable reference allows modification.
 fn main() {
     let mut s = String::from("hello"); // Note: must be `mut`
     
-    append_world(&mut s); // Pass a MUTABLE reference
+    append_world(&mut s);              // Pass a MUTABLE reference
     
-    println!("{}", s); // Prints: "hello world"
+    println!("{}", s);                 // Prints: "hello world"
 }
 
 fn append_world(some_string: &mut String) {
@@ -395,8 +395,8 @@ We use **slices**, lightweight views into contiguous memory.
 ```rust
 let s = String::from("hello world");
 
-let hello: &str = &s[0..5];  // View of bytes 0-4
-let world: &str = &s[6..11]; // View of bytes 6-10
+let hello: &str = &s[0..5];      // View of bytes 0-4
+let world: &str = &s[6..11];     // View of bytes 6-10
 
 println!("{} {}", hello, world); // "hello world"
 ```
@@ -508,16 +508,17 @@ By using `&[f32]` instead of `Vec<f32>`:
 
 ---
 
-## 6. Lifetimes (A Taste)
+## 6. Lifetimes: How Rust Tracks Reference Validity
 
 You might wonder: "How does Rust know that a reference is still valid?"
 
-The answer is **lifetimes**, annotations that tell the compiler how long references are valid. Most of the time, Rust infers them automatically.
+The answer is **lifetimes**, the compiler's way of tracking how long each reference is valid. Most of the time, Rust infers them automatically (called **lifetime elision**).
 
-We won't go deep into lifetimes yet (that's a topic for when we build the storage layer), but here's a preview:
+### When Lifetimes Are Invisible
+
+Rust infers the lifetime here, the returned `&str` lives as long as the input `&str`:
 
 ```rust
-// Rust infers: the returned &str lives as long as the input &str
 fn first_word(s: &str) -> &str {
     match s.find(' ') {
         Some(i) => &s[0..i],
@@ -526,17 +527,164 @@ fn first_word(s: &str) -> &str {
 }
 ```
 
-If you ever see an error like `missing lifetime specifier`, we'll tackle it when we need it.
+### When Lifetimes Become Visible
+
+If a function takes *two* references and returns one, Rust can't guess which input the output borrows from. You must annotate:
+
+```rust
+// 'a is a lifetime parameter — it says:
+// "the returned reference lives as long as the shorter of a and b"
+fn longer_vec<'a>(a: &'a [f32], b: &'a [f32]) -> &'a [f32] {
+    if a.len() >= b.len() { a } else { b }
+}
+
+fn main() {
+    let v1 = vec![1.0, 2.0, 3.0];
+    let result;
+    {
+        let v2 = vec![4.0, 5.0];
+        result = longer_vec(&v1, &v2);
+        println!("Longer: {:?}", result); // Both v1 and v2 alive here
+    }
+    // println!("{:?}", result);          // v2 is dropped — result might dangle
+}
+```
+
+**The `'a` annotation doesn't *change* how long data lives.** It tells the compiler: "check that these references are all valid for the same scope." If they aren't, the compiler rejects the code.
+
+### The Practical Rule
+
+For Phase 1, you almost never need to write lifetime annotations. They'll appear naturally when we build the storage layer (Post 7+), where references into memory-mapped files must provably outlive the queries that use them.
+
+**If you see `missing lifetime specifier`, the compiler's error message will tell you exactly where to add `'a`.** Don't memorize rules, let the compiler guide you.
 
 ---
 
-## 7. Summary: The Systems Programmer's Mental Model
+## 7. Exercises: Test Your Understanding
+
+These exercises are designed to build muscle memory with the borrow checker. Try to fix each one *before* looking at the answer.
+
+### Exercise 1: Fix the Move
+
+This code doesn't compile. Make it work **without** using `.clone()`:
+
+```rust
+fn print_length(s: String) {
+    println!("Length: {}", s.len());
+}
+
+fn main() {
+    let name = String::from("VectorDB");
+    print_length(name);
+    println!("Name: {}", name); // Error: value used after move
+}
+```
+
+<details>
+<summary><strong>Solution</strong></summary>
+
+Change `print_length` to borrow instead of taking ownership:
+
+```rust
+fn print_length(s: &String) {  // or better: s: &str
+    println!("Length: {}", s.len());
+}
+
+fn main() {
+    let name = String::from("VectorDB");
+    print_length(&name);        // Pass a reference
+    println!("Name: {}", name); // name is still valid
+}
+```
+</details>
+
+### Exercise 2: Fix the Borrow Conflict
+
+This code violates the borrowing rules. Fix it:
+
+```rust
+fn main() {
+    let mut scores = vec![0.95, 0.87, 0.72];
+    let first = &scores[0];       // immutable borrow
+    scores.push(0.99);            // mutable borrow while immutable exists
+    println!("First: {}", first);
+}
+```
+
+<details>
+<summary><strong>Solution</strong></summary>
+
+Use the immutable borrow *before* the mutable operation:
+
+```rust
+fn main() {
+    let mut scores = vec![0.95, 0.87, 0.72];
+    let first = scores[0];       // Copy the f32 value (f32 is Copy)
+    scores.push(0.99);           // No active borrows
+    println!("First: {}", first);
+}
+```
+
+Alternatively, use `first` before `push`:
+```rust
+fn main() {
+    let mut scores = vec![0.95, 0.87, 0.72];
+    let first = &scores[0];
+    println!("First: {}", first); // Use it here
+    // first's borrow ends (NLL)
+    scores.push(0.99);            // Now safe
+}
+```
+</details>
+
+### Exercise 3: Slice Challenge
+
+Write a function `max_value` that takes a `&[f32]` slice and returns the largest value. Handle the empty-slice case by returning `f32::NEG_INFINITY`.
+
+```rust
+fn max_value(values: &[f32]) -> f32 {
+    // Your code here
+    todo!()
+}
+
+fn main() {
+    let embeddings = vec![0.1, 0.9, 0.3, 0.7];
+    println!("Max: {}", max_value(&embeddings));      // 0.9
+    println!("Max: {}", max_value(&embeddings[0..2])); // 0.9
+    println!("Max: {}", max_value(&[]));               // -inf
+}
+```
+
+<details>
+<summary><strong>Solution</strong></summary>
+
+```rust
+fn max_value(values: &[f32]) -> f32 {
+    let mut max = f32::NEG_INFINITY;
+    for &val in values {
+        if val > max {
+            max = val;
+        }
+    }
+    max
+}
+
+// Or using iterators (idiomatic Rust):
+fn max_value_iter(values: &[f32]) -> f32 {
+    values.iter().copied().fold(f32::NEG_INFINITY, f32::max)
+}
+```
+</details>
+
+---
+
+## 8. Summary: The Systems Programmer's Mental Model
 
 | Concept | Mental Model |
 |---------|--------------|
 | **Owner** | The single manager responsible for freeing memory |
 | **Move** | "Here, you take responsibility for this data now" |
-| **Clone** | "Make a full copy—expensive but both are independent" |
+| **Clone** | "Make a full copy, expensive but both are independent" |
 | **Borrow (`&T`)** | "I'm just looking. You still own it." |
 | **Mut Borrow (`&mut T`)** | "I need to modify this. Exclusive access, please." |
 | **Slice (`&[T]`)** | "A lightweight window into contiguous memory" |
@@ -564,7 +712,17 @@ Do you need to modify the data?
 
 ---
 
-## 8. What's Next?
+## 9. What's Next?
+
+### End-of-Post Checkpoint
+
+You should now be able to answer these questions confidently:
+
+1. **What happens when you assign `let s2 = s1;` where `s1` is a `String`?** → Ownership moves. `s1` is invalid.
+2. **How many mutable references can exist at once?** → Exactly one.
+3. **Why does `cosine_similarity` take `&[f32]` instead of `Vec<f32>`?** → Borrows a slice. No copying, no ownership transfer, works with any contiguous float data.
+
+If any of these feel shaky, re-read the relevant section. These concepts are used in **every single post** from here on.
 
 You've survived the borrow checker conceptually, at least. Now we need to put this knowledge into practice.
 
