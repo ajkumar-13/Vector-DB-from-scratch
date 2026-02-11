@@ -1,0 +1,19 @@
+[package]
+name = "post03-ownership"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "ownership-examples"
+path = "ownership-examples.rs"
+
+[[bin]]
+name = "borrowing-examples"
+path = "borrowing-examples.rs"
+
+[[bin]]
+name = "slice-examples"
+path = "slice-examples.rs"
+
+[dependencies]
