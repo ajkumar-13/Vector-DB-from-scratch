@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400">
+  <defs>
+    <marker id="okArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#40c057"/>
+    </marker>
+    <marker id="errArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#fa5252"/>
+    </marker>
+    <marker id="flowArrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#495057"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="700" height="400" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="350" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#212529">Result&lt;T, E&gt; Control Flow</text>
+  <text x="350" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">Handling success and failure explicitly</text>
+  
+  <!-- Function call -->
+  <rect x="250" y="65" width="200" height="45" rx="8" fill="#e7f5ff" stroke="#339af0" stroke-width="2"/>
+  <text x="350" y="93" text-anchor="middle" font-family="monospace" font-size="11" fill="#1971c2" font-weight="bold">parse_vector(input)</text>
+  
+  <!-- Arrow down to Result -->
+  <line x1="350" y1="110" x2="350" y2="140" stroke="#495057" stroke-width="2" marker-end="url(#flowArrow2)"/>
+  <text x="365" y="130" font-family="Arial, sans-serif" font-size="9" fill="#868e96">returns</text>
+  
+  <!-- Result type -->
+  <rect x="240" y="145" width="220" height="45" rx="8" fill="#fff9db" stroke="#fcc419" stroke-width="2"/>
+  <text x="350" y="173" text-anchor="middle" font-family="monospace" font-size="12" fill="#e67700" font-weight="bold">Result&lt;Vector, ParseError&gt;</text>
+  
+  <!-- Diamond decision -->
+  <polygon points="350,210 400,240 350,270 300,240" fill="#f1f3f5" stroke="#495057" stroke-width="2"/>
+  <text x="350" y="244" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#495057" font-weight="bold">match</text>
+  
+  <!-- OK path -->
+  <line x1="400" y1="240" x2="500" y2="240" stroke="#40c057" stroke-width="2" marker-end="url(#okArrow)"/>
+  <text x="450" y="230" font-family="Arial, sans-serif" font-size="10" fill="#40c057" font-weight="bold">Ok(v)</text>
+  
+  <rect x="510" y="210" width="160" height="60" rx="8" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  <text x="590" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2b8a3e" font-weight="bold">✓ Success Path</text>
+  <text x="590" y="255" text-anchor="middle" font-family="monospace" font-size="9" fill="#495057">Use vector v</text>
+  
+  <!-- Err path -->
+  <line x1="300" y1="240" x2="200" y2="240" stroke="#fa5252" stroke-width="2" marker-end="url(#errArrow)"/>
+  <text x="250" y="230" font-family="Arial, sans-serif" font-size="10" fill="#fa5252" font-weight="bold">Err(e)</text>
+  
+  <rect x="30" y="210" width="160" height="60" rx="8" fill="#ffe3e3" stroke="#fa5252" stroke-width="2"/>
+  <text x="110" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#c92a2a" font-weight="bold">✗ Error Path</text>
+  <text x="110" y="255" text-anchor="middle" font-family="monospace" font-size="9" fill="#495057">Handle error e</text>
+  
+  <!-- ? operator shortcut -->
+  <rect x="170" y="300" width="360" height="85" rx="8" fill="white" stroke="#dee2e6" stroke-width="1"/>
+  <text x="350" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#495057" font-weight="bold">The ? Operator (Shortcut)</text>
+  <text x="350" y="350" text-anchor="middle" font-family="monospace" font-size="10" fill="#495057">let v = parse_vector(input)?;</text>
+  <text x="350" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#868e96">↑ Returns early with Err if failure, unwraps Ok if success</text>
+</svg>

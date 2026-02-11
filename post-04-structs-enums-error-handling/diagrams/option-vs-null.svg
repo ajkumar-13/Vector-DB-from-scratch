@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 350">
+  <defs>
+    <linearGradient id="optionGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#b197fc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9775fa;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="700" height="350" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="350" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#212529">Option&lt;T&gt; vs Null</text>
+  <text x="350" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">Compile-time null safety</text>
+  
+  <!-- C/Java NULL section -->
+  <rect x="40" y="65" width="280" height="260" rx="10" fill="white" stroke="#fa5252" stroke-width="2"/>
+  <rect x="40" y="65" width="280" height="30" rx="10" fill="#ffe3e3"/>
+  <rect x="40" y="83" width="280" height="12" fill="#ffe3e3"/>
+  <text x="180" y="87" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#c92a2a" font-weight="bold">❌ C/Java: Nullable Pointer</text>
+  
+  <text x="60" y="120" font-family="monospace" font-size="10" fill="#495057">User user = getUser(id);</text>
+  <text x="60" y="145" font-family="monospace" font-size="10" fill="#495057">// user might be NULL!</text>
+  <text x="60" y="175" font-family="monospace" font-size="10" fill="#495057">user.getName(); // ☠️ CRASH</text>
+  <text x="60" y="195" font-family="monospace" font-size="10" fill="#c92a2a">// NullPointerException</text>
+  
+  <rect x="60" y="215" width="240" height="95" rx="6" fill="#fff5f5" stroke="#ffc9c9" stroke-width="1"/>
+  <text x="180" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#c92a2a" font-weight="bold">Problems:</text>
+  <text x="75" y="260" font-family="Arial, sans-serif" font-size="9" fill="#495057">• Null is valid for ANY pointer type</text>
+  <text x="75" y="278" font-family="Arial, sans-serif" font-size="9" fill="#495057">• Compiler can't catch null access</text>
+  <text x="75" y="296" font-family="Arial, sans-serif" font-size="9" fill="#495057">• Runtime crashes in production</text>
+  
+  <!-- Rust Option section -->
+  <rect x="380" y="65" width="280" height="260" rx="10" fill="white" stroke="#40c057" stroke-width="2"/>
+  <rect x="380" y="65" width="280" height="30" rx="10" fill="#d3f9d8"/>
+  <rect x="380" y="83" width="280" height="12" fill="#d3f9d8"/>
+  <text x="520" y="87" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#2b8a3e" font-weight="bold">✓ Rust: Option&lt;T&gt;</text>
+  
+  <text x="400" y="120" font-family="monospace" font-size="10" fill="#495057">let user: Option&lt;User&gt; =</text>
+  <text x="400" y="138" font-family="monospace" font-size="10" fill="#495057">    get_user(id);</text>
+  <text x="400" y="168" font-family="monospace" font-size="10" fill="#495057">match user {</text>
+  <text x="400" y="186" font-family="monospace" font-size="10" fill="#2b8a3e">  Some(u) =&gt; u.name(),</text>
+  <text x="400" y="204" font-family="monospace" font-size="10" fill="#e67700">  None =&gt; "Unknown",</text>
+  <text x="400" y="222" font-family="monospace" font-size="10" fill="#495057">}</text>
+  
+  <rect x="400" y="235" width="240" height="75" rx="6" fill="#ebfbee" stroke="#69db7c" stroke-width="1"/>
+  <text x="520" y="258" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#2b8a3e" font-weight="bold">Benefits:</text>
+  <text x="415" y="276" font-family="Arial, sans-serif" font-size="9" fill="#495057">• Must handle None explicitly</text>
+  <text x="415" y="294" font-family="Arial, sans-serif" font-size="9" fill="#495057">• Compiler enforces null-check</text>
+</svg>
