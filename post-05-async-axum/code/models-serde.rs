@@ -91,6 +91,12 @@ impl DistanceMetric {
     }
 }
 
+impl Default for DistanceMetric {
+    fn default() -> Self {
+        DistanceMetric::Cosine
+    }
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // SEARCH TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -105,9 +111,9 @@ pub struct SearchRequest {
     #[serde(default = "default_top_k")]
     pub top_k: usize,
 
-    /// Distance metric to use
+    /// Distance metric to use (default: cosine)
     #[serde(default)]
-    pub metric: Option<DistanceMetric>,
+    pub metric: DistanceMetric,
 }
 
 fn default_top_k() -> usize {
@@ -134,8 +140,10 @@ pub enum VectorDbError {
     EmptyVector,
     DimensionMismatch { expected: usize, got: usize },
     NotFound(String),
+    AlreadyExists(String),
     InvalidParameter(String),
     IoError(std::io::Error),
+    SerializationError(String),
 }
 
 impl fmt::Display for VectorDbError {
@@ -146,13 +154,34 @@ impl fmt::Display for VectorDbError {
                 write!(f, "Dimension mismatch: expected {}, got {}", expected, got)
             }
             VectorDbError::NotFound(id) => write!(f, "Not found: {}", id),
+            VectorDbError::AlreadyExists(name) => write!(f, "Already exists: {}", name),
             VectorDbError::InvalidParameter(msg) => write!(f, "Invalid parameter: {}", msg),
             VectorDbError::IoError(e) => write!(f, "I/O error: {}", e),
+            VectorDbError::SerializationError(msg) => write!(f, "Serialization error: {}", msg),
         }
     }
 }
 
-impl std::error::Error for VectorDbError {}
+impl std::error::Error for VectorDbError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            VectorDbError::IoError(e) => Some(e),
+            _ => None,
+        }
+    }
+}
+
+impl From<std::io::Error> for VectorDbError {
+    fn from(err: std::io::Error) -> Self {
+        VectorDbError::IoError(err)
+    }
+}
+
+impl From<serde_json::Error> for VectorDbError {
+    fn from(err: serde_json::Error) -> Self {
+        VectorDbError::SerializationError(err.to_string())
+    }
+}
 
 /// Serialize errors for API responses
 impl Serialize for VectorDbError {

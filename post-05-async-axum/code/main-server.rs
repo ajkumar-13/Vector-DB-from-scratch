@@ -18,6 +18,8 @@ use std::collections::HashMap;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::sync::RwLock;
+// tracing and tracing_subscriber are used via their macros (tracing::info!)
+// and tracing_subscriber::fmt() — no `use` import needed for macro crates.
 
 // ═══════════════════════════════════════════════════════════════════════════
 // DATA MODELS (normally in models.rs)
@@ -117,7 +119,7 @@ async fn main() {
         // API endpoints
         .route("/api/search", post(handler_search))
         .route("/api/vectors", post(handler_insert))
-        .route("/api/vectors/:id", get(handler_get_vector))
+        .route("/api/vectors/{id}", get(handler_get_vector))
         .route("/api/stats", get(handler_stats))
         // Attach shared state
         .with_state(state);
