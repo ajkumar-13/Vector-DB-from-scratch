@@ -338,20 +338,18 @@ fn main() {
     }
 }
 
-/// Example showing how to use map_err with custom error types.
-/// The ? operator doesn't automatically convert io::Error to VectorDbError,
-/// so we must use map_err to do the conversion explicitly.
+/// Example showing both approaches to error conversion:
+/// 1. With `impl From<io::Error>` (defined above), `?` works automatically
+/// 2. Without `From`, you'd need `map_err` to convert explicitly
 fn load_file_example(path: &str) -> Result<Vec<u8>> {
     use std::io::Read;
 
-    // Without map_err, this would NOT compile:
-    // let mut f = std::fs::File::open(path)?;  // ❌ ERROR!
-
-    // With map_err, we explicitly convert the error:
-    let mut f = std::fs::File::open(path).map_err(VectorDbError::IoError)?; // ✅ Works!
+    // Because we implemented `From<io::Error> for VectorDbError` above,
+    // the `?` operator converts io::Error automatically:
+    let mut f = std::fs::File::open(path)?; // ✅ Works thanks to From impl!
 
     let mut buffer = Vec::new();
-    f.read_to_end(&mut buffer).map_err(VectorDbError::IoError)?;
+    f.read_to_end(&mut buffer)?; // ✅ Same here
 
     Ok(buffer)
 }

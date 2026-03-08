@@ -1038,14 +1038,14 @@ You should see **9 tests passing**:
 ```text
 running 9 tests
 test models::tests::test_vector_creation ... ok
+test models::tests::test_vector_with_metadata ... ok
+test models::tests::test_vector_magnitude ... ok
 test models::tests::test_vector_normalize ... ok
 test models::tests::test_cosine_similarity ... ok
 test models::tests::test_euclidean_distance ... ok
 test models::tests::test_dot_product ... ok
-test models::tests::test_distance_metric_calculate ... ok
-test models::tests::test_search_request_defaults ... ok
-test models::tests::test_vector_db_error_display ... ok
-test models::tests::test_error_from_io ... ok
+test models::tests::test_error_display ... ok
+test models::tests::test_io_error_conversion ... ok
 ```
 
 Then run the demo:
