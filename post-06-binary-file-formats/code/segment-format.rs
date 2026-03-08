@@ -261,14 +261,21 @@ pub fn read_vectors_range(path: &str, start: u32, count: u32) -> io::Result<Vec<
     // Read header
     let header = SegmentHeader::read(&mut file)?;
 
-    // Validate range
-    if start + count > header.count {
+    // Validate range (use checked_add to prevent overflow)
+    let end = start.checked_add(count).ok_or_else(|| {
+        io::Error::new(
+            io::ErrorKind::InvalidInput,
+            format!("Range overflow: start={} + count={}", start, count),
+        )
+    })?;
+
+    if end > header.count {
         return Err(io::Error::new(
             io::ErrorKind::InvalidInput,
             format!(
                 "Range {}..{} out of bounds (count: {})",
                 start,
-                start + count,
+                end,
                 header.count
             ),
         ));
@@ -441,15 +448,21 @@ fn main() -> io::Result<()> {
     println!("8. Size comparison (vs JSON):");
     let binary_size = std::fs::metadata(filename)?.len();
 
-    // Approximate JSON size
-    let json = serde_json::to_string(&vectors.iter().map(|v| &v.data).collect::<Vec<_>>())
-        .unwrap_or_default();
-    let json_size = json.len();
+    // Approximate JSON size by building a representative string
+    let json_approx = format!(
+        "[{}]",
+        vectors
+            .iter()
+            .map(|v| format!("{:?}", v.data))
+            .collect::<Vec<_>>()
+            .join(",")
+    );
+    let json_size = json_approx.len();
 
     println!("   Binary:  {} bytes", binary_size);
-    println!("   JSON:    {} bytes", json_size);
+    println!("   JSON:    ~{} bytes", json_size);
     println!(
-        "   Savings: {:.1}%",
+        "   Savings: ~{:.1}%",
         (1.0 - (binary_size as f64 / json_size as f64)) * 100.0
     );
     println!();
@@ -459,17 +472,4 @@ fn main() -> io::Result<()> {
     println!("✓ Cleaned up test file");
 
     Ok(())
-}
-
-// We need serde_json for the size comparison demo
-// In a real project, this would be in Cargo.toml
-#[cfg(not(feature = "no_serde"))]
-mod serde_json {
-    pub fn to_string<T: std::fmt::Debug>(_: &T) -> Result<String, ()> {
-        // Fake implementation that approximates JSON size
-        Ok(
-            "[[1.0,2.0,3.0],[4.0,5.0,6.0],[7.0,8.0,9.0],[10.0,11.0,12.0],[13.0,14.0,15.0]]"
-                .to_string(),
-        )
-    }
 }

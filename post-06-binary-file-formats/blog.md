@@ -20,7 +20,6 @@ Why?
 
 3. **Random Access:** In a JSON file, if you want the 100th vector, you have to parse the first 99. In a binary file with fixed-width records, you just calculate the offset: `Position = Header + (100 * RecordSize)` and jump straight there.
 
-<!-- Diagram: diagram-1-json-vs-binary -->
 
 In this post, we will stop being "Web Developers" and start being "Systems Engineers." We will design the raw binary file format that our database uses to store vectors on disk.
 
@@ -49,7 +48,6 @@ If we have the number `500`, in hex it is `0x000001F4`. How do we store this seq
 
 This is the classic "Gulliver's Travels" problem in computing.
 
-<!-- Diagram: diagram-2-endianness -->
 
 * **Big Endian:** Store the "Big" end first. `[00, 00, 01, F4]`. (Used by Networking protocols, Java).
 * **Little Endian:** Store the "Little" end first. `[F4, 01, 00, 00]`. (Used by Intel/AMD/ARM CPUs).
@@ -84,7 +82,7 @@ We will define a file structure with two parts:
 
 ### 3.1 The Layout
 
-<!-- Diagram: diagram-3-file-layout -->
+![Binary Segment File Format](diagrams/segment-format.svg)
 
 ```text
 File Start ──►  ┌──────────────────────────┐
@@ -122,7 +120,7 @@ Every good binary format starts with a unique signature.
 |--------|-------------|-----|
 | Java class | `CAFEBABE` | `CA FE BA BE` |
 | PDF | `%PDF` | `25 50 44 46` |
-| PNG | `PNG` | `89 50 4E 47` |
+| PNG | `‰PNG` | `89 50 4E 47` |
 | ZIP | `PK` | `50 4B` |
 | **Ours** | `VECT` | `56 45 43 54` |
 
@@ -183,7 +181,6 @@ fn read_f32(r: &mut impl Read) -> io::Result<f32> {
 
 ### 4.2 Writing a Segment File
 
-<!-- Diagram: diagram-4-write-flow -->
 
 ```rust
 use std::io::{self, Write};
@@ -233,7 +230,6 @@ fn write_segment(file: &mut impl Write, vectors: &[Vector]) -> io::Result<()> {
 
 ### 4.3 Reading a Segment File
 
-<!-- Diagram: diagram-5-read-flow -->
 
 ```rust
 use std::io::{self, Read};
@@ -294,7 +290,6 @@ fn read_segment(file: &mut impl Read) -> io::Result<Vec<Vector>> {
 
 Here's where binary shines. If you want to read vector #1000 without loading the other 999:
 
-<!-- Diagram: diagram-6-random-access -->
 
 ```rust
 use std::io::{Read, Seek, SeekFrom};
@@ -329,7 +324,7 @@ This is **O(1)** access. Whether you have 100 vectors or 100 million, reading ve
 
 ## 6. Hex Editors: The X-Ray Vision
 
-To verify our work, we need to look at the file. You can't open `.vec` files in a text editor—it will look like garbage characters.
+To verify our work, we need to look at the file. You can't open `.vec` files in a text editor, it will look like garbage characters.
 
 You need a **Hex Editor**:
 - **VS Code:** Install the "Hex Editor" extension
@@ -352,7 +347,7 @@ Offset    00 01 02 03  04 05 06 07  08 09 0A 0B  0C 0D 0E 0F
 
 > **TRAP:** "Wait, `1.0` is `00 00 80 3F`? That doesn't look like 1!"
 >
-> That's IEEE 754 floating point encoding. The bytes represent the sign, exponent, and mantissa in a specific format. You don't need to memorize this—just use online converters or Rust's `f32::to_le_bytes()` to check values.
+> That's IEEE 754 floating point encoding. The bytes represent the sign, exponent, and mantissa in a specific format. You don't need to memorize this, just use online converters or Rust's `f32::to_le_bytes()` to check values.
 
 ---
 
@@ -361,6 +356,9 @@ Offset    00 01 02 03  04 05 06 07  08 09 0A 0B  0C 0D 0E 0F
 Let's put it all together with a test that writes and reads back:
 
 ```rust
+use std::fs::File;
+use std::io;
+
 fn main() -> io::Result<()> {
     // Create test vectors
     let vectors = vec![
@@ -402,11 +400,12 @@ Read 3 vectors from test.vec
 Random access vector[1]: [4.0, 5.0, 6.0]
 ```
 
+> **Code Note:** In the snippets above, `write_segment` and `read_segment` accept generic `impl Write`/`impl Read` parameters for teaching clarity. The companion code file (`segment-format.rs`) wraps these in path-based functions that also add `BufWriter`/`BufReader` for better I/O performance — the same pattern you'd use in production.
+
 ---
 
 ## 8. Design Decisions Recap
 
-<!-- Diagram: diagram-7-design-decisions -->
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
@@ -434,7 +433,6 @@ This is a minimal viable format. Production databases add:
 
 We have moved from abstract JSON objects to raw silicon.
 
-<!-- Diagram: diagram-8-layer-progress -->
 
 **What we learned:**
 - **Endianness:** Little Endian matches modern CPUs
