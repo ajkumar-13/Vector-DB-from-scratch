@@ -932,7 +932,7 @@ We'll learn:
 - How to design a binary segment format
 - Reading and writing raw bytes efficiently
 
-**Next Post:** [Post #6: Binary File Formats: Designing a Custom Segment Layout →](../post-06-binary-formats/blog.md)
+**Next Post:** [Post #6: Binary File Formats: Designing a Custom Segment Layout →](../post-06-binary-file-formats/blog.md)
 
 ---
 

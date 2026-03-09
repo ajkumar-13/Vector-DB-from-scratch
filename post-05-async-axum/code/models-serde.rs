@@ -197,7 +197,23 @@ impl Serialize for VectorDbError {
 pub type Result<T> = std::result::Result<T, VectorDbError>;
 
 // ═══════════════════════════════════════════════════════════════════════════
-// EXAMPLE USAGE
+// MAIN ENTRY POINT
+// ═══════════════════════════════════════════════════════════════════════════
+
+fn main() {
+    let v = Vector::new(vec![0.1, 0.2, 0.3]);
+    let json = serde_json::to_string_pretty(&v).unwrap();
+    println!("Vector as JSON:\n{}", json);
+
+    let parsed: Vector = serde_json::from_str(&json).unwrap();
+    println!("Round-trip dimension: {}", parsed.dimension());
+
+    let metric = DistanceMetric::Cosine;
+    println!("Distance metric: {:?}", metric);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TESTS
 // ═══════════════════════════════════════════════════════════════════════════
 
 #[cfg(test)]
