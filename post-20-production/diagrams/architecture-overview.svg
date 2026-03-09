@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420">
+  <defs>
+    <linearGradient id="prodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#69db7c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#40c057;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="750" height="420" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#212529">Production Architecture Overview</text>
+  <text x="375" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#868e96">Complete vector database system we built</text>
+  
+  <!-- Client -->
+  <rect x="320" y="65" width="110" height="40" rx="8" fill="#e7f5ff" stroke="#339af0" stroke-width="2"/>
+  <text x="375" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1971c2" font-weight="bold">🌐 Clients</text>
+  
+  <!-- Arrow to API -->
+  <line x1="375" y1="105" x2="375" y2="130" stroke="#495057" stroke-width="2"/>
+  
+  <!-- API Layer -->
+  <rect x="200" y="135" width="350" height="55" rx="10" fill="white" stroke="#339af0" stroke-width="2"/>
+  <rect x="200" y="135" width="350" height="25" rx="10" fill="#339af0"/>
+  <rect x="200" y="148" width="350" height="12" fill="#339af0"/>
+  <text x="375" y="153" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">HTTP API (Axum + Tokio)</text>
+  <text x="240" y="177" font-family="monospace" font-size="8" fill="#495057">/search</text>
+  <text x="320" y="177" font-family="monospace" font-size="8" fill="#495057">/upsert</text>
+  <text x="400" y="177" font-family="monospace" font-size="8" fill="#495057">/delete</text>
+  <text x="480" y="177" font-family="monospace" font-size="8" fill="#495057">/query</text>
+  
+  <!-- Arrow to Engine -->
+  <line x1="375" y1="190" x2="375" y2="210" stroke="#495057" stroke-width="2"/>
+  
+  <!-- Main Engine Box -->
+  <rect x="50" y="215" width="650" height="150" rx="10" fill="white" stroke="#40c057" stroke-width="3"/>
+  <rect x="50" y="215" width="650" height="25" rx="10" fill="url(#prodGrad)"/>
+  <rect x="50" y="228" width="650" height="12" fill="url(#prodGrad)"/>
+  <text x="375" y="233" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">VectorDB Engine (RwLock + Arc)</text>
+  
+  <!-- Sub-components -->
+  <rect x="70" y="255" width="140" height="50" rx="6" fill="#d3f9d8" stroke="#69db7c" stroke-width="1"/>
+  <text x="140" y="278" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2b8a3e" font-weight="bold">HNSW Index</text>
+  <text x="140" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#495057">O(log N) search</text>
+  
+  <rect x="230" y="255" width="140" height="50" rx="6" fill="#fff9db" stroke="#fab005" stroke-width="1"/>
+  <text x="300" y="278" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#e67700" font-weight="bold">Inverted Index</text>
+  <text x="300" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#495057">Metadata filters</text>
+  
+  <rect x="390" y="255" width="140" height="50" rx="6" fill="#e7f5ff" stroke="#339af0" stroke-width="1"/>
+  <text x="460" y="278" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#1971c2" font-weight="bold">Tantivy Index</text>
+  <text x="460" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#495057">Full-text search</text>
+  
+  <rect x="550" y="255" width="130" height="50" rx="6" fill="#f3d9fa" stroke="#be4bdb" stroke-width="1"/>
+  <text x="615" y="278" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#862e9c" font-weight="bold">Query Planner</text>
+  <text x="615" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#495057">Hybrid fusion</text>
+  
+  <!-- Storage components -->
+  <rect x="70" y="315" width="200" height="40" rx="6" fill="#ffe3e3" stroke="#fa5252" stroke-width="1"/>
+  <text x="170" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#c92a2a" font-weight="bold">WAL (Write-Ahead Log)</text>
+  
+  <rect x="290" y="315" width="200" height="40" rx="6" fill="#e9ecef" stroke="#495057" stroke-width="1"/>
+  <text x="390" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057" font-weight="bold">Segment Storage (mmap)</text>
+  
+  <rect x="510" y="315" width="170" height="40" rx="6" fill="#c3fae8" stroke="#20c997" stroke-width="1"/>
+  <text x="595" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#0ca678" font-weight="bold">Checkpoint Manager</text>
+  
+  <!-- Disk -->
+  <rect x="200" y="380" width="350" height="30" rx="6" fill="#495057"/>
+  <text x="375" y="400" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">💾 Persistent Storage (SSD)</text>
+</svg>

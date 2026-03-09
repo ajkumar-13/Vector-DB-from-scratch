@@ -1,0 +1,15 @@
+[package]
+name = "post20-production"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "quantization"
+path = "quantization.rs"
+
+[[bin]]
+name = "simd-distance"
+path = "simd-distance.rs"
+
+[dependencies]
