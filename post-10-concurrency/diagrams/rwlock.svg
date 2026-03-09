@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400">
+  <defs>
+    <linearGradient id="rwGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#748ffc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5c7cfa;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="750" height="400" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#212529">RwLock: Read-Write Concurrency</text>
+  <text x="375" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#868e96">Many readers OR one writer - never both</text>
+  
+  <!-- Reader scenario -->
+  <rect x="50" y="70" width="300" height="150" rx="10" fill="white" stroke="#40c057" stroke-width="2"/>
+  <rect x="50" y="70" width="300" height="30" rx="10" fill="#40c057"/>
+  <rect x="50" y="88" width="300" height="12" fill="#40c057"/>
+  <text x="200" y="92" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">✓ Multiple Readers Allowed</text>
+  
+  <!-- Multiple readers -->
+  <rect x="70" y="115" width="60" height="35" rx="4" fill="#d3f9d8" stroke="#69db7c" stroke-width="1"/>
+  <text x="100" y="138" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2b8a3e">Reader 1</text>
+  
+  <rect x="140" y="115" width="60" height="35" rx="4" fill="#d3f9d8" stroke="#69db7c" stroke-width="1"/>
+  <text x="170" y="138" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2b8a3e">Reader 2</text>
+  
+  <rect x="210" y="115" width="60" height="35" rx="4" fill="#d3f9d8" stroke="#69db7c" stroke-width="1"/>
+  <text x="240" y="138" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2b8a3e">Reader 3</text>
+  
+  <rect x="280" y="115" width="50" height="35" rx="4" fill="#d3f9d8" stroke="#69db7c" stroke-width="1"/>
+  <text x="305" y="138" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2b8a3e">...</text>
+  
+  <!-- All reading from data -->
+  <rect x="120" y="165" width="160" height="40" rx="6" fill="#e7f5ff" stroke="#339af0" stroke-width="2"/>
+  <text x="200" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1971c2" font-weight="bold">📖 Data</text>
+  
+  <!-- Writer scenario -->
+  <rect x="400" y="70" width="300" height="150" rx="10" fill="white" stroke="#fa5252" stroke-width="2"/>
+  <rect x="400" y="70" width="300" height="30" rx="10" fill="#fa5252"/>
+  <rect x="400" y="88" width="300" height="12" fill="#fa5252"/>
+  <text x="550" y="92" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">⚠️ Exclusive Writer</text>
+  
+  <!-- Single writer -->
+  <rect x="520" y="115" width="60" height="35" rx="4" fill="#ffe3e3" stroke="#fa5252" stroke-width="2"/>
+  <text x="550" y="138" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#c92a2a" font-weight="bold">Writer</text>
+  
+  <!-- Blocked readers -->
+  <rect x="420" y="115" width="60" height="35" rx="4" fill="#f1f3f5" stroke="#ced4da" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="450" y="133" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Reader</text>
+  <text x="450" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="7" fill="#868e96">blocked</text>
+  
+  <rect x="620" y="115" width="60" height="35" rx="4" fill="#f1f3f5" stroke="#ced4da" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="650" y="133" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Reader</text>
+  <text x="650" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="7" fill="#868e96">blocked</text>
+  
+  <!-- Writing to data -->
+  <rect x="470" y="165" width="160" height="40" rx="6" fill="#fff9db" stroke="#fab005" stroke-width="2"/>
+  <text x="550" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#e67700" font-weight="bold">✏️ Data (locked)</text>
+  
+  <!-- Code example -->
+  <rect x="50" y="240" width="650" height="140" rx="10" fill="#1e1e1e" stroke="#495057" stroke-width="1"/>
+  <text x="375" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#dcdcaa" font-weight="bold">Rust RwLock Example</text>
+  
+  <text x="70" y="295" font-family="monospace" font-size="9" fill="#569cd6">use</text>
+  <text x="95" y="295" font-family="monospace" font-size="9" fill="#d4d4d4">std::sync::RwLock;</text>
+  
+  <text x="70" y="315" font-family="monospace" font-size="9" fill="#569cd6">let</text>
+  <text x="95" y="315" font-family="monospace" font-size="9" fill="#d4d4d4">data = RwLock::new(vec![1, 2, 3]);</text>
+  
+  <text x="70" y="340" font-family="monospace" font-size="9" fill="#6a9955">// Multiple readers OK</text>
+  <text x="270" y="340" font-family="monospace" font-size="9" fill="#6a9955">// Exclusive writer</text>
+  
+  <text x="70" y="360" font-family="monospace" font-size="9" fill="#569cd6">let</text>
+  <text x="95" y="360" font-family="monospace" font-size="9" fill="#d4d4d4">r = data.</text>
+  <text x="160" y="360" font-family="monospace" font-size="9" fill="#dcdcaa">read()</text>
+  <text x="205" y="360" font-family="monospace" font-size="9" fill="#d4d4d4">;</text>
+  
+  <text x="270" y="360" font-family="monospace" font-size="9" fill="#569cd6">let mut</text>
+  <text x="325" y="360" font-family="monospace" font-size="9" fill="#d4d4d4">w = data.</text>
+  <text x="400" y="360" font-family="monospace" font-size="9" fill="#dcdcaa">write()</text>
+  <text x="450" y="360" font-family="monospace" font-size="9" fill="#d4d4d4">;</text>
+  
+  <text x="500" y="360" font-family="monospace" font-size="9" fill="#6a9955">// w.push(4);</text>
+</svg>
