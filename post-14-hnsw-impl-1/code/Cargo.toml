@@ -1,0 +1,16 @@
+[package]
+name = "post14-hnsw-impl-1"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "hnsw-basic"
+path = "hnsw-basic.rs"
+
+[[bin]]
+name = "neighbor-selection"
+path = "neighbor-selection.rs"
+
+[dependencies]
+rand = "0.8"
