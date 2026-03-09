@@ -1,0 +1,15 @@
+[package]
+name = "post09-crash-recovery"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "recovery"
+path = "recovery.rs"
+
+[[bin]]
+name = "compaction"
+path = "compaction.rs"
+
+[dependencies]
