@@ -1,0 +1,15 @@
+[package]
+name = "post06-binary-formats"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "binary-io"
+path = "binary-io.rs"
+
+[[bin]]
+name = "segment-format"
+path = "segment-format.rs"
+
+[dependencies]
