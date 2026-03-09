@@ -1,0 +1,16 @@
+[package]
+name = "post16-benchmarking"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "benchmark-harness"
+path = "benchmark-harness.rs"
+
+[[bin]]
+name = "comparison-suite"
+path = "comparison-suite.rs"
+
+[dependencies]
+rand = "0.8"
