@@ -1,0 +1,16 @@
+[package]
+name = "post15-hnsw-impl-2"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "search-impl"
+path = "search-impl.rs"
+
+[[bin]]
+name = "benchmark-recall"
+path = "benchmark-recall.rs"
+
+[dependencies]
+rand = "0.8"
