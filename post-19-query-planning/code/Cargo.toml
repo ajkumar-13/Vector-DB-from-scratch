@@ -1,0 +1,20 @@
+[package]
+name = "post19-query-planning"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "query-planner"
+path = "query-planner.rs"
+
+[[bin]]
+name = "execution-engine"
+path = "execution-engine.rs"
+
+[[bin]]
+name = "benchmarks"
+path = "benchmarks.rs"
+
+[dependencies]
+rand = "0.8"
