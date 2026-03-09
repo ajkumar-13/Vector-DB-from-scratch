@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420">
+  <defs>
+    <linearGradient id="mmapGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#69db7c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#40c057;stop-opacity:1" />
+    </linearGradient>
+    <marker id="mmapArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#495057"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="750" height="420" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#212529">Memory-Mapped I/O (mmap)</text>
+  <text x="375" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#868e96">Let the OS handle file I/O efficiently</text>
+  
+  <!-- Process Virtual Memory -->
+  <rect x="50" y="70" width="280" height="270" rx="10" fill="white" stroke="#339af0" stroke-width="2"/>
+  <rect x="50" y="70" width="280" height="30" rx="10" fill="#339af0"/>
+  <rect x="50" y="88" width="280" height="12" fill="#339af0"/>
+  <text x="190" y="92" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">Process Virtual Memory</text>
+  
+  <!-- Stack -->
+  <rect x="70" y="115" width="240" height="35" rx="4" fill="#ffe3e3" stroke="#ffc9c9" stroke-width="1"/>
+  <text x="190" y="137" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#c92a2a">Stack</text>
+  
+  <!-- Heap -->
+  <rect x="70" y="160" width="240" height="35" rx="4" fill="#fff9db" stroke="#fcc419" stroke-width="1"/>
+  <text x="190" y="182" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#e67700">Heap</text>
+  
+  <!-- mmap region -->
+  <rect x="70" y="205" width="240" height="60" rx="4" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  <text x="190" y="232" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2b8a3e" font-weight="bold">mmap Region</text>
+  <text x="190" y="252" text-anchor="middle" font-family="monospace" font-size="9" fill="#495057">&amp;[u8] → file bytes!</text>
+  
+  <!-- Code -->
+  <rect x="70" y="275" width="240" height="35" rx="4" fill="#e7f5ff" stroke="#74c0fc" stroke-width="1"/>
+  <text x="190" y="297" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1971c2">Code</text>
+  
+  <!-- Disk -->
+  <rect x="420" y="70" width="280" height="270" rx="10" fill="white" stroke="#495057" stroke-width="2"/>
+  <rect x="420" y="70" width="280" height="30" rx="10" fill="#495057"/>
+  <rect x="420" y="88" width="280" height="12" fill="#495057"/>
+  <text x="560" y="92" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">💾 Disk (SSD/HDD)</text>
+  
+  <!-- File on disk -->
+  <rect x="440" y="115" width="240" height="80" rx="6" fill="#f1f3f5" stroke="#ced4da" stroke-width="1"/>
+  <text x="560" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#495057" font-weight="bold">vectors.seg</text>
+  
+  <rect x="455" y="155" width="50" height="30" rx="2" fill="#ff8787"/>
+  <text x="480" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Page 0</text>
+  <rect x="510" y="155" width="50" height="30" rx="2" fill="#74c0fc"/>
+  <text x="535" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Page 1</text>
+  <rect x="565" y="155" width="50" height="30" rx="2" fill="#69db7c"/>
+  <text x="590" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Page 2</text>
+  <rect x="620" y="155" width="45" height="30" rx="2" fill="#e9ecef"/>
+  <text x="642" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">...</text>
+  
+  <!-- OS/Kernel -->
+  <rect x="440" y="210" width="240" height="110" rx="6" fill="#fff9db" stroke="#fab005" stroke-width="2"/>
+  <text x="560" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#e67700" font-weight="bold">🐧 OS Kernel</text>
+  
+  <text x="460" y="260" font-family="Arial, sans-serif" font-size="9" fill="#495057" font-weight="bold">Page Cache</text>
+  <rect x="460" y="270" width="80" height="25" rx="3" fill="#69db7c"/>
+  <text x="500" y="287" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Cached</text>
+  <rect x="545" y="270" width="60" height="25" rx="3" fill="#e9ecef" stroke="#ced4da"/>
+  <text x="575" y="287" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Cold</text>
+  <rect x="610" y="270" width="60" height="25" rx="3" fill="#e9ecef" stroke="#ced4da"/>
+  <text x="640" y="287" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#868e96">Cold</text>
+  
+  <text x="560" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#495057">Loads pages on demand</text>
+  
+  <!-- mmap connection -->
+  <path d="M310 235 Q 365 235, 420 175" fill="none" stroke="#40c057" stroke-width="3" stroke-dasharray="6,3"/>
+  <text x="365" y="195" font-family="Arial, sans-serif" font-size="9" fill="#40c057" font-weight="bold">mmap()</text>
+  
+  <!-- Access arrow -->
+  <path d="M310 235 Q 380 260, 460 280" fill="none" stroke="#339af0" stroke-width="2" marker-end="url(#mmapArrow)"/>
+  <text x="385" y="280" font-family="Arial, sans-serif" font-size="8" fill="#339af0">page fault → load</text>
+  
+  <!-- Benefits box -->
+  <rect x="50" y="355" width="650" height="55" rx="8" fill="white" stroke="#40c057" stroke-width="2"/>
+  <text x="80" y="378" font-family="Arial, sans-serif" font-size="10" fill="#2b8a3e" font-weight="bold">✓ Zero-copy:</text>
+  <text x="160" y="378" font-family="Arial, sans-serif" font-size="10" fill="#495057">No memcpy from kernel to user space</text>
+  
+  <text x="80" y="398" font-family="Arial, sans-serif" font-size="10" fill="#2b8a3e" font-weight="bold">✓ Lazy loading:</text>
+  <text x="175" y="398" font-family="Arial, sans-serif" font-size="10" fill="#495057">OS loads only accessed pages</text>
+  
+  <text x="380" y="378" font-family="Arial, sans-serif" font-size="10" fill="#2b8a3e" font-weight="bold">✓ Shared cache:</text>
+  <text x="485" y="378" font-family="Arial, sans-serif" font-size="10" fill="#495057">Multiple processes share pages</text>
+  
+  <text x="380" y="398" font-family="Arial, sans-serif" font-size="10" fill="#2b8a3e" font-weight="bold">✓ Simple API:</text>
+  <text x="475" y="398" font-family="Arial, sans-serif" font-size="10" fill="#495057">Use slice &amp;[u8] like normal memory</text>
+</svg>
