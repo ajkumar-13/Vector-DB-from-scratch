@@ -14,7 +14,7 @@ You've probably heard the buzzwords: *"RAG pipelines"*, *"semantic search"*, *"e
 
 > **Everyone uses Vector DBs, but few know how they work under the hood.**
 
-We are going change it.
+We are going to change it.
 
 ### What You'll Build
 
@@ -208,9 +208,9 @@ The Core Engine must decide:
 The right choice depends on how many papers match the filter. 90% match? Vector-first is better. 0.1% match? Filter-first wins.
 
 **Components:**
-- **Vector Index (HNSW):** A graph structure for ultra-fast approximate nearest neighbor search. We'll build this in Posts #18-19.
-- **Metadata Index (Tantivy):** An inverted index for filtering by keywords, dates, and numbers. Posts #15-16.
-- **Query Planner:** The optimizer that chooses the best execution strategy. Post #17.
+- **Vector Index (HNSW):** A graph structure for ultra-fast approximate nearest neighbor search. We'll build this in Posts #14-15.
+- **Metadata Index (Tantivy):** An inverted index for filtering by keywords, dates, and numbers. Posts #17-18.
+- **Query Planner:** The optimizer that chooses the best execution strategy. Post #19.
 
 ### Layer 3: The Storage Layer (The Vault)
 
