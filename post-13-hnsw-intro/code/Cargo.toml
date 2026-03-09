@@ -1,0 +1,16 @@
+[package]
+name = "post13-hnsw-intro"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "graph-search-demo"
+path = "graph-search-demo.rs"
+
+[[bin]]
+name = "skip-list-demo"
+path = "skip-list-demo.rs"
+
+[dependencies]
+rand = "0.8"

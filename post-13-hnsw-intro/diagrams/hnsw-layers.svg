@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="layerGrad0" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff8787;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fa5252;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="layerGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd43b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fab005;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="layerGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#69db7c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#40c057;stop-opacity:1" />
+    </linearGradient>
+    <marker id="hnswArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#339af0"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="500" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">HNSW: Hierarchical Navigable Small World</text>
+  <text x="400" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#868e96">Multi-layer graph for O(log N) nearest neighbor search</text>
+  
+  <!-- Layer 0 (bottom) - Dense -->
+  <rect x="50" y="350" width="700" height="120" rx="8" fill="white" stroke="#40c057" stroke-width="2"/>
+  <rect x="50" y="350" width="700" height="25" rx="8" fill="url(#layerGrad2)"/>
+  <rect x="50" y="363" width="700" height="12" fill="url(#layerGrad2)"/>
+  <text x="80" y="368" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">Layer 0 (Base) - ALL nodes, dense connections</text>
+  
+  <!-- Layer 0 nodes -->
+  <circle cx="120" cy="420" r="15" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  <circle cx="200" cy="420" r="15" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  <circle cx="280" cy="420" r="15" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  <circle cx="360" cy="420" r="15" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  <circle cx="440" cy="420" r="15" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  <circle cx="520" cy="420" r="15" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  <circle cx="600" cy="420" r="15" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  <circle cx="680" cy="420" r="15" fill="#d3f9d8" stroke="#40c057" stroke-width="2"/>
+  
+  <!-- Layer 0 connections (many) -->
+  <line x1="135" y1="420" x2="185" y2="420" stroke="#69db7c" stroke-width="1"/>
+  <line x1="215" y1="420" x2="265" y2="420" stroke="#69db7c" stroke-width="1"/>
+  <line x1="295" y1="420" x2="345" y2="420" stroke="#69db7c" stroke-width="1"/>
+  <line x1="375" y1="420" x2="425" y2="420" stroke="#69db7c" stroke-width="1"/>
+  <line x1="455" y1="420" x2="505" y2="420" stroke="#69db7c" stroke-width="1"/>
+  <line x1="535" y1="420" x2="585" y2="420" stroke="#69db7c" stroke-width="1"/>
+  <line x1="615" y1="420" x2="665" y2="420" stroke="#69db7c" stroke-width="1"/>
+  <line x1="200" y1="405" x2="280" y2="435" stroke="#69db7c" stroke-width="1"/>
+  <line x1="360" y1="405" x2="440" y2="435" stroke="#69db7c" stroke-width="1"/>
+  <line x1="520" y1="405" x2="600" y2="435" stroke="#69db7c" stroke-width="1"/>
+  
+  <!-- Layer 1 (middle) - Sparse -->
+  <rect x="100" y="220" width="600" height="110" rx="8" fill="white" stroke="#fab005" stroke-width="2"/>
+  <rect x="100" y="220" width="600" height="25" rx="8" fill="url(#layerGrad1)"/>
+  <rect x="100" y="233" width="600" height="12" fill="url(#layerGrad1)"/>
+  <text x="130" y="238" font-family="Arial, sans-serif" font-size="11" fill="#212529" font-weight="bold">Layer 1 - Subset of nodes, longer edges</text>
+  
+  <!-- Layer 1 nodes (subset) -->
+  <circle cx="200" cy="290" r="15" fill="#fff9db" stroke="#fab005" stroke-width="2"/>
+  <circle cx="360" cy="290" r="15" fill="#fff9db" stroke="#fab005" stroke-width="2"/>
+  <circle cx="520" cy="290" r="15" fill="#fff9db" stroke="#fab005" stroke-width="2"/>
+  <circle cx="680" cy="290" r="15" fill="#fff9db" stroke="#fab005" stroke-width="2"/>
+  
+  <!-- Layer 1 connections -->
+  <line x1="215" y1="290" x2="345" y2="290" stroke="#fcc419" stroke-width="2"/>
+  <line x1="375" y1="290" x2="505" y2="290" stroke="#fcc419" stroke-width="2"/>
+  <line x1="535" y1="290" x2="665" y2="290" stroke="#fcc419" stroke-width="2"/>
+  
+  <!-- Vertical connections Layer 1 -> Layer 0 -->
+  <line x1="200" y1="305" x2="200" y2="405" stroke="#868e96" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="360" y1="305" x2="360" y2="405" stroke="#868e96" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="520" y1="305" x2="520" y2="405" stroke="#868e96" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="680" y1="305" x2="680" y2="405" stroke="#868e96" stroke-width="1" stroke-dasharray="4,2"/>
+  
+  <!-- Layer 2 (top) - Very sparse -->
+  <rect x="200" y="100" width="400" height="100" rx="8" fill="white" stroke="#fa5252" stroke-width="2"/>
+  <rect x="200" y="100" width="400" height="25" rx="8" fill="url(#layerGrad0)"/>
+  <rect x="200" y="113" width="400" height="12" fill="url(#layerGrad0)"/>
+  <text x="230" y="118" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">Layer 2 (Top) - Few entry points</text>
+  
+  <!-- Layer 2 nodes (very few) -->
+  <circle cx="360" cy="165" r="15" fill="#ffe3e3" stroke="#fa5252" stroke-width="2"/>
+  <text x="360" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#c92a2a" font-weight="bold">EP</text>
+  <circle cx="520" cy="165" r="15" fill="#ffe3e3" stroke="#fa5252" stroke-width="2"/>
+  
+  <!-- Layer 2 connection -->
+  <line x1="375" y1="165" x2="505" y2="165" stroke="#fa5252" stroke-width="2"/>
+  
+  <!-- Vertical connections Layer 2 -> Layer 1 -->
+  <line x1="360" y1="180" x2="360" y2="275" stroke="#868e96" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="520" y1="180" x2="520" y2="275" stroke="#868e96" stroke-width="1" stroke-dasharray="4,2"/>
+  
+  <!-- Query path -->
+  <text x="50" y="90" font-family="Arial, sans-serif" font-size="11" fill="#339af0" font-weight="bold">🔍 Search Path:</text>
+  
+  <!-- Entry arrow -->
+  <path d="M250 80 Q 300 120, 345 165" fill="none" stroke="#339af0" stroke-width="3" marker-end="url(#hnswArrow)"/>
+  <text x="260" y="75" font-family="Arial, sans-serif" font-size="9" fill="#339af0">1. Enter at top</text>
+  
+  <!-- Descend arrow -->
+  <path d="M360 180 Q 360 230, 360 275" fill="none" stroke="#339af0" stroke-width="3" marker-end="url(#hnswArrow)"/>
+  <text x="380" y="230" font-family="Arial, sans-serif" font-size="9" fill="#339af0">2. Descend</text>
+  
+  <!-- Search at base -->
+  <path d="M360 305 Q 400 350, 440 405" fill="none" stroke="#339af0" stroke-width="3" marker-end="url(#hnswArrow)"/>
+  <text x="420" y="360" font-family="Arial, sans-serif" font-size="9" fill="#339af0">3. Fine search</text>
+  
+  <!-- Result -->
+  <circle cx="440" cy="420" r="18" fill="none" stroke="#339af0" stroke-width="3"/>
+  <text x="440" y="424" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#339af0" font-weight="bold">✓</text>
+  
+  <!-- Legend -->
+  <rect x="50" y="60" width="130" height="35" rx="4" fill="#f1f3f5" stroke="#ced4da" stroke-width="1"/>
+  <text x="115" y="82" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057" font-weight="bold">O(log N) search!</text>
+</svg>
