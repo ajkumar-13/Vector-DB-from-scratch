@@ -1,0 +1,11 @@
+[package]
+name = "post12-5-heaps"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "heap-demo"
+path = "heap-demo.rs"
+
+[dependencies]
