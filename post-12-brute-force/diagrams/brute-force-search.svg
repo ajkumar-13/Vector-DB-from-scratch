@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400">
+  <defs>
+    <linearGradient id="bruteGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff8787;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fa5252;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="750" height="400" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#212529">Brute Force Search: The O(N) Baseline</text>
+  <text x="375" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#868e96">Compare query against EVERY vector - simple but slow</text>
+  
+  <!-- Query vector -->
+  <rect x="50" y="80" width="120" height="50" rx="8" fill="#e7f5ff" stroke="#339af0" stroke-width="2"/>
+  <text x="110" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1971c2" font-weight="bold">🔍 Query</text>
+  <text x="110" y="120" text-anchor="middle" font-family="monospace" font-size="8" fill="#495057">[0.5, 0.3, ...]</text>
+  
+  <!-- Arrow to vectors -->
+  <line x1="170" y1="105" x2="210" y2="105" stroke="#495057" stroke-width="2"/>
+  <text x="190" y="95" font-family="Arial, sans-serif" font-size="8" fill="#495057">vs</text>
+  
+  <!-- All vectors grid -->
+  <rect x="220" y="70" width="480" height="160" rx="10" fill="white" stroke="#fa5252" stroke-width="2"/>
+  <text x="460" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#c92a2a" font-weight="bold">All N Vectors (1,000,000 vectors)</text>
+  
+  <!-- Vector grid -->
+  <g transform="translate(240, 110)">
+    <rect x="0" y="0" width="40" height="25" rx="3" fill="#d3f9d8" stroke="#40c057" stroke-width="1"/>
+    <text x="20" y="17" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2b8a3e">0.91</text>
+    
+    <rect x="50" y="0" width="40" height="25" rx="3" fill="#ffc9c9" stroke="#fa5252" stroke-width="1"/>
+    <text x="70" y="17" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#c92a2a">0.45</text>
+    
+    <rect x="100" y="0" width="40" height="25" rx="3" fill="#d3f9d8" stroke="#40c057" stroke-width="1"/>
+    <text x="120" y="17" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2b8a3e">0.88</text>
+    
+    <rect x="150" y="0" width="40" height="25" rx="3" fill="#ffc9c9" stroke="#fa5252" stroke-width="1"/>
+    <text x="170" y="17" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#c92a2a">0.32</text>
+    
+    <rect x="200" y="0" width="40" height="25" rx="3" fill="#ffc9c9" stroke="#fa5252" stroke-width="1"/>
+    <text x="220" y="17" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#c92a2a">0.51</text>
+    
+    <rect x="250" y="0" width="40" height="25" rx="3" fill="#d3f9d8" stroke="#40c057" stroke-width="1"/>
+    <text x="270" y="17" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2b8a3e">0.95</text>
+    
+    <rect x="300" y="0" width="40" height="25" rx="3" fill="#ffc9c9" stroke="#fa5252" stroke-width="1"/>
+    <text x="320" y="17" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#c92a2a">0.28</text>
+    
+    <rect x="350" y="0" width="40" height="25" rx="3" fill="#ffc9c9" stroke="#fa5252" stroke-width="1"/>
+    <text x="370" y="17" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#c92a2a">0.67</text>
+    
+    <!-- Second row -->
+    <rect x="0" y="35" width="40" height="25" rx="3" fill="#ffc9c9" stroke="#fa5252" stroke-width="1"/>
+    <text x="20" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#c92a2a">0.43</text>
+    
+    <rect x="50" y="35" width="40" height="25" rx="3" fill="#d3f9d8" stroke="#40c057" stroke-width="1"/>
+    <text x="70" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2b8a3e">0.89</text>
+    
+    <rect x="100" y="35" width="40" height="25" rx="3" fill="#ffc9c9" stroke="#fa5252" stroke-width="1"/>
+    <text x="120" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#c92a2a">0.55</text>
+    
+    <rect x="150" y="35" width="40" height="25" rx="3" fill="#ffc9c9" stroke="#fa5252" stroke-width="1"/>
+    <text x="170" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#c92a2a">0.61</text>
+    
+    <rect x="200" y="35" width="100" height="25" rx="3" fill="#f1f3f5"/>
+    <text x="250" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#868e96">... 999,988 more ...</text>
+    
+    <rect x="310" y="35" width="40" height="25" rx="3" fill="#ffc9c9" stroke="#fa5252" stroke-width="1"/>
+    <text x="330" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#c92a2a">0.39</text>
+    
+    <rect x="360" y="35" width="40" height="25" rx="3" fill="#d3f9d8" stroke="#40c057" stroke-width="1"/>
+    <text x="380" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2b8a3e">0.92</text>
+    
+    <!-- Legend -->
+    <text x="130" y="95" font-family="Arial, sans-serif" font-size="9" fill="#2b8a3e">🟢 High similarity (keep)</text>
+    <text x="130" y="110" font-family="Arial, sans-serif" font-size="9" fill="#c92a2a">🔴 Low similarity (skip)</text>
+  </g>
+  
+  <!-- Complexity comparison -->
+  <rect x="50" y="250" width="300" height="130" rx="10" fill="white" stroke="#fa5252" stroke-width="2"/>
+  <text x="200" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#c92a2a" font-weight="bold">❌ Brute Force</text>
+  <text x="200" y="305" text-anchor="middle" font-family="monospace" font-size="12" fill="#495057">O(N × D)</text>
+  <text x="200" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">N = 1M vectors, D = 768 dims</text>
+  <text x="200" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#c92a2a">768M operations per query!</text>
+  <text x="200" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#868e96">~50-100ms latency</text>
+  
+  <rect x="400" y="250" width="300" height="130" rx="10" fill="white" stroke="#40c057" stroke-width="2"/>
+  <text x="550" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2b8a3e" font-weight="bold">✓ HNSW (next post!)</text>
+  <text x="550" y="305" text-anchor="middle" font-family="monospace" font-size="12" fill="#495057">O(log N × D)</text>
+  <text x="550" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#495057">Only ~20 comparisons needed</text>
+  <text x="550" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2b8a3e">15K operations per query!</text>
+  <text x="550" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#868e96">~1-5ms latency</text>
+</svg>

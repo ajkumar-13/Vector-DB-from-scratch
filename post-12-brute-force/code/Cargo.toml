@@ -1,0 +1,15 @@
+[package]
+name = "post12-brute-force"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "brute-force-search"
+path = "brute-force-search.rs"
+
+[[bin]]
+name = "benchmark"
+path = "benchmark.rs"
+
+[dependencies]
