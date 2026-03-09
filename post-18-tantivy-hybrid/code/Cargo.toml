@@ -1,0 +1,17 @@
+[package]
+name = "post18-tantivy-hybrid"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "tantivy-integration"
+path = "tantivy-integration.rs"
+
+[[bin]]
+name = "hybrid-search"
+path = "hybrid-search.rs"
+
+[dependencies]
+tantivy = "0.22"
+serde_json = "1"

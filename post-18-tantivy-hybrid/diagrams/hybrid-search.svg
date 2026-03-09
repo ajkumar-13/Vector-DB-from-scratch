@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420">
+  <defs>
+    <linearGradient id="hybridGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#b197fc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9775fa;stop-opacity:1" />
+    </linearGradient>
+    <marker id="hybridArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#495057"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="750" height="420" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#212529">Hybrid Search: Combining Vector + Text</text>
+  <text x="375" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#868e96">Best of both worlds: semantic understanding + keyword precision</text>
+  
+  <!-- Query -->
+  <rect x="275" y="70" width="200" height="40" rx="8" fill="#e7f5ff" stroke="#339af0" stroke-width="2"/>
+  <text x="375" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#1971c2" font-weight="bold">🔍 Query: "fast python web framework"</text>
+  
+  <!-- Split arrows -->
+  <line x1="325" y1="110" x2="180" y2="145" stroke="#495057" stroke-width="2" marker-end="url(#hybridArrow)"/>
+  <line x1="425" y1="110" x2="570" y2="145" stroke="#495057" stroke-width="2" marker-end="url(#hybridArrow)"/>
+  
+  <!-- Vector Search Path -->
+  <rect x="50" y="150" width="260" height="170" rx="10" fill="white" stroke="#40c057" stroke-width="2"/>
+  <rect x="50" y="150" width="260" height="30" rx="10" fill="#40c057"/>
+  <rect x="50" y="168" width="260" height="12" fill="#40c057"/>
+  <text x="180" y="172" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">🧠 Vector Search (HNSW)</text>
+  
+  <text x="70" y="205" font-family="Arial, sans-serif" font-size="9" fill="#495057" font-weight="bold">Semantic Understanding:</text>
+  <text x="70" y="225" font-family="Arial, sans-serif" font-size="9" fill="#495057">• "fast" → performance, speed, quick</text>
+  <text x="70" y="245" font-family="Arial, sans-serif" font-size="9" fill="#495057">• "framework" → library, toolkit</text>
+  <text x="70" y="265" font-family="Arial, sans-serif" font-size="9" fill="#495057">• Context-aware matching</text>
+  
+  <rect x="70" y="285" width="220" height="25" rx="4" fill="#d3f9d8" stroke="#69db7c" stroke-width="1"/>
+  <text x="180" y="302" text-anchor="middle" font-family="monospace" font-size="8" fill="#2b8a3e">Results: FastAPI, Starlette, Sanic</text>
+  
+  <!-- Text Search Path -->
+  <rect x="440" y="150" width="260" height="170" rx="10" fill="white" stroke="#339af0" stroke-width="2"/>
+  <rect x="440" y="150" width="260" height="30" rx="10" fill="#339af0"/>
+  <rect x="440" y="168" width="260" height="12" fill="#339af0"/>
+  <text x="570" y="172" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">📝 Text Search (Tantivy)</text>
+  
+  <text x="460" y="205" font-family="Arial, sans-serif" font-size="9" fill="#495057" font-weight="bold">Keyword Matching:</text>
+  <text x="460" y="225" font-family="Arial, sans-serif" font-size="9" fill="#495057">• BM25 scoring</text>
+  <text x="460" y="245" font-family="Arial, sans-serif" font-size="9" fill="#495057">• Exact phrase: "python"</text>
+  <text x="460" y="265" font-family="Arial, sans-serif" font-size="9" fill="#495057">• Inverted index lookup</text>
+  
+  <rect x="460" y="285" width="220" height="25" rx="4" fill="#e7f5ff" stroke="#74c0fc" stroke-width="1"/>
+  <text x="570" y="302" text-anchor="middle" font-family="monospace" font-size="8" fill="#1971c2">Results: Flask, Django, FastAPI</text>
+  
+  <!-- Merge -->
+  <line x1="180" y1="320" x2="320" y2="355" stroke="#495057" stroke-width="2" marker-end="url(#hybridArrow)"/>
+  <line x1="570" y1="320" x2="430" y2="355" stroke="#495057" stroke-width="2" marker-end="url(#hybridArrow)"/>
+  
+  <!-- Fusion -->
+  <rect x="200" y="355" width="350" height="55" rx="10" fill="white" stroke="url(#hybridGrad)" stroke-width="3"/>
+  <rect x="200" y="355" width="350" height="25" rx="10" fill="url(#hybridGrad)"/>
+  <rect x="200" y="368" width="350" height="12" fill="url(#hybridGrad)"/>
+  <text x="375" y="373" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">🔀 Reciprocal Rank Fusion (RRF)</text>
+  
+  <text x="375" y="398" text-anchor="middle" font-family="monospace" font-size="9" fill="#495057">score = Σ 1/(k + rank_i) → FastAPI: 0.95, Starlette: 0.72, Django: 0.65</text>
+</svg>
