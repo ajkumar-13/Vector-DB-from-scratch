@@ -1,0 +1,37 @@
+[package]
+name = "vectordb"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[dependencies]
+
+# ═══════════════════════════════════════════════════════════════
+# ASYNC RUNTIME
+# ═══════════════════════════════════════════════════════════════
+# Tokio is the async runtime that powers our server.
+# "full" enables: multi-threaded scheduler, I/O, timers, macros.
+tokio = { version = "1", features = ["full"] }
+
+# ═══════════════════════════════════════════════════════════════
+# WEB FRAMEWORK (Post #5)
+# ═══════════════════════════════════════════════════════════════
+# Axum: type-safe, macro-free HTTP framework built on Tokio + Hyper.
+axum = "0.7"
+
+# ═══════════════════════════════════════════════════════════════
+# SERIALIZATION
+# ═══════════════════════════════════════════════════════════════
+# Serde converts Rust structs ↔ JSON (and other formats).
+# "derive" allows #[derive(Serialize, Deserialize)] on our types.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# ═══════════════════════════════════════════════════════════════
+# LOGGING & MIDDLEWARE (Post #5)
+# ═══════════════════════════════════════════════════════════════
+# Structured logging for async applications.
+tracing = "0.1"
+tracing-subscriber = "0.3"
+# Tower middleware — TraceLayer for automatic request logging.
+tower-http = { version = "0.5", features = ["trace"] }
