@@ -114,6 +114,7 @@ error[E0425]: cannot find value `name` in this scope
 
 To understand Ownership, you must visualize where your data lives.
 
+![Stack vs Heap Memory Layout](diagrams/stack-vs-heap.svg)
 
 ### The Stack
 
@@ -235,6 +236,8 @@ help: consider cloning the value if the ownership is needed
 If both `s1` and `s2` owned the memory, what happens when they both go out of scope? Both would try to free the same memory → **Double Free Error** (a classic security vulnerability).
 
 Rust prevents this by invalidating `s1` at compile time.
+
+![Ownership Move - s1 to s2](diagrams/ownership-move.svg)
 
 ### When You Actually Want a Copy: `.clone()`
 
