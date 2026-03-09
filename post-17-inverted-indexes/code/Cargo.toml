@@ -1,0 +1,15 @@
+[package]
+name = "post17-inverted-indexes"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "inverted-index"
+path = "inverted-index.rs"
+
+[[bin]]
+name = "boolean-ops"
+path = "boolean-ops.rs"
+
+[dependencies]
