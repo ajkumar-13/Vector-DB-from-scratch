@@ -617,7 +617,7 @@ fn main() {
 
 Everything so far has been conceptual examples. Now let's actually wire these types into our `vectordb` project from Post #2. This is the step that makes Phase 2 possible.
 
-### 7.1 Create the Models Module
+### 8.1 Create the Models Module
 
 Create a new file `vectordb/src/models.rs`. This is where all our core types live:
 
@@ -771,7 +771,7 @@ pub type Result<T> = std::result::Result<T, VectorDbError>;
 
 > **Why `Serialize`/`Deserialize` already?** Post #5 will use `Json<Vector>` in Axum handlers. Adding Serde derives now means we won't have to touch these types again later.
 
-### 7.2 Create the Library Root
+### 8.2 Create the Library Root
 
 Create `vectordb/src/lib.rs`:
 
@@ -784,7 +784,7 @@ Create `vectordb/src/lib.rs`:
 pub mod models;
 ```
 
-### 7.3 Update main.rs
+### 8.3 Update main.rs
 
 Replace the Post #2 "hello async" demo in `vectordb/src/main.rs` with a real integration test of our types:
 
@@ -829,7 +829,7 @@ async fn main() {
 }
 ```
 
-### 7.4 Verify Everything Works
+### 8.4 Verify Everything Works
 
 ```bash
 cd vectordb

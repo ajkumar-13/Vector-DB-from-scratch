@@ -1,0 +1,23 @@
+[package]
+name = "post04-structs-enums"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "structs-examples"
+path = "structs-examples.rs"
+
+[[bin]]
+name = "enums-examples"
+path = "enums-examples.rs"
+
+[[bin]]
+name = "models"
+path = "models.rs"
+
+[[bin]]
+name = "error-handling"
+path = "error-handling.rs"
+
+[dependencies]
