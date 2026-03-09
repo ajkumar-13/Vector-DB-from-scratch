@@ -1,0 +1,15 @@
+[package]
+name = "post11-vector-math"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "vector-math"
+path = "vector-math.rs"
+
+[[bin]]
+name = "similarity-demo"
+path = "similarity-demo.rs"
+
+[dependencies]
