@@ -1,0 +1,7 @@
+slug: 09-crash-recovery
+title: "Crash Recovery: Writing the Startup Logic to Replay Logs and Restore State"
+date: 2026-03-10
+tags: [crash-recovery, durability, wal, startup]
+hero: diagrams/recovery-process.svg
+reading_time: 15
+part: "Part II — Storage & Persistence"

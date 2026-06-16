@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 350" role="img" aria-labelledby="t d">
+  <title id="t">Stack vs Heap Memory</title>
+  <desc id="d">A side-by-side comparison of how Rust stores a Vec&lt;f32&gt; embedding. The stack holds fixed-size data: a 4-byte f32 value and 24 bytes of Vec metadata (ptr, len 768, cap 768). A pointer from that metadata crosses to the heap, where the actual 768 floats live as 768 x 4 = 3,072 bytes. The takeaway: the stack stores small, fixed-size metadata while the heap stores the variable-size payload.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.mono-sm{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:400;font-size:9px;fill:var(--vdb-ink-muted);}
+.mono-head{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;fill:var(--vdb-ink);}
+.byte{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:9px;fill:var(--vdb-ink-subtle);}
+.sub{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:10px;fill:#FFFFFF;}
+]]></style>
+
+  <defs>
+    <marker id="ptrArrow" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-accent)"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="750" height="350"/>
+
+  <!-- Title -->
+  <text class="title" x="375" y="30" text-anchor="middle">Stack vs Heap Memory</text>
+  <text class="label" x="375" y="50" text-anchor="middle">How Rust manages different types of data</text>
+
+  <!-- Stack Section -->
+  <rect class="box" x="50" y="70" width="280" height="250" rx="10"/>
+  <path class="box-success" d="M50,80 a10,10 0 0 1 10,-10 h260 a10,10 0 0 1 10,10 v25 h-280 z"/>
+  <text class="on-fill" x="190" y="92" text-anchor="middle">STACK</text>
+  <text class="sub" x="190" y="100" text-anchor="middle">Fast | Fixed Size | LIFO</text>
+
+  <!-- Stack variable 1: simple value -->
+  <rect class="box" x="70" y="135" width="240" height="55" rx="6"/>
+  <rect x="70" y="135" width="5" height="55" rx="2.5" fill="var(--vdb-success)"/>
+  <text class="mono-head" x="88" y="157">single_value: f32</text>
+  <text class="mono-sm" x="88" y="175">= 0.12345</text>
+  <text class="byte" x="295" y="175" text-anchor="end">4 bytes</text>
+
+  <!-- Stack variable 2: Vec metadata -->
+  <rect class="box" x="70" y="205" width="240" height="100" rx="6"/>
+  <rect x="70" y="205" width="5" height="100" rx="2.5" fill="var(--vdb-accent)"/>
+  <text class="mono-head" x="88" y="227">embedding: Vec&lt;f32&gt;</text>
+  <text class="mono-sm" x="88" y="247">├─ ptr: 0x7f...</text>
+  <text class="mono-sm" x="88" y="263">├─ len: 768</text>
+  <text class="mono-sm" x="88" y="279">└─ cap: 768</text>
+  <text class="byte" x="295" y="294" text-anchor="end">24 bytes</text>
+  <text class="byte" x="295" y="305" text-anchor="end">(metadata only)</text>
+
+  <!-- Pointer Arrow -->
+  <line class="flow" x1="312" y1="248" x2="430" y2="175" stroke="var(--vdb-accent)" marker-end="url(#ptrArrow)"/>
+  <text class="head" x="352" y="198" fill="var(--vdb-accent)">pointer</text>
+
+  <!-- Heap Section -->
+  <rect class="box" x="420" y="70" width="280" height="250" rx="10"/>
+  <path class="box-primary" d="M420,80 a10,10 0 0 1 10,-10 h260 a10,10 0 0 1 10,10 v25 h-280 z"/>
+  <text class="on-fill" x="560" y="92" text-anchor="middle">HEAP</text>
+  <text class="sub" x="560" y="100" text-anchor="middle">Flexible | Dynamic | Random Access</text>
+
+  <!-- Heap data -->
+  <rect class="box" x="440" y="135" width="240" height="105" rx="6"/>
+  <rect x="440" y="135" width="5" height="105" rx="2.5" fill="var(--vdb-primary)"/>
+  <text class="mono-head" x="458" y="160">Actual Vector Data:</text>
+  <text class="mono-sm" x="458" y="185">[0.1, 0.2, 0.3, 0.4, ...]</text>
+  <text class="mono-sm" x="458" y="205">... 768 floats total ...</text>
+  <text class="head" x="458" y="227" fill="var(--vdb-primary)">768 × 4 = 3,072 bytes</text>
+
+  <!-- Explanations -->
+  <rect x="440" y="255" width="240" height="50" rx="6" fill="var(--vdb-neutral-1)" stroke="var(--vdb-border)" stroke-width="1"/>
+  <text class="label" x="560" y="277" text-anchor="middle">Stack holds fixed-size metadata</text>
+  <text class="label" x="560" y="293" text-anchor="middle">Heap holds variable-size data</text>
+</svg>

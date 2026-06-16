@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 650" role="img" aria-labelledby="t d">
+  <title id="t">VectorDB project structure</title>
+  <desc id="d">A directory tree for the vectordb Cargo project, showing the root manifest files (Cargo.toml, Cargo.lock, README.md) and the src directory with main.rs and lib.rs. The src tree is organised into three stacked layers: Transport (HTTP interface), Core Engine (business logic), and Storage (persistence), each listing its module files. The takeaway is that the codebase follows a canonical three-layer architecture flowing Transport to Engine to Storage.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.mono-sm{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:11px;fill:var(--vdb-ink);}
+.subtitle{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.layerhead{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:10px;}
+.tree{stroke:var(--vdb-ink-subtle);stroke-width:1;fill:none;}
+.folder{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:0.75;}
+.file{fill:var(--vdb-surface);stroke:var(--vdb-ink-muted);stroke-width:0.75;}
+]]></style>
+
+  <rect class="bg" x="0" y="0" width="700" height="650"/>
+
+  <!-- Title -->
+  <text class="title" x="350" y="32" text-anchor="middle">VectorDB Project Structure</text>
+  <text class="subtitle" x="350" y="52" text-anchor="middle">Three-Layer Architecture: Transport to Engine to Storage</text>
+
+  <!-- Root container -->
+  <rect class="box" x="60" y="70" width="580" height="560" rx="8"/>
+
+  <!-- vectordb/ header band -->
+  <path class="box-accent" d="M60 78 a8 8 0 0 1 8 -8 h564 a8 8 0 0 1 8 8 v27 h-580 z"/>
+  <!-- folder marker -->
+  <path class="folder" d="M76 84 h7 l2 3 h11 v9 h-20 z"/>
+  <text class="mono on-fill" x="105" y="93" font-weight="700">vectordb/</text>
+
+  <!-- Root files -->
+  <g>
+    <rect class="file" x="92" y="122" width="9" height="11" rx="1"/>
+    <text class="mono-sm" x="108" y="131">Cargo.toml</text>
+    <text class="label" x="290" y="131">Project manifest (dependencies)</text>
+
+    <rect class="file" x="92" y="143" width="9" height="11" rx="1"/>
+    <text class="mono-sm" x="108" y="152">Cargo.lock</text>
+    <text class="label" x="290" y="152">Lockfile (auto-generated)</text>
+
+    <rect class="file" x="92" y="164" width="9" height="11" rx="1"/>
+    <text class="mono-sm" x="108" y="173">README.md</text>
+    <text class="label" x="290" y="173">Documentation</text>
+  </g>
+
+  <!-- tree spine for root level -->
+  <path class="tree" d="M86 110 V196"/>
+  <path class="tree" d="M86 128 H90 M86 149 H90 M86 170 H90 M86 196 H90"/>
+
+  <!-- src/ folder -->
+  <path class="folder" d="M92 189 h7 l2 3 h11 v9 h-20 z"/>
+  <text class="mono-sm" x="120" y="200" font-weight="700">src/</text>
+
+  <!-- main.rs and lib.rs -->
+  <rect class="file" x="122" y="216" width="9" height="11" rx="1"/>
+  <text class="mono-sm" x="138" y="225">main.rs</text>
+  <text class="label" x="290" y="225">Entry point: CLI, starts server</text>
+
+  <rect class="file" x="122" y="237" width="9" height="11" rx="1"/>
+  <text class="mono-sm" x="138" y="246">lib.rs</text>
+  <text class="label" x="290" y="246">Library root: public API</text>
+
+  <!-- tree spine under src -->
+  <path class="tree" d="M116 206 V570"/>
+  <path class="tree" d="M116 222 H120 M116 243 H120"/>
+  <path class="tree" d="M116 312 H113 M116 417 H113 M116 522 H113"/>
+
+  <!-- LAYER 1: Transport -->
+  <rect class="box" x="115" y="265" width="510" height="95" rx="6" stroke="var(--vdb-primary)" stroke-width="1.5"/>
+  <rect x="115" y="265" width="6" height="95" rx="0" fill="var(--vdb-primary)"/>
+  <text class="layerhead" x="132" y="285" fill="var(--vdb-primary)">LAYER 1: TRANSPORT (HTTP Interface)</text>
+
+  <path class="folder" d="M132 298 h7 l2 3 h11 v9 h-20 z"/>
+  <text class="mono-sm" x="160" y="309" font-weight="700">transport/</text>
+
+  <rect class="file" x="162" y="316" width="8" height="10" rx="1"/>
+  <text class="mono-sm" x="177" y="325" font-size="11">mod.rs</text>
+  <text class="label" x="300" y="325">Module declaration</text>
+
+  <rect class="file" x="162" y="330" width="8" height="10" rx="1"/>
+  <text class="mono-sm" x="177" y="339" font-size="11">routes.rs</text>
+  <text class="label" x="300" y="339">Axum route definitions</text>
+
+  <rect class="file" x="162" y="344" width="8" height="10" rx="1"/>
+  <text class="mono-sm" x="177" y="353" font-size="11">handlers.rs</text>
+  <text class="label" x="300" y="353">Request handlers</text>
+
+  <!-- LAYER 2: Engine -->
+  <rect class="box" x="115" y="370" width="510" height="95" rx="6" stroke="var(--vdb-warn)" stroke-width="1.5"/>
+  <rect x="115" y="370" width="6" height="95" fill="var(--vdb-warn)"/>
+  <text class="layerhead" x="132" y="390" fill="var(--vdb-warn)">LAYER 2: CORE ENGINE (Business Logic)</text>
+
+  <path class="folder" d="M132 403 h7 l2 3 h11 v9 h-20 z"/>
+  <text class="mono-sm" x="160" y="414" font-weight="700">engine/</text>
+
+  <rect class="file" x="162" y="421" width="8" height="10" rx="1"/>
+  <text class="mono-sm" x="177" y="430" font-size="11">mod.rs</text>
+  <text class="label" x="300" y="430">Module declaration</text>
+
+  <rect class="file" x="162" y="435" width="8" height="10" rx="1"/>
+  <text class="mono-sm" x="177" y="444" font-size="11">query.rs</text>
+  <text class="label" x="300" y="444">Query planning &amp; execution</text>
+
+  <rect class="file" x="162" y="449" width="8" height="10" rx="1"/>
+  <text class="mono-sm" x="177" y="458" font-size="11">vector_index.rs</text>
+  <text class="label" x="300" y="458">HNSW graph for similarity search</text>
+
+  <!-- LAYER 3: Storage -->
+  <rect class="box" x="115" y="475" width="510" height="110" rx="6" stroke="var(--vdb-success)" stroke-width="1.5"/>
+  <rect x="115" y="475" width="6" height="110" fill="var(--vdb-success)"/>
+  <text class="layerhead" x="132" y="495" fill="var(--vdb-success)">LAYER 3: STORAGE (Persistence)</text>
+
+  <path class="folder" d="M132 508 h7 l2 3 h11 v9 h-20 z"/>
+  <text class="mono-sm" x="160" y="519" font-weight="700">storage/</text>
+
+  <rect class="file" x="162" y="526" width="8" height="10" rx="1"/>
+  <text class="mono-sm" x="177" y="535" font-size="11">mod.rs</text>
+  <text class="label" x="300" y="535">Module declaration</text>
+
+  <rect class="file" x="162" y="540" width="8" height="10" rx="1"/>
+  <text class="mono-sm" x="177" y="549" font-size="11">wal.rs</text>
+  <text class="label" x="300" y="549">Write-Ahead Log implementation</text>
+
+  <rect class="file" x="162" y="554" width="8" height="10" rx="1"/>
+  <text class="mono-sm" x="177" y="563" font-size="11">segment.rs</text>
+  <text class="label" x="300" y="563">Memory-mapped segment files</text>
+
+  <rect class="file" x="162" y="568" width="8" height="10" rx="1"/>
+  <text class="mono-sm" x="177" y="577" font-size="11">recovery.rs</text>
+  <text class="label" x="300" y="577">Crash recovery logic</text>
+
+  <!-- Legend -->
+  <rect class="box" x="430" y="595" width="200" height="48" rx="4" fill="var(--vdb-neutral-1)"/>
+  <text class="head" x="444" y="611" font-size="10">Legend</text>
+  <path class="folder" d="M444 618 h7 l2 3 h11 v9 h-20 z"/>
+  <text class="label" x="472" y="628">Folder</text>
+  <rect class="file" x="528" y="618" width="9" height="11" rx="1"/>
+  <text class="label" x="544" y="628">File</text>
+  <text class="mono-sm" x="444" y="640" font-size="10">mod.rs = Module entry</text>
+</svg>

@@ -1,0 +1,7 @@
+slug: 20-production
+title: "Production Hardening: Quantization, Docker, and the Final Mile"
+date: 2026-03-10
+tags: [production, quantization, docker, deployment]
+hero: diagrams/architecture-overview.svg
+reading_time: 20
+part: "Part IV — Hybrid Search & Production"

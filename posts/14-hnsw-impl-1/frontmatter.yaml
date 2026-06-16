@@ -1,0 +1,7 @@
+slug: 14-hnsw-impl-1
+title: "Implementing HNSW Part 1: Building the Graph Structure"
+date: 2026-03-10
+tags: [hnsw, graph-construction, indexing, implementation]
+hero: diagrams/hnsw-insertion.svg
+reading_time: 20
+part: "Part III — Vector Search & Indexing"

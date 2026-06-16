@@ -1,0 +1,7 @@
+slug: 13-hnsw-intro
+title: "Introduction to HNSW: The Theory of Approximate Nearest Neighbors and Graph-Based Search"
+date: 2026-03-10
+tags: [hnsw, ann, graph-search, theory]
+hero: diagrams/hnsw-layers.svg
+reading_time: 20
+part: "Part III — Vector Search & Indexing"

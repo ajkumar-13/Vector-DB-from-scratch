@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 450" role="img" aria-labelledby="t d">
+  <title id="t">Ownership Decision Flowchart</title>
+  <desc id="d">A decision flowchart for choosing how to pass data in Rust. Starting from "How to pass data?", three questions branch toward outcomes: if you need to modify it use a mutable borrow (&amp;mut T); otherwise if you do not need ownership beyond the call use an immutable borrow (&amp;T or &amp;[T]); if you do need ownership, Move it, or .clone() only when a separate deep copy is required. The takeaway: prefer cheap immutable borrows first and avoid clone unless necessary.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.on-fill-mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:600;font-size:13px;fill:#FFFFFF;}
+.on-fill-sub{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:9px;fill:#FFFFFF;}
+.branch{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:10px;fill:var(--vdb-ink-muted);}
+.box-alert{fill:var(--vdb-alert);stroke:var(--vdb-ink);stroke-width:1.5;}
+]]></style>
+
+  <rect class="bg" x="0" y="0" width="700" height="450"/>
+
+  <defs>
+    <marker id="flowArrow" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-ink)"/>
+    </marker>
+    <marker id="mutedArrow" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-ink-muted)"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle" class="title">Ownership Decision Flowchart</text>
+  <text x="350" y="50" text-anchor="middle" class="label">How should I pass this data?</text>
+
+  <!-- Start -->
+  <ellipse cx="350" cy="90" rx="100" ry="25" class="box-primary"/>
+  <text x="350" y="94" text-anchor="middle" class="on-fill">How to pass data?</text>
+
+  <!-- Arrow to Q1 -->
+  <line x1="350" y1="115" x2="350" y2="145" class="flow" marker-end="url(#flowArrow)"/>
+
+  <!-- Question 1: Need to modify? -->
+  <rect x="260" y="150" width="180" height="50" rx="6" class="box-accent"/>
+  <text x="350" y="179" text-anchor="middle" class="on-fill">Need to modify it?</text>
+
+  <!-- Yes to Q1 -> Mutable borrow -->
+  <line x1="440" y1="175" x2="520" y2="175" class="flow" marker-end="url(#flowArrow)"/>
+  <text x="480" y="167" text-anchor="middle" class="branch">Yes</text>
+
+  <rect x="525" y="150" width="130" height="50" rx="6" class="box-primary"/>
+  <text x="590" y="172" text-anchor="middle" class="on-fill-mono">&amp;mut T</text>
+  <text x="590" y="190" text-anchor="middle" class="on-fill-sub">Mutable borrow</text>
+
+  <!-- No to Q1 -> Q2 -->
+  <line x1="350" y1="200" x2="350" y2="235" class="flow" marker-end="url(#flowArrow)"/>
+  <text x="366" y="222" class="branch">No</text>
+
+  <!-- Question 2: Need ownership beyond call? -->
+  <rect x="230" y="240" width="240" height="50" rx="6" class="box-accent"/>
+  <text x="350" y="262" text-anchor="middle" class="on-fill">Need ownership beyond</text>
+  <text x="350" y="278" text-anchor="middle" class="on-fill">this function call?</text>
+
+  <!-- No to Q2 -> Immutable borrow -->
+  <line x1="230" y1="265" x2="155" y2="265" class="flow" marker-end="url(#flowArrow)"/>
+  <text x="190" y="257" text-anchor="middle" class="branch">No</text>
+
+  <rect x="30" y="240" width="120" height="55" rx="6" class="box-success"/>
+  <text x="90" y="263" text-anchor="middle" class="on-fill-mono">&amp;T or &amp;[T]</text>
+  <text x="90" y="281" text-anchor="middle" class="on-fill-sub">Immutable borrow</text>
+
+  <!-- Yes to Q2 -> Q3 -->
+  <line x1="350" y1="290" x2="350" y2="325" class="flow" marker-end="url(#flowArrow)"/>
+  <text x="366" y="312" class="branch">Yes</text>
+
+  <!-- Question 3: Need separate copy? -->
+  <rect x="250" y="330" width="200" height="45" rx="6" class="box-accent"/>
+  <text x="350" y="357" text-anchor="middle" class="on-fill">Need separate copy?</text>
+
+  <!-- No to Q3 -> Move -->
+  <line x1="250" y1="352" x2="155" y2="352" class="flow" marker-end="url(#flowArrow)"/>
+  <text x="200" y="344" text-anchor="middle" class="branch">No</text>
+
+  <rect x="30" y="325" width="120" height="55" rx="6" class="box" stroke="var(--vdb-warn)"/>
+  <text x="90" y="347" text-anchor="middle" class="head" fill="var(--vdb-warn)">Move</text>
+  <text x="90" y="365" text-anchor="middle" class="label">Transfer ownership</text>
+
+  <!-- Yes to Q3 -> Clone -->
+  <line x1="450" y1="352" x2="525" y2="352" class="flow" marker-end="url(#flowArrow)"/>
+  <text x="490" y="344" text-anchor="middle" class="branch">Yes</text>
+
+  <rect x="530" y="325" width="130" height="55" rx="6" class="box-alert"/>
+  <text x="595" y="345" text-anchor="middle" class="on-fill-mono">.clone()</text>
+  <text x="595" y="361" text-anchor="middle" class="on-fill-sub">Deep copy</text>
+  <!-- status marker: small triangle in place of warning glyph -->
+  <path d="M555,376 L561,366 L567,376 z" fill="#FFFFFF" stroke="var(--vdb-ink)" stroke-width="0.75"/>
+  <rect x="559.5" y="370" width="3" height="3" fill="var(--vdb-alert)"/>
+  <text x="572" y="377" class="on-fill-sub">expensive!</text>
+
+  <!-- Legend -->
+  <rect x="30" y="400" width="280" height="40" rx="4" class="box" fill="var(--vdb-neutral-1)"/>
+  <text x="45" y="418" class="head" font-size="9">Preferred:</text>
+  <text x="100" y="418" class="label" font-size="9" fill="var(--vdb-success)">&amp;T (cheap)</text>
+  <text x="158" y="418" class="label" font-size="9">&#8594;</text>
+  <text x="172" y="418" class="label" font-size="9" fill="var(--vdb-primary)">&amp;mut T</text>
+  <text x="216" y="418" class="label" font-size="9">&#8594;</text>
+  <text x="232" y="418" class="label" font-size="9" fill="var(--vdb-warn)">Move</text>
+  <text x="45" y="432" class="label" font-size="9" fill="var(--vdb-alert)">Avoid: .clone() unless necessary</text>
+</svg>

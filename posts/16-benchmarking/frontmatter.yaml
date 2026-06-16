@@ -1,0 +1,7 @@
+slug: 16-benchmarking
+title: "Benchmarking the Search Engine: Brute Force vs HNSW Performance Comparison at Scale"
+date: 2026-03-10
+tags: [benchmarking, performance, recall, latency]
+hero: diagrams/latency-recall.svg
+reading_time: 15
+part: "Part III — Vector Search & Indexing"

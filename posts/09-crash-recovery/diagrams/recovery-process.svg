@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 450" role="img" aria-labelledby="t d">
+  <title id="t">Crash Recovery: From Chaos to Consistency</title>
+  <desc id="d">A timeline shows normal operation interrupted by a crash, a recovery phase, and a return to a consistent state. The recovery process has three steps: load the last checkpoint (LSN 1000), scan the WAL for entries after that checkpoint (LSN 1001-1500), and replay each operation in order. The WAL strip shows entries 1001-1004 applied while entry 1005 is partial/invalid and truncated, with CRC32 validation, idempotent replay, and trailing-entry truncation keeping the rebuilt state correct.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.sub{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:10px;fill:var(--vdb-ink-muted);}
+.smono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:8px;}
+.tag{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:10px;}
+.box-alert{fill:var(--vdb-surface);stroke:var(--vdb-alert);stroke-width:1.5;}
+]]></style>
+
+  <defs>
+    <marker id="recArrow" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-ink)"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="750" height="450"/>
+
+  <!-- Title -->
+  <text class="title" x="375" y="30" text-anchor="middle">Crash Recovery: From Chaos to Consistency</text>
+  <text class="label" x="375" y="48" text-anchor="middle">Replaying WAL entries to restore database state</text>
+
+  <!-- Timeline -->
+  <line class="flow-muted" x1="50" y1="90" x2="700" y2="90"/>
+
+  <!-- Pre-crash state -->
+  <rect class="box-success" x="60" y="75" width="200" height="30" rx="4"/>
+  <text class="on-fill" x="160" y="95" text-anchor="middle" style="font-size:11px">Normal Operation</text>
+
+  <!-- Crash point -->
+  <rect class="box-alert" x="270" y="70" width="80" height="40" rx="4"/>
+  <path class="flow" d="M298,80 L322,100 M322,80 L298,100" stroke="var(--vdb-alert)"/>
+  <text class="tag" x="310" y="105" text-anchor="middle" fill="var(--vdb-alert)" style="font-size:9px">CRASH</text>
+
+  <!-- Recovery -->
+  <rect class="box-accent" x="360" y="75" width="140" height="30" rx="4"/>
+  <text class="on-fill" x="430" y="95" text-anchor="middle" style="font-size:11px">Recovery Phase</text>
+
+  <!-- Back to normal -->
+  <rect class="box-success" x="510" y="75" width="180" height="30" rx="4"/>
+  <text class="on-fill" x="600" y="95" text-anchor="middle" style="font-size:11px">Consistent State</text>
+
+  <!-- Recovery Process Detail -->
+  <rect class="box" x="50" y="130" width="650" height="300" rx="10"/>
+  <text class="head" x="375" y="160" text-anchor="middle" style="font-size:14px">Recovery Process</text>
+
+  <!-- Step 1: Load Checkpoint -->
+  <rect class="box-primary" x="80" y="180" width="180" height="80" rx="8"/>
+  <text class="on-fill" x="170" y="205" text-anchor="middle">1. Load Checkpoint</text>
+  <text class="on-fill" x="170" y="225" text-anchor="middle" style="font-weight:400;font-size:10px">Last known good</text>
+  <text class="on-fill" x="170" y="240" text-anchor="middle" style="font-weight:400;font-size:10px">state on disk</text>
+  <text x="170" y="255" text-anchor="middle" class="smono" fill="#FFFFFF">LSN: 1000</text>
+
+  <line class="flow" x1="260" y1="220" x2="296" y2="220" marker-end="url(#recArrow)"/>
+
+  <!-- Step 2: Scan WAL -->
+  <rect class="box-accent" x="300" y="180" width="180" height="80" rx="8"/>
+  <text class="on-fill" x="390" y="205" text-anchor="middle">2. Scan WAL</text>
+  <text class="on-fill" x="390" y="225" text-anchor="middle" style="font-weight:400;font-size:10px">Find entries after</text>
+  <text class="on-fill" x="390" y="240" text-anchor="middle" style="font-weight:400;font-size:10px">checkpoint LSN</text>
+  <text x="390" y="255" text-anchor="middle" class="smono" fill="#FFFFFF">LSN: 1001-1500</text>
+
+  <line class="flow" x1="480" y1="220" x2="516" y2="220" marker-end="url(#recArrow)"/>
+
+  <!-- Step 3: Replay -->
+  <rect class="box-success" x="520" y="180" width="160" height="80" rx="8"/>
+  <text class="on-fill" x="600" y="205" text-anchor="middle">3. Replay</text>
+  <text class="on-fill" x="600" y="225" text-anchor="middle" style="font-weight:400;font-size:10px">Re-apply each</text>
+  <text class="on-fill" x="600" y="240" text-anchor="middle" style="font-weight:400;font-size:10px">operation in order</text>
+  <text x="600" y="255" text-anchor="middle" class="smono" fill="#FFFFFF">State: Current</text>
+
+  <!-- WAL visualization -->
+  <rect class="box" x="80" y="290" width="600" height="50" rx="6" fill="var(--vdb-neutral-1)"/>
+  <text class="head" x="90" y="312" style="font-size:10px">WAL:</text>
+
+  <!-- WAL entries (applied) -->
+  <rect class="box-success" x="130" y="295" width="80" height="35" rx="3"/>
+  <text x="170" y="309" text-anchor="middle" class="smono" fill="#FFFFFF">INSERT 1001</text>
+  <text x="170" y="323" text-anchor="middle" style="font-family:Inter,system-ui,sans-serif;font-size:7px;fill:#FFFFFF;font-weight:600">applied</text>
+
+  <rect class="box-success" x="215" y="295" width="80" height="35" rx="3"/>
+  <text x="255" y="309" text-anchor="middle" class="smono" fill="#FFFFFF">UPDATE 1002</text>
+  <text x="255" y="323" text-anchor="middle" style="font-family:Inter,system-ui,sans-serif;font-size:7px;fill:#FFFFFF;font-weight:600">applied</text>
+
+  <rect class="box-success" x="300" y="295" width="80" height="35" rx="3"/>
+  <text x="340" y="309" text-anchor="middle" class="smono" fill="#FFFFFF">DELETE 1003</text>
+  <text x="340" y="323" text-anchor="middle" style="font-family:Inter,system-ui,sans-serif;font-size:7px;fill:#FFFFFF;font-weight:600">applied</text>
+
+  <rect class="box-success" x="385" y="295" width="80" height="35" rx="3"/>
+  <text x="425" y="309" text-anchor="middle" class="smono" fill="#FFFFFF">INSERT 1004</text>
+  <text x="425" y="323" text-anchor="middle" style="font-family:Inter,system-ui,sans-serif;font-size:7px;fill:#FFFFFF;font-weight:600">applied</text>
+
+  <!-- WAL entry (partial/invalid) -->
+  <rect class="box-alert" x="470" y="295" width="80" height="35" rx="3"/>
+  <text x="510" y="309" text-anchor="middle" class="smono" fill="var(--vdb-alert)">INSERT 1005</text>
+  <text x="510" y="323" text-anchor="middle" style="font-family:Inter,system-ui,sans-serif;font-size:7px;fill:var(--vdb-alert);font-weight:600">partial/invalid</text>
+
+  <!-- Truncate -->
+  <rect class="box" x="555" y="295" width="110" height="35" rx="3" fill="var(--vdb-neutral-1)"/>
+  <path class="flow" d="M627,312 L613,312" marker-end="url(#recArrow)" stroke="var(--vdb-ink-muted)"/>
+  <text x="632" y="316" text-anchor="start" class="sub" style="font-size:9px">truncate</text>
+
+  <!-- Key points -->
+  <rect x="80" y="368" width="9" height="9" rx="2" class="box-success"/>
+  <text class="label" x="96" y="376" style="font-size:10px;fill:var(--vdb-ink)">CRC32 validation ensures corrupted entries are detected</text>
+  <rect x="80" y="388" width="9" height="9" rx="2" class="box-success"/>
+  <text class="label" x="96" y="396" style="font-size:10px;fill:var(--vdb-ink)">Idempotent operations can be safely replayed</text>
+  <rect x="80" y="408" width="9" height="9" rx="2" class="box-success"/>
+  <text class="label" x="96" y="416" style="font-size:10px;fill:var(--vdb-ink)">Truncate incomplete entries at end of WAL</text>
+</svg>

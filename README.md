@@ -83,43 +83,43 @@ cargo run
 ### Phase 1: Foundation (Posts 1-4)
 | Post | Title | Topics |
 |------|-------|--------|
-| 01 | [The Blueprint](post-01-the-blueprint/blog.md) | Architecture design, vectors, embeddings, cosine similarity |
-| 02 | [Setting Up the Forge](post-02-setting-up-the-forge/blog.md) | Rust toolchain, VS Code, async runtime |
-| 03 | [Ownership & Borrowing](post-03-ownership-borrowing-memory/blog.md) | Memory safety, the borrow checker |
-| 04 | [Structs, Enums & Errors](post-04-structs-enums-error-handling/blog.md) | Domain modeling, Result type |
+| 01 | [The Blueprint](posts/01-the-blueprint/index.md) | Architecture design, vectors, embeddings, cosine similarity |
+| 02 | [Setting Up the Forge](posts/02-setting-up-the-forge/index.md) | Rust toolchain, VS Code, async runtime |
+| 03 | [Ownership & Borrowing](posts/03-ownership-borrowing-memory/index.md) | Memory safety, the borrow checker |
+| 04 | [Structs, Enums & Errors](posts/04-structs-enums-error-handling/index.md) | Domain modeling, Result type |
 
 ### Phase 2: Storage Layer (Posts 5-10)
 | Post | Title | Topics |
 |------|-------|--------|
-| 05 | [Async & Axum](post-05-async-axum/blog.md) | HTTP server, JSON endpoints |
-| 06 | [Binary File Formats](post-06-binary-file-formats/blog.md) | Custom segment format, endianness |
-| 07 | [Memory-Mapped Files](post-07-mmap/blog.md) | Zero-copy I/O with `memmap2` |
-| 08 | [Write-Ahead Logging](post-08-wal/blog.md) | Durability, crash safety |
-| 09 | [Crash Recovery](post-09-crash-recovery/blog.md) | Replaying WAL, consistency |
-| 10 | [Concurrency](post-10-concurrency/blog.md) | RwLock, Arc, thread safety |
+| 05 | [Async & Axum](posts/05-async-axum/index.md) | HTTP server, JSON endpoints |
+| 06 | [Binary File Formats](posts/06-binary-file-formats/index.md) | Custom segment format, endianness |
+| 07 | [Memory-Mapped Files](posts/07-mmap/index.md) | Zero-copy I/O with `memmap2` |
+| 08 | [Write-Ahead Logging](posts/08-wal/index.md) | Durability, crash safety |
+| 09 | [Crash Recovery](posts/09-crash-recovery/index.md) | Replaying WAL, consistency |
+| 10 | [Concurrency](posts/10-concurrency/index.md) | RwLock, Arc, thread safety |
 
 ### Phase 3: Vector Search (Posts 11-16)
 | Post | Title | Topics |
 |------|-------|--------|
-| 11 | [Vector Math](post-11-vector-math/blog.md) | Dot product, cosine distance, norms |
-| 12 | [Brute Force Search](post-12-brute-force/blog.md) | Linear scan, baseline performance |
-| 12.5 | [Heaps Deep Dive](post-12.5-heaps-deep-dive/blog.md) | Priority queues, top-k selection |
-| 13 | [HNSW Introduction](post-13-hnsw-intro/blog.md) | Navigable small world graphs |
-| 14 | [HNSW Implementation I](post-14-hnsw-impl-1/blog.md) | Graph construction, insertion |
-| 15 | [HNSW Implementation II](post-15-hnsw-impl-2/blog.md) | Search algorithm, parameters |
-| 16 | [Benchmarking](post-16-benchmarking/blog.md) | Criterion, performance testing |
+| 11 | [Vector Math](posts/11-vector-math/index.md) | Dot product, cosine distance, norms |
+| 12 | [Brute Force Search](posts/12-brute-force/index.md) | Linear scan, baseline performance |
+| 12.5 | [Heaps Deep Dive](posts/12.5-heaps-deep-dive/index.md) | Priority queues, top-k selection |
+| 13 | [HNSW Introduction](posts/13-hnsw-intro/index.md) | Navigable small world graphs |
+| 14 | [HNSW Implementation I](posts/14-hnsw-impl-1/index.md) | Graph construction, insertion |
+| 15 | [HNSW Implementation II](posts/15-hnsw-impl-2/index.md) | Search algorithm, parameters |
+| 16 | [Benchmarking](posts/16-benchmarking/index.md) | Criterion, performance testing |
 
 ### Phase 4: Hybrid Search (Posts 17-19)
 | Post | Title | Topics |
 |------|-------|--------|
-| 17 | [Inverted Indexes](post-17-inverted-indexes/blog.md) | Text search fundamentals |
-| 18 | [Tantivy Integration](post-18-tantivy-hybrid/blog.md) | Metadata filtering, hybrid queries |
-| 19 | [Query Planning](post-19-query-planning/blog.md) | Cost-based optimization |
+| 17 | [Inverted Indexes](posts/17-inverted-indexes/index.md) | Text search fundamentals |
+| 18 | [Tantivy Integration](posts/18-tantivy-hybrid/index.md) | Metadata filtering, hybrid queries |
+| 19 | [Query Planning](posts/19-query-planning/index.md) | Cost-based optimization |
 
 ### Phase 5: Production (Post 20)
 | Post | Title | Topics |
 |------|-------|--------|
-| 20 | [Production Hardening](post-20-production/blog.md) | Quantization, Docker, CI/CD, SIMD |
+| 20 | [Production Hardening](posts/20-production/index.md) | Quantization, Docker, CI/CD, SIMD |
 
 ---
 

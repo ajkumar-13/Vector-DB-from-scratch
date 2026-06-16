@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" role="img" aria-labelledby="t d">
+  <title id="t">Ownership move: let s2 = s1;</title>
+  <desc id="d">Two panels compare memory before and after a move in Rust. Before, the variable s1 (a String with ptr, len 5, cap 5) owns the heap data "hello". After the statement let s2 = s1, s1 becomes invalid and cannot be used, while s2 now owns the same heap data. The takeaway: because only one owner can drop the data, the move prevents a double-free.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.mono-sm{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:9px;fill:var(--vdb-ink-muted);}
+.mono-on{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.panel-head{fill:var(--vdb-neutral-1);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-invalid{fill:var(--vdb-surface);stroke:var(--vdb-alert);stroke-width:1.5;stroke-dasharray:5 3;}
+.flow-invalid{stroke:var(--vdb-alert);stroke-width:1.5;fill:none;stroke-dasharray:4 2;}
+.flow-success{stroke:var(--vdb-success);stroke-width:1.5;fill:none;}
+]]></style>
+
+  <defs>
+    <marker id="moveArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="var(--vdb-ink)"/>
+    </marker>
+    <marker id="ownArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-success)"/>
+    </marker>
+    <marker id="invalidArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-alert)"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="800" height="400"/>
+
+  <!-- Title -->
+  <text class="title" x="400" y="30" text-anchor="middle">Ownership Move: let s2 = s1;</text>
+  <text class="label" x="400" y="50" text-anchor="middle">Ownership transfers, original becomes invalid</text>
+
+  <!-- BEFORE Section -->
+  <rect class="box" x="40" y="70" width="320" height="280" rx="10"/>
+  <path class="panel-head" d="M40,80 a10,10 0 0 1 10,-10 h300 a10,10 0 0 1 10,10 v25 h-320 z"/>
+  <text class="head" x="200" y="93" text-anchor="middle">BEFORE</text>
+  <text class="mono" x="200" y="128" text-anchor="middle" font-size="11">let s1 = String::from("hello");</text>
+
+  <!-- s1 variable (valid) -->
+  <rect class="box" x="70" y="145" width="130" height="85" rx="6" stroke="var(--vdb-success)"/>
+  <text class="mono" x="135" y="167" text-anchor="middle" font-size="12">s1: String</text>
+  <text class="mono-sm" x="85" y="187">&#8866;&#9472; ptr</text>
+  <text class="mono-sm" x="85" y="203">&#8866;&#9472; len: 5</text>
+  <text class="mono-sm" x="85" y="219">&#9492;&#9472; cap: 5</text>
+
+  <!-- Heap data (before) -->
+  <rect class="box-primary" x="230" y="165" width="110" height="45" rx="6"/>
+  <text class="mono-on" x="285" y="192" text-anchor="middle">"hello"</text>
+
+  <!-- Ownership arrow (before) -->
+  <line class="flow-success" x1="200" y1="187" x2="228" y2="187" marker-end="url(#ownArrow)"/>
+  <text class="label" x="214" y="178" text-anchor="middle" font-size="8" fill="var(--vdb-success)">owns</text>
+
+  <!-- Arrow between sections -->
+  <line class="flow" x1="370" y1="210" x2="420" y2="210" marker-end="url(#moveArrow)"/>
+  <text class="mono" x="395" y="198" text-anchor="middle" font-size="10">let s2 = s1;</text>
+
+  <!-- AFTER Section -->
+  <rect class="box" x="440" y="70" width="320" height="280" rx="10"/>
+  <path class="panel-head" d="M440,80 a10,10 0 0 1 10,-10 h300 a10,10 0 0 1 10,10 v25 h-320 z"/>
+  <text class="head" x="600" y="93" text-anchor="middle">AFTER</text>
+  <text class="mono" x="600" y="128" text-anchor="middle" font-size="11">s1 moved to s2</text>
+
+  <!-- s1 variable (INVALID) -->
+  <rect class="box-invalid" x="470" y="145" width="130" height="85" rx="6"/>
+  <text class="mono" x="535" y="167" text-anchor="middle" font-size="12" fill="var(--vdb-alert)">s1: INVALID</text>
+  <!-- status marker: small alert square -->
+  <rect x="497" y="181" width="9" height="9" rx="1.5" fill="var(--vdb-alert)" stroke="var(--vdb-ink)" stroke-width="0.75"/>
+  <text class="label" x="512" y="189" font-size="10" fill="var(--vdb-alert)">moved</text>
+  <text class="label" x="535" y="210" text-anchor="middle" font-size="9" fill="var(--vdb-ink-subtle)">Cannot be used</text>
+
+  <!-- Invalid arrow -->
+  <line class="flow-invalid" x1="600" y1="187" x2="628" y2="187" marker-end="url(#invalidArrow)"/>
+  <!-- status marker: crossed-out link (X drawn with two strokes, no glyph) -->
+  <line x1="610" y1="173" x2="618" y2="181" stroke="var(--vdb-alert)" stroke-width="1.5"/>
+  <line x1="618" y1="173" x2="610" y2="181" stroke="var(--vdb-alert)" stroke-width="1.5"/>
+
+  <!-- s2 variable (valid) -->
+  <rect class="box" x="470" y="250" width="130" height="85" rx="6" stroke="var(--vdb-success)"/>
+  <text class="mono" x="535" y="272" text-anchor="middle" font-size="12">s2: String</text>
+  <text class="mono-sm" x="485" y="292">&#8866;&#9472; ptr</text>
+  <text class="mono-sm" x="485" y="308">&#8866;&#9472; len: 5</text>
+  <text class="mono-sm" x="485" y="324">&#9492;&#9472; cap: 5</text>
+
+  <!-- Heap data (after) -->
+  <rect class="box-primary" x="630" y="250" width="110" height="45" rx="6"/>
+  <text class="mono-on" x="685" y="277" text-anchor="middle">"hello"</text>
+
+  <!-- Ownership arrow (after) -->
+  <line class="flow-success" x1="600" y1="292" x2="628" y2="273" marker-end="url(#ownArrow)"/>
+  <text class="label" x="620" y="298" font-size="8" fill="var(--vdb-success)">owns</text>
+
+  <!-- Key insight box -->
+  <rect class="box" x="195" y="358" width="410" height="34" rx="6" stroke="var(--vdb-accent)"/>
+  <rect x="208" y="370" width="9" height="9" rx="1.5" fill="var(--vdb-accent)" stroke="var(--vdb-ink)" stroke-width="0.75"/>
+  <text class="head" x="226" y="379" font-size="11" fill="var(--vdb-ink)">No double-free: Only one owner can drop the data!</text>
+</svg>

@@ -1,0 +1,7 @@
+slug: 04-structs-enums-error-handling
+title: "Rust Crash Course Part 2: Structs, Enums, and Error Handling"
+date: 2026-01-05
+tags: [rust, structs, enums, error-handling]
+hero: diagrams/option-vs-null.svg
+reading_time: 12
+part: "Part I — Foundations"

@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500" role="img" aria-labelledby="t d">
+  <title id="t">Word embeddings in 2D space</title>
+  <desc id="d">A scatter plot placing King, Queen, Man, and Woman on a Gender dimension (horizontal) and a Royalty dimension (vertical). Dashed arrows show that the gender shift from King to Queen runs parallel to the shift from Man to Woman, while vertical lines show the royalty shift. The takeaway is that consistent semantic relationships become consistent vector offsets, so King minus Man plus Woman is approximately Queen.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.axis{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.grid{stroke:var(--vdb-border);stroke-width:0.75;}
+.axislabel{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:13px;fill:var(--vdb-ink);}
+.shift-gender{stroke:var(--vdb-primary);stroke-width:1.5;fill:none;stroke-dasharray:5 5;}
+.shift-royalty{stroke:var(--vdb-accent);stroke-width:1.5;fill:none;stroke-dasharray:3 3;}
+.ptlabel{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:13px;fill:var(--vdb-ink);}
+]]></style>
+
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-ink)"/>
+    </marker>
+    <marker id="arrowGender" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-primary)"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="700" height="500"/>
+
+  <!-- Title -->
+  <text class="title" x="350" y="35" text-anchor="middle">Word Embeddings in 2D Space</text>
+  <text class="label" x="350" y="55" text-anchor="middle">Demonstrating: King - Man + Woman &#8776; Queen</text>
+
+  <!-- Plot surface -->
+  <rect class="box" x="100" y="80" width="400" height="350" rx="4"/>
+
+  <!-- Grid lines -->
+  <g class="grid">
+    <line x1="100" y1="168" x2="500" y2="168"/>
+    <line x1="100" y1="255" x2="500" y2="255"/>
+    <line x1="100" y1="343" x2="500" y2="343"/>
+    <line x1="200" y1="80" x2="200" y2="430"/>
+    <line x1="300" y1="80" x2="300" y2="430"/>
+    <line x1="400" y1="80" x2="400" y2="430"/>
+  </g>
+
+  <!-- Axes -->
+  <line class="axis" x1="100" y1="430" x2="500" y2="430" marker-end="url(#arrow)"/>
+  <line class="axis" x1="100" y1="430" x2="100" y2="80" marker-end="url(#arrow)"/>
+
+  <!-- Axis Labels -->
+  <text class="axislabel" x="300" y="470" text-anchor="middle">Gender Dimension &#8594;</text>
+  <text class="axislabel" x="60" y="255" text-anchor="middle" transform="rotate(-90 60 255)">Royalty Dimension &#8594;</text>
+
+  <!-- Quadrant Labels -->
+  <text class="label" x="180" y="108" text-anchor="middle">Male Royalty</text>
+  <text class="label" x="420" y="108" text-anchor="middle">Female Royalty</text>
+  <text class="label" x="180" y="416" text-anchor="middle">Male Commoner</text>
+  <text class="label" x="420" y="416" text-anchor="middle">Female Commoner</text>
+
+  <!-- Gender shift arrows (dashed, primary) -->
+  <line class="shift-gender" x1="200" y1="150" x2="400" y2="150" marker-end="url(#arrowGender)"/>
+  <line class="shift-gender" x1="200" y1="360" x2="400" y2="360" marker-end="url(#arrowGender)"/>
+
+  <!-- Royalty shift arrows (dashed, accent) -->
+  <line class="shift-royalty" x1="180" y1="342" x2="180" y2="172"/>
+  <line class="shift-royalty" x1="420" y1="342" x2="420" y2="172"/>
+
+  <!-- King -->
+  <circle class="box-primary" cx="180" cy="150" r="14"/>
+  <!-- crown marker -->
+  <path d="M173,154 L172,145 L177,149 L180,143 L183,149 L188,145 L187,154 Z" fill="#FFFFFF" stroke="none"/>
+  <text class="ptlabel" x="180" y="128" text-anchor="middle">King</text>
+
+  <!-- Queen -->
+  <circle class="box-accent" cx="420" cy="150" r="14"/>
+  <path d="M413,154 L412,145 L417,149 L420,143 L423,149 L428,145 L427,154 Z" fill="#FFFFFF" stroke="none"/>
+  <text class="ptlabel" x="420" y="128" text-anchor="middle">Queen</text>
+
+  <!-- Man -->
+  <circle class="box" cx="180" cy="360" r="13" style="fill:var(--vdb-ink-muted);stroke:var(--vdb-ink);"/>
+  <circle cx="180" cy="355" r="3.5" fill="#FFFFFF"/>
+  <path d="M173,366 a7,5 0 0 1 14,0 Z" fill="#FFFFFF"/>
+  <text class="ptlabel" x="180" y="392" text-anchor="middle">Man</text>
+
+  <!-- Woman -->
+  <circle class="box" cx="420" cy="360" r="13" style="fill:var(--vdb-ink-muted);stroke:var(--vdb-ink);"/>
+  <circle cx="420" cy="355" r="3.5" fill="#FFFFFF"/>
+  <path d="M413,366 a7,5 0 0 1 14,0 Z" fill="#FFFFFF"/>
+  <text class="ptlabel" x="420" y="392" text-anchor="middle">Woman</text>
+
+  <!-- Legend Box -->
+  <rect class="box" x="530" y="120" width="150" height="180" rx="8"/>
+  <text class="head" x="605" y="145" text-anchor="middle">Key Insight</text>
+
+  <line class="shift-gender" x1="545" y1="165" x2="585" y2="165"/>
+  <text class="label" x="595" y="169">Gender shift</text>
+
+  <line class="shift-royalty" x1="545" y1="190" x2="585" y2="190"/>
+  <text class="label" x="595" y="194">Royalty shift</text>
+
+  <text class="label" x="605" y="230" text-anchor="middle">The vector from</text>
+  <text class="head" x="605" y="248" text-anchor="middle">Man &#8594; Woman</text>
+  <text class="label" x="605" y="266" text-anchor="middle">is parallel to</text>
+  <text class="head" x="605" y="284" text-anchor="middle">King &#8594; Queen</text>
+
+  <!-- Formula Box -->
+  <rect class="box-primary" x="530" y="320" width="150" height="60" rx="8"/>
+  <text class="mono" x="605" y="346" text-anchor="middle" style="fill:#FFFFFF;">King - Man</text>
+  <text class="mono" x="605" y="366" text-anchor="middle" style="fill:#FFFFFF;">+ Woman &#8776; Queen</text>
+</svg>

@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" role="img" aria-labelledby="t d">
+  <title id="t">Binary Segment File Format</title>
+  <desc id="d">A segment file laid out left to right: a fixed 32-byte HEADER, a sequence of fixed-size vector entries (Vector 0, 1, 2, …), and a variable OFFSET INDEX. Detail panels show the header fields, the layout of a single vector entry (id_len, id bytes, and the f32 array), and the offset formula. The takeaway is that fixed-size records let an offset be computed directly, giving O(1) random access and memory-mapped page loading without scanning the file.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.mono-sm{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:10px;fill:var(--vdb-ink);}
+.mono-fill{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:600;font-size:10px;fill:#FFFFFF;}
+.label-fill{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:8px;fill:#FFFFFF;}
+]]></style>
+
+  <rect class="bg" x="0" y="0" width="750" height="400"/>
+
+  <!-- Title -->
+  <text x="375" y="28" text-anchor="middle" class="title">Binary Segment File Format</text>
+  <text x="375" y="47" text-anchor="middle" class="label">How we store vectors on disk efficiently</text>
+
+  <!-- Segment file visualization container -->
+  <rect x="50" y="70" width="650" height="50" rx="4" class="box"/>
+
+  <!-- Header section -->
+  <rect x="55" y="75" width="120" height="40" rx="3" class="box-accent"/>
+  <text x="115" y="96" text-anchor="middle" class="mono-fill">HEADER</text>
+  <text x="115" y="109" text-anchor="middle" class="label-fill">32 bytes</text>
+
+  <!-- Vector 0 -->
+  <rect x="180" y="75" width="100" height="40" rx="3" class="box-success"/>
+  <text x="230" y="96" text-anchor="middle" class="mono-fill">Vector 0</text>
+  <text x="230" y="109" text-anchor="middle" class="label-fill">N×4 bytes</text>
+
+  <!-- Vector 1 -->
+  <rect x="285" y="75" width="100" height="40" rx="3" class="box-primary"/>
+  <text x="335" y="96" text-anchor="middle" class="mono-fill">Vector 1</text>
+  <text x="335" y="109" text-anchor="middle" class="label-fill">N×4 bytes</text>
+
+  <!-- Vector 2 -->
+  <rect x="390" y="75" width="100" height="40" rx="3" class="box-success"/>
+  <text x="440" y="96" text-anchor="middle" class="mono-fill">Vector 2</text>
+  <text x="440" y="109" text-anchor="middle" class="label-fill">N×4 bytes</text>
+
+  <!-- More vectors -->
+  <rect x="495" y="75" width="50" height="40" rx="3" class="box" fill="var(--vdb-neutral-1)"/>
+  <text x="520" y="100" text-anchor="middle" class="head">...</text>
+
+  <!-- Index -->
+  <rect x="550" y="75" width="145" height="40" rx="3" class="box-primary"/>
+  <text x="622" y="96" text-anchor="middle" class="mono-fill">OFFSET INDEX</text>
+  <text x="622" y="109" text-anchor="middle" class="label-fill">variable</text>
+
+  <!-- Header Detail -->
+  <rect x="50" y="145" width="300" height="120" rx="8" class="box"/>
+  <rect x="50" y="145" width="6" height="120" rx="3" fill="var(--vdb-accent)"/>
+  <text x="200" y="169" text-anchor="middle" class="head">Header (32 bytes)</text>
+
+  <text x="70" y="195" class="mono-sm">magic: [u8; 4]    = b"VSEG"</text>
+  <text x="70" y="212" class="mono-sm">version: u32      = 1</text>
+  <text x="70" y="229" class="mono-sm">dimensions: u32   = 768</text>
+  <text x="70" y="246" class="mono-sm">vector_count: u64 = 10000</text>
+
+  <!-- Vector Entry Detail -->
+  <rect x="400" y="145" width="300" height="120" rx="8" class="box"/>
+  <rect x="400" y="145" width="6" height="120" rx="3" fill="var(--vdb-success)"/>
+  <text x="550" y="169" text-anchor="middle" class="head">Vector Entry</text>
+
+  <rect x="420" y="188" width="60" height="26" rx="3" class="box-accent"/>
+  <text x="450" y="205" text-anchor="middle" class="mono-fill">id_len</text>
+
+  <rect x="485" y="188" width="80" height="26" rx="3" class="box-accent"/>
+  <text x="525" y="205" text-anchor="middle" class="mono-fill">id bytes</text>
+
+  <rect x="570" y="188" width="110" height="26" rx="3" class="box-success"/>
+  <text x="625" y="205" text-anchor="middle" class="mono-fill">[f32; dims]</text>
+
+  <text x="420" y="244" class="head" font-size="10">Example (768 dims):</text>
+  <text x="420" y="259" class="mono-sm">id="doc_123" → 4 + 7 + 3072 = 3083 bytes</text>
+
+  <!-- Offset calculation -->
+  <rect x="50" y="290" width="650" height="95" rx="8" class="box"/>
+  <rect x="50" y="290" width="6" height="95" rx="3" fill="var(--vdb-primary)"/>
+  <!-- accent dot marker (replaces lightning glyph) -->
+  <circle cx="160" cy="311" r="5" fill="var(--vdb-primary)" stroke="var(--vdb-ink)" stroke-width="1"/>
+  <text x="375" y="315" text-anchor="middle" class="head">Fast Random Access via Memory Mapping</text>
+
+  <text x="70" y="345" class="mono" font-size="11">offset = HEADER_SIZE + (index × vector_size)</text>
+  <text x="70" y="365" class="mono" font-size="11">       = 32 + (index × (4 + id_len + dims×4))</text>
+
+  <!-- status markers: small filled squares instead of checkmarks -->
+  <rect x="420" y="338" width="8" height="8" rx="1.5" fill="var(--vdb-success)" stroke="var(--vdb-ink)" stroke-width="0.75"/>
+  <text x="435" y="346" class="label" font-size="10" font-weight="700" fill="var(--vdb-ink)">O(1) lookup - no scanning!</text>
+  <rect x="420" y="358" width="8" height="8" rx="1.5" fill="var(--vdb-success)" stroke="var(--vdb-ink)" stroke-width="0.75"/>
+  <text x="435" y="366" class="label" font-size="10" font-weight="700" fill="var(--vdb-ink)">mmap loads only needed pages</text>
+</svg>

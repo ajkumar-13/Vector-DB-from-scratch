@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img" aria-labelledby="t d">
+  <title id="t">HNSW Search: Two-Phase Algorithm</title>
+  <desc id="d">The figure splits HNSW search into two phases. Phase 1 is a greedy descent (ef=1) that follows the single closest neighbour down through the upper layers to reach the right neighbourhood quickly in O(log N) layers. Phase 2 is a beam search at layer 0 that explores ef_search candidates simultaneously around the query and returns the k closest, trading speed for recall.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.sub{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:9px;fill:var(--vdb-ink-muted);}
+.node{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.node-lbl{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:9px;fill:var(--vdb-ink);}
+.layerband{fill:var(--vdb-neutral-1);stroke:var(--vdb-border);stroke-width:1;}
+.accent-arrow{stroke:var(--vdb-accent);stroke-width:1.5;fill:none;}
+.primary-arrow{stroke:var(--vdb-primary);stroke-width:1.5;fill:none;}
+.dist{stroke:var(--vdb-accent);stroke-width:1;fill:none;stroke-dasharray:3 2;}
+]]></style>
+
+  <rect class="bg" x="0" y="0" width="800" height="480"/>
+
+  <defs>
+    <marker id="searchArrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-accent)"/>
+    </marker>
+    <marker id="beamArrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-primary)"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text class="title" x="400" y="30" text-anchor="middle">HNSW Search: Two-Phase Algorithm</text>
+  <text class="label" x="400" y="50" text-anchor="middle">Phase 1: Greedy descent through upper layers, then Phase 2: Beam search at base layer</text>
+
+  <!-- Phase 1 Box -->
+  <rect class="box" x="30" y="70" width="360" height="380" rx="10"/>
+  <rect class="box-accent" x="30" y="70" width="360" height="28" rx="10"/>
+  <rect class="box-accent" x="30" y="84" width="360" height="14"/>
+  <text class="on-fill" x="50" y="89">Phase 1: Greedy Descent (ef=1)</text>
+
+  <!-- Layer 2 -->
+  <rect class="layerband" x="55" y="115" width="310" height="70" rx="6"/>
+  <text class="head" x="65" y="132" font-size="10">Layer 2 (top)</text>
+
+  <circle class="node" cx="120" cy="160" r="14" stroke="var(--vdb-accent)"/>
+  <text class="node-lbl" x="120" y="164" text-anchor="middle">EP</text>
+  <circle class="node" cx="280" cy="160" r="14"/>
+  <text class="node-lbl" x="280" y="164" text-anchor="middle">N&#8321;</text>
+  <line class="accent-arrow" x1="134" y1="160" x2="264" y2="160" marker-end="url(#searchArrow)"/>
+  <text class="sub" x="200" y="152" text-anchor="middle">closer to query</text>
+
+  <!-- Layer 1 -->
+  <rect class="layerband" x="55" y="200" width="310" height="70" rx="6"/>
+  <text class="head" x="65" y="217" font-size="10">Layer 1</text>
+
+  <circle class="node" cx="280" cy="245" r="14"/>
+  <text class="node-lbl" x="280" y="249" text-anchor="middle">N&#8321;</text>
+  <circle class="node" cx="180" cy="245" r="14" stroke="var(--vdb-accent)"/>
+  <text class="node-lbl" x="180" y="249" text-anchor="middle">N&#8322;</text>
+  <line class="accent-arrow" x1="266" y1="245" x2="196" y2="245" marker-end="url(#searchArrow)"/>
+  <text class="sub" x="230" y="237" text-anchor="middle">closer</text>
+
+  <!-- Dashed arrow down to layer 0 -->
+  <line class="flow-muted" x1="180" y1="270" x2="180" y2="295"/>
+  <text class="sub" x="200" y="290">descend</text>
+
+  <!-- Layer 0 partial in Phase 1 -->
+  <rect class="box" x="55" y="300" width="310" height="70" rx="6" stroke="var(--vdb-success)"/>
+  <text class="head" x="65" y="317" font-size="10">Layer 0 &#8594; hand off to Phase 2</text>
+  <circle class="box-success" cx="180" cy="345" r="14"/>
+  <text class="on-fill" x="180" y="349" text-anchor="middle" font-size="9">N&#8322;</text>
+  <text class="label" x="220" y="349" font-size="9">= best entry point</text>
+
+  <!-- Phase 1 summary -->
+  <text class="sub" x="210" y="405" text-anchor="middle">Single best candidate per layer</text>
+  <text class="sub" x="210" y="418" text-anchor="middle">Fast: O(log N) layers traversed</text>
+  <text class="sub" x="210" y="431" text-anchor="middle">Coarse approximation only</text>
+
+  <!-- Phase 2 Box -->
+  <rect class="box" x="410" y="70" width="370" height="380" rx="10"/>
+  <rect class="box-primary" x="410" y="70" width="370" height="28" rx="10"/>
+  <rect class="box-primary" x="410" y="84" width="370" height="14"/>
+  <text class="on-fill" x="430" y="89">Phase 2: Beam Search (ef=ef_search)</text>
+
+  <!-- Beam search visualization -->
+  <rect class="layerband" x="435" y="115" width="320" height="240" rx="6"/>
+  <text class="head" x="445" y="132" font-size="10">Layer 0 (base) &#8212; explore multiple candidates</text>
+
+  <!-- Query node -->
+  <circle class="box-accent" cx="720" cy="250" r="16"/>
+  <text class="on-fill" x="720" y="254" text-anchor="middle" font-size="10">Q</text>
+  <text class="sub" x="720" y="276" text-anchor="middle">query</text>
+
+  <!-- Beam candidates -->
+  <circle class="box-success" cx="480" cy="200" r="14"/>
+  <text class="on-fill" x="480" y="204" text-anchor="middle" font-size="9">N&#8322;</text>
+  <circle class="node" cx="560" cy="170" r="14" stroke="var(--vdb-primary)"/>
+  <text class="node-lbl" x="560" y="174" text-anchor="middle">N&#8323;</text>
+  <circle class="node" cx="630" cy="210" r="14" stroke="var(--vdb-primary)"/>
+  <text class="node-lbl" x="630" y="214" text-anchor="middle">N&#8324;</text>
+  <circle class="node" cx="540" cy="260" r="14" stroke="var(--vdb-primary)"/>
+  <text class="node-lbl" x="540" y="264" text-anchor="middle">N&#8325;</text>
+  <circle class="node" cx="650" cy="280" r="14" stroke="var(--vdb-primary)"/>
+  <text class="node-lbl" x="650" y="284" text-anchor="middle">N&#8326;</text>
+  <circle class="node" cx="490" cy="310" r="14" stroke="var(--vdb-ink-subtle)"/>
+  <text class="node-lbl" x="490" y="314" text-anchor="middle" fill="var(--vdb-ink-muted)">N&#8327;</text>
+
+  <!-- Search edges (primary) -->
+  <line class="primary-arrow" x1="494" y1="200" x2="544" y2="175" marker-end="url(#beamArrow)"/>
+  <line class="primary-arrow" x1="494" y1="205" x2="614" y2="210" marker-end="url(#beamArrow)"/>
+  <line class="primary-arrow" x1="494" y1="210" x2="526" y2="252" marker-end="url(#beamArrow)"/>
+  <line class="primary-arrow" x1="560" y1="184" x2="620" y2="200" stroke-width="1"/>
+  <line class="primary-arrow" x1="630" y1="224" x2="643" y2="268" stroke-width="1"/>
+
+  <!-- Distance lines to query (dashed) -->
+  <line class="dist" x1="644" y1="210" x2="705" y2="245"/>
+  <line class="dist" x1="664" y1="280" x2="705" y2="255"/>
+
+  <!-- Results box -->
+  <rect class="box" x="435" y="365" width="320" height="70" rx="6"/>
+  <text class="head" x="445" y="383" font-size="10">Result: top-k from ef_search candidates</text>
+  <text class="sub" x="595" y="400" text-anchor="middle">Candidates explored = ef_search (e.g. 64)</text>
+  <text class="sub" x="595" y="413" text-anchor="middle">Return k closest (e.g. k=10, sorted by distance)</text>
+  <text class="sub" x="595" y="426" text-anchor="middle">Higher ef_search &#8594; better recall, slower</text>
+</svg>

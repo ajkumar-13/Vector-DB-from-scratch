@@ -1,0 +1,7 @@
+slug: 12-brute-force
+title: "The Brute Force Engine: Implementing Exact Nearest Neighbor Search (k-NN)"
+date: 2026-03-10
+tags: [brute-force, knn, nearest-neighbor, search]
+hero: diagrams/brute-force-search.svg
+reading_time: 15
+part: "Part III — Vector Search & Indexing"

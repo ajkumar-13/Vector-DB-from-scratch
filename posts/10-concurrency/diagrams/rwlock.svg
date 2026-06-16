@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" role="img" aria-labelledby="t d">
+  <title id="t">RwLock: Read-Write Concurrency</title>
+  <desc id="d">A read-write lock allows many readers OR one writer, but never both at once. On the left, multiple reader threads share concurrent read access to the data; on the right, a single exclusive writer holds the data while other readers are blocked. The takeaway: read-heavy workloads gain parallelism from RwLock, since read() locks coexist while write() locks are exclusive.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.box-alert{fill:var(--vdb-alert);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-muted{fill:var(--vdb-neutral-1);stroke:var(--vdb-border);stroke-width:1;stroke-dasharray:4 3;}
+.codebox{fill:var(--vdb-neutral-1);stroke:var(--vdb-border);stroke-width:1;}
+.monolabel{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:400;font-size:11px;fill:var(--vdb-ink);}
+.monomuted{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:400;font-size:11px;fill:var(--vdb-ink-subtle);}
+.monokw{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;fill:var(--vdb-primary);}
+.monofn{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;fill:var(--vdb-accent);}
+]]></style>
+
+  <rect class="bg" x="0" y="0" width="750" height="400"/>
+
+  <!-- Title -->
+  <text class="title" x="375" y="28" text-anchor="middle">RwLock: Read-Write Concurrency</text>
+  <text class="label" x="375" y="48" text-anchor="middle">Many readers OR one writer - never both</text>
+
+  <!-- ===== Reader scenario ===== -->
+  <rect class="box" x="50" y="70" width="300" height="150" rx="8"/>
+  <rect class="box-success" x="50" y="70" width="300" height="28" rx="8"/>
+  <rect class="box-success" x="50" y="84" width="300" height="14"/>
+  <!-- status marker: open circle -->
+  <circle cx="78" cy="84" r="5" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text class="on-fill" x="200" y="88" text-anchor="middle">Multiple Readers Allowed</text>
+
+  <!-- Multiple readers -->
+  <rect class="box" x="70" y="115" width="60" height="35" rx="4"/>
+  <text class="label" x="100" y="137" text-anchor="middle">Reader 1</text>
+
+  <rect class="box" x="140" y="115" width="60" height="35" rx="4"/>
+  <text class="label" x="170" y="137" text-anchor="middle">Reader 2</text>
+
+  <rect class="box" x="210" y="115" width="60" height="35" rx="4"/>
+  <text class="label" x="240" y="137" text-anchor="middle">Reader 3</text>
+
+  <rect class="box" x="280" y="115" width="50" height="35" rx="4"/>
+  <text class="label" x="305" y="137" text-anchor="middle">...</text>
+
+  <!-- connectors readers -> data -->
+  <path class="flow" d="M100 150 L150 165"/>
+  <path class="flow" d="M170 150 L185 165"/>
+  <path class="flow" d="M240 150 L215 165"/>
+  <path class="flow" d="M305 150 L250 165"/>
+
+  <!-- All reading from data -->
+  <rect class="box-primary" x="120" y="165" width="160" height="40" rx="6"/>
+  <text class="on-fill" x="200" y="189" text-anchor="middle">Data (read)</text>
+
+  <!-- ===== Writer scenario ===== -->
+  <rect class="box" x="400" y="70" width="300" height="150" rx="8"/>
+  <rect class="box-alert" x="400" y="70" width="300" height="28" rx="8"/>
+  <rect class="box-alert" x="400" y="84" width="300" height="14"/>
+  <!-- status marker: filled square -->
+  <rect x="424" y="79" width="10" height="10" fill="#FFFFFF"/>
+  <text class="on-fill" x="556" y="88" text-anchor="middle">Exclusive Writer</text>
+
+  <!-- Blocked reader left -->
+  <rect class="box-muted" x="420" y="115" width="60" height="35" rx="4"/>
+  <text class="label" x="450" y="132" text-anchor="middle">Reader</text>
+  <text class="label" x="450" y="144" text-anchor="middle">blocked</text>
+
+  <!-- Single writer -->
+  <rect class="box-accent" x="520" y="115" width="60" height="35" rx="4"/>
+  <text class="on-fill" x="550" y="137" text-anchor="middle">Writer</text>
+
+  <!-- Blocked reader right -->
+  <rect class="box-muted" x="620" y="115" width="60" height="35" rx="4"/>
+  <text class="label" x="650" y="132" text-anchor="middle">Reader</text>
+  <text class="label" x="650" y="144" text-anchor="middle">blocked</text>
+
+  <!-- blocked connectors -->
+  <path class="flow-muted" d="M450 150 L520 165"/>
+  <path class="flow-muted" d="M650 150 L580 165"/>
+  <!-- writer connector -->
+  <path class="flow" d="M550 150 L550 165"/>
+
+  <!-- Writing to data -->
+  <rect class="box-accent" x="470" y="165" width="160" height="40" rx="6"/>
+  <text class="on-fill" x="550" y="189" text-anchor="middle">Data (locked)</text>
+
+  <!-- ===== Code example ===== -->
+  <rect class="codebox" x="50" y="240" width="650" height="140" rx="8"/>
+  <text class="head" x="70" y="263">Rust RwLock Example</text>
+
+  <text x="70" y="292"><tspan class="monokw">use</tspan><tspan class="monolabel" xml:space="preserve"> std::sync::RwLock;</tspan></text>
+
+  <text x="70" y="313"><tspan class="monokw">let</tspan><tspan class="monolabel" xml:space="preserve"> data = RwLock::new(vec![1, 2, 3]);</tspan></text>
+
+  <text class="monomuted" x="70" y="338">// Multiple readers OK</text>
+  <text class="monomuted" x="370" y="338">// Exclusive writer</text>
+
+  <text x="70" y="360"><tspan class="monokw">let</tspan><tspan class="monolabel" xml:space="preserve"> r = data.</tspan><tspan class="monofn">read()</tspan><tspan class="monolabel">;</tspan></text>
+
+  <text x="370" y="360"><tspan class="monokw">let mut</tspan><tspan class="monolabel" xml:space="preserve"> w = data.</tspan><tspan class="monofn">write()</tspan><tspan class="monolabel">;</tspan></text>
+
+  <text class="monomuted" x="540" y="360">// w.push(4);</text>
+</svg>

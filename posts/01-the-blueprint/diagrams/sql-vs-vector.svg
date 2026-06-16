@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" role="img" aria-labelledby="t d">
+  <title id="t">SQL vs Vector Search for "feline behavior"</title>
+  <desc id="d">A side-by-side comparison of how traditional SQL and a vector database answer the query "feline behavior". SQL matches by spelling, so it misses "Cat Psychology" and "Kitten Development" and only finds the exact match "Feline Studies". The vector database matches by meaning and surfaces all three papers with high cosine-similarity scores (0.92, 0.89, 0.95).</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.result-head{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:16px;fill:#FFFFFF;}
+.result{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:13px;fill:var(--vdb-ink);}
+.score{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;fill:var(--vdb-ink);}
+.note{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-subtle);}
+.hit{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:0.75;}
+.miss{fill:none;stroke:var(--vdb-alert);stroke-width:1.5;}
+]]></style>
+
+  <rect class="bg" x="0" y="0" width="800" height="400"/>
+
+  <!-- Title -->
+  <text class="title" x="400" y="34" text-anchor="middle">SQL vs Vector Search: Finding "Feline Behavior" Papers</text>
+
+  <!-- Query Box -->
+  <rect class="box-primary" x="300" y="55" width="200" height="40" rx="6"/>
+  <text class="on-fill" x="400" y="80" text-anchor="middle">Query: "feline behavior"</text>
+
+  <!-- Arrows from query to each side -->
+  <path class="flow" d="M350 95 L205 132"/>
+  <polygon points="205,132 215,129 211,138" fill="var(--vdb-ink)"/>
+  <path class="flow" d="M450 95 L595 132"/>
+  <polygon points="595,132 589,138 585,129" fill="var(--vdb-ink)"/>
+
+  <!-- ============ SQL Section ============ -->
+  <rect class="box" x="50" y="140" width="310" height="230" rx="8"/>
+  <rect class="box-accent" x="50" y="140" width="310" height="44" rx="8"/>
+
+  <text class="result-head" x="205" y="170" text-anchor="middle">Traditional SQL</text>
+
+  <text class="mono" x="205" y="213" text-anchor="middle" font-size="11">WHERE text LIKE '%feline%'</text>
+
+  <!-- SQL Results -->
+  <rect class="box" x="70" y="235" width="275" height="35" rx="6"/>
+  <circle class="miss" cx="90" cy="252.5" r="6"/>
+  <line class="miss" x1="86" y1="248.5" x2="94" y2="256.5"/>
+  <text class="result" x="106" y="257">"Cat Psychology"</text>
+  <text class="note" x="335" y="257" text-anchor="end">no match</text>
+
+  <rect class="box" x="70" y="280" width="275" height="35" rx="6"/>
+  <circle class="miss" cx="90" cy="297.5" r="6"/>
+  <line class="miss" x1="86" y1="293.5" x2="94" y2="301.5"/>
+  <text class="result" x="106" y="302">"Kitten Development"</text>
+  <text class="note" x="335" y="302" text-anchor="end">no match</text>
+
+  <rect class="box-success" x="70" y="325" width="275" height="35" rx="6"/>
+  <circle class="hit" cx="90" cy="342.5" r="6"/>
+  <path class="flow" d="M87 342.5 L89.5 345 L93.5 340" stroke-width="1.5"/>
+  <text class="on-fill" x="106" y="347" font-weight="400" font-size="13">"Feline Studies"</text>
+  <text class="on-fill" x="335" y="347" text-anchor="end" font-weight="400" font-size="11">exact match</text>
+
+  <!-- ============ Vector Section ============ -->
+  <rect class="box" x="450" y="140" width="300" height="230" rx="8"/>
+  <rect class="box-success" x="450" y="140" width="300" height="44" rx="8"/>
+
+  <text class="result-head" x="600" y="170" text-anchor="middle">Vector Database</text>
+
+  <text class="mono" x="600" y="213" text-anchor="middle" font-size="11">cosine_similarity(query, doc)</text>
+
+  <!-- Vector Results -->
+  <rect class="box-success" x="470" y="235" width="260" height="35" rx="6"/>
+  <circle class="hit" cx="490" cy="252.5" r="6" stroke="#FFFFFF"/>
+  <path d="M487 252.5 L489.5 255 L493.5 250" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
+  <text class="on-fill" x="506" y="257" font-weight="400" font-size="13">"Cat Psychology"</text>
+  <text class="on-fill" x="710" y="257" text-anchor="end">0.92</text>
+
+  <rect class="box-success" x="470" y="280" width="260" height="35" rx="6"/>
+  <circle class="hit" cx="490" cy="297.5" r="6" stroke="#FFFFFF"/>
+  <path d="M487 297.5 L489.5 300 L493.5 295" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
+  <text class="on-fill" x="506" y="302" font-weight="400" font-size="13">"Kitten Development"</text>
+  <text class="on-fill" x="710" y="302" text-anchor="end">0.89</text>
+
+  <rect class="box-success" x="470" y="325" width="260" height="35" rx="6"/>
+  <circle class="hit" cx="490" cy="342.5" r="6" stroke="#FFFFFF"/>
+  <path d="M487 342.5 L489.5 345 L493.5 340" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
+  <text class="on-fill" x="506" y="347" font-weight="400" font-size="13">"Feline Studies"</text>
+  <text class="on-fill" x="710" y="347" text-anchor="end">0.95</text>
+</svg>

@@ -1,0 +1,769 @@
+# Rust Crash Course Part 1: Ownership, Borrowing, and Memory Management
+
+> **TL;DR.** This post teaches Rust's ownership model: the three rules of ownership, moves versus clones, borrowing with `&T` and `&mut T`, slices as zero-copy views, and a first look at lifetimes. By the end you can reason about where data lives (stack versus heap) and why our vector database avoids both garbage-collection pauses and manual `free()` calls. These are the exact rules the compiler will use to guide every line of database code you write from here on.
+>
+> **What you will build:**
+> - A working mental model of stack versus heap allocation for embeddings and HNSW graphs
+> - The ability to pass `&[f32]` slices into functions like `cosine_similarity` with zero copying
+> - Fluency reading the borrow checker's errors (E0382, E0502, E0596) and fixing them
+> - A first, practical grasp of lifetimes you will lean on when building the storage layer
+
+---
+
+## 1. Introduction: The "Boss Fight"
+
+Picking up from the previous post, [Setting Up the Forge](../02-setting-up-the-forge/index.md), where you installed the toolchain and laid out the project structure, we now turn from tooling to the language itself. Everything in our vector database (embeddings, collections, the HNSW index) is just memory that someone has to own and eventually free, and this post is where you learn the rules that govern that.
+
+Welcome to the most infamous part of learning Rust: **The Borrow Checker**.
+
+If you come from Python or Java, you're used to a **Garbage Collector (GC)** cleaning up after you. It's convenient, but it causes random pauses (latency spikes) when the GC runs, unacceptable for a database.
+
+If you come from C or C++, you're used to **manual memory management** (`malloc`/`free`). It's fast, but one mistake leads to crashes (segfaults) or security vulnerabilities.
+
+Rust chooses a third path: **Ownership**.
+
+Ownership is a set of rules that the compiler checks *at compile time*. If you follow them, you get:
+
+1. **Zero GC pauses** (predictable performance for our DB)
+2. **Zero manual memory management** (no `free()` calls)
+3. **Memory safety** (no dangling pointers, no double-frees)
+
+In this post, we will master these rules. We aren't just learning syntax, we're learning how to manage the memory of the database we're building.
+
+---
+
+## 1.5 Quick Rust Syntax Primer
+
+If you've never written Rust before, here's the essential syntax you need:
+
+### Variables and Bindings
+
+```rust
+let x = 5;             // Immutable variable (inferred type: i32)
+let y: i32 = 10;       // Explicit type annotation
+let mut z = 15;        // Mutable variable (can be reassigned)
+
+z = 20;                // OK - z is mutable
+// x = 30;             // ERROR - x is immutable
+```
+
+**Compiler Error:**
+```
+error[E0384]: cannot assign twice to immutable variable `x`
+   |
+2  | let x = 5;
+   |     - first assignment to `x`
+3  | x = 30;
+   |     ^^ cannot assign twice to immutable variable
+```
+
+**Key Point:** Rust defaults to immutability. You must explicitly declare `mut` to allow changes.
+
+### Basic Types
+
+```rust
+let count: i32 = 42;                          // Signed 32-bit integer
+let distance: f32 = 3.14;                     // 32-bit float (good for embeddings)
+let is_valid: bool = true;                    // Boolean
+let name: String = String::from("VectorDB");  // Growable, heap-allocated string
+let s: &str = "hello";                        // String literal (fixed text)
+```
+
+### Functions
+
+```rust
+fn add(a: i32, b: i32) -> i32 {    // Parameters have explicit types
+    a + b                          // No semicolon = return value
+}
+
+fn main() {
+    let result = add(5, 3);        // Call the function
+    println!("Result: {}", result);
+}
+```
+
+**Note:** In Rust, functions must declare parameter types and return types explicitly.
+
+### Collections
+
+```rust
+let numbers: Vec<i32> = vec![1, 2, 3, 4, 5];   // Growable array (on heap)
+let first = numbers[0];                        // Access element
+
+let embedding: [f32; 3] = [0.1, 0.2, 0.3];     // Fixed-size array (on stack)
+```
+
+### The `println!` Macro
+
+```rust
+let x = 42;
+println!("The answer is {}", x);      // {} = placeholder for value
+println!("Debug: {:?}", x);           // {:?} = debug format
+
+let v = vec![1, 2, 3];
+println!("{:?}", v);                  // Prints: [1, 2, 3]
+```
+
+**Common Error:**
+```
+error[E0425]: cannot find value `name` in this scope
+   |
+5  | println!("Hello {}", name);
+   |                      ^^^ not found in this scope
+```
+
+---
+
+## 2. Systems 101: Stack vs. Heap
+
+To understand Ownership, you must visualize where your data lives.
+
+![Stack vs Heap Memory Layout](diagrams/stack-vs-heap.svg)
+
+### The Stack
+
+| Property | Description |
+|----------|-------------|
+| **What it is** | A scratchpad for function execution |
+| **Behavior** | Last In, First Out (LIFO). Extremely fast. |
+| **Limitations** | All data must have a **known, fixed size** at compile time |
+| **Examples** | `i32`, `f64`, `bool`, `[f32; 768]` (fixed-size array) |
+
+**Analogy:** A stack of plates. You grab the top one, use it, and put it back. No searching, no asking for permission just push and pop.
+
+### The Heap
+
+| Property | Description |
+|----------|-------------|
+| **What it is** | A giant warehouse for dynamically-sized data |
+| **Behavior** | You ask the allocator for space; it returns a **pointer** |
+| **Cost** | Slower allocation. Must follow the pointer to access data. |
+| **Examples** | `String`, `Vec<f32>`, `HashMap`, our HNSW graphs |
+
+**Analogy:** A warehouse with numbered storage units. You get a key (pointer) that tells you where your stuff is stored.
+
+### In Our Vector DB Context
+
+```rust
+// This f32 lives on the STACK (fixed size: 4 bytes)
+let single_value: f32 = 0.12345;
+
+// This Vec lives on the HEAP (dynamic size: 768 × 4 = 3072 bytes)
+// But the Vec "handle" (pointer + length + capacity) is on the STACK
+let embedding: Vec<f32> = vec![0.1, 0.2, /* ... 768 values */];
+```
+
+```
+STACK                          HEAP
+┌─────────────────┐            ┌─────────────────────────────┐
+│ single_value    │            │                             │
+│ [0.12345]       │            │  [0.1, 0.2, 0.3, ... 768]   │
+├─────────────────┤            │                             │
+│ embedding       │            └─────────────────────────────┘
+│ ┌─────────────┐ │                       ▲
+│ │ ptr ────────┼─┼───────────────────────┘
+│ │ len: 768    │ │
+│ │ cap: 768    │ │
+│ └─────────────┘ │
+└─────────────────┘
+```
+
+---
+
+## 3. The Three Rules of Ownership
+
+Rust enforces these three rules strictly. Memorize them:
+
+> **Rule 1:** Each value in Rust has a variable that's called its **owner**.
+> 
+> **Rule 2:** There can only be **one owner** at a time.
+> 
+> **Rule 3:** When the owner goes out of scope, the value will be **dropped** (memory freed).
+
+### Rule 3 in Action: Automatic Cleanup
+
+```rust
+fn main() {
+    {
+        let s = String::from("hello"); // s is valid from here
+        // ... use s ...
+    } // s goes out of scope here. Rust calls drop(s) automatically.
+    
+    // Memory for "hello" has been freed. No garbage collector needed!
+}
+```
+
+This is called **RAII** (Resource Acquisition Is Initialization), a pattern from C++ that Rust enforces by default.
+
+### Rule 2 in Action: The "Move"
+
+This is where beginners get stuck. Watch carefully:
+
+```rust
+fn main() {
+    let s1 = String::from("hello"); // s1 owns the heap memory
+    let s2 = s1;                    // Ownership MOVES to s2
+    
+    println!("{}", s1);  //  ERROR: borrow of moved value: `s1`
+    println!("{}", s2);  //  s2 is the owner now
+}
+```
+
+**Compiler Error:**
+```
+error[E0382]: borrow of moved value: `s1`
+   |
+2  | let s1 = String::from("hello");
+   |     -- move occurs because `s1` has type `String`, 
+   |        which does not implement the `Copy` trait
+3  | let s2 = s1;
+   |          -- value moved here
+4  | println!("{}", s1);
+   |                ^^ value borrowed after move
+   |
+help: consider cloning the value if the ownership is needed
+   |
+3  | let s2 = s1.clone();
+```
+
+**What happened?**
+
+| Language | Behavior of `s2 = s1` |
+|----------|----------------------|
+| Python/Java | Both variables point to the same object (reference counting or GC tracks it) |
+| C++ | Depends, might copy, might reference, might move |
+| **Rust** | **Move**: s1's ownership transfers to s2. s1 becomes invalid. |
+
+**Why does Rust do this?**
+
+If both `s1` and `s2` owned the memory, what happens when they both go out of scope? Both would try to free the same memory → **Double Free Error** (a classic security vulnerability).
+
+Rust prevents this by invalidating `s1` at compile time.
+
+![Ownership Move - s1 to s2](diagrams/ownership-move.svg)
+
+### When You Actually Want a Copy: `.clone()`
+
+If you *really* need two independent copies:
+
+```rust
+let s1 = String::from("hello");
+let s2 = s1.clone(); // Deep copy: new heap allocation!
+
+println!("s1 = {}, s2 = {}", s1, s2); // Both valid
+```
+
+**System Engineer Warning:** Cloning is expensive. In our Vector DB, cloning a 768-dimensional embedding means copying 3KB of data. For a batch of 10,000 vectors, that's 30MB of unnecessary copying. We'll avoid this with **borrowing**.
+
+### Copy Types (The Exception)
+
+Simple types that live entirely on the stack implement the `Copy` trait. They're copied, not moved:
+
+```rust
+let x: i32 = 5;
+let y = x;                        // x is COPIED, not moved
+
+println!("x = {}, y = {}", x, y); // Both valid! No error.
+```
+
+![Copy Types vs Move Types Decision](diagrams/ownership-flowchart.svg)
+
+Copy types include: `i32`, `f32`, `bool`, `char`, `&T` (immutable references), tuples of Copy types, and fixed-size arrays of Copy types.
+
+---
+
+## 4. Borrowing (References)
+
+Moving ownership everywhere is cumbersome. What if we just want to *look* at data without taking responsibility for it?
+
+That's **borrowing**.
+
+### Immutable References (`&T`)
+
+An immutable reference is a "read-only view" of data.
+
+```rust
+fn main() {
+    let s1 = String::from("hello");
+    
+    let len = calculate_length(&s1); // Pass a REFERENCE (borrow)
+    
+    println!("The length of '{}' is {}.", s1, len); // s1 still valid!
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+} // s goes out of scope, but it doesn't own the data, so nothing is freed.
+```
+
+The `&` creates a reference. Think of it as: "I'm lending you my book to read, but I still own it."
+
+### Mutable References (`&mut T`)
+
+A mutable reference allows modification.
+
+```rust
+fn main() {
+    let mut s = String::from("hello"); // Note: must be `mut`
+    
+    append_world(&mut s);              // Pass a MUTABLE reference
+    
+    println!("{}", s);                 // Prints: "hello world"
+}
+
+fn append_world(some_string: &mut String) {
+    some_string.push_str(" world");
+}
+```
+
+### The Golden Rule of Borrowing
+
+This is the most important rule for concurrency safety:
+
+> **At any given time, you can have EITHER:**
+> - **One mutable reference** (`&mut T`)
+> - **OR any number of immutable references** (`&T`)
+> 
+> **But NOT both simultaneously.**
+
+> **Systems Programmer Note:**
+> If you've used `RwLock` in C++ or Java, this rule is identical.
+> - **Immutable References (`&T`)** = **Readers** (Shared Lock)
+> - **Mutable Reference (`&mut T`)** = **Writer** (Exclusive Lock)
+>
+> Rust just enforces this "locking" at compile time with zero runtime cost.
+
+![Borrowing Rules - RwLock Analogy](diagrams/borrowing-rules.svg)
+
+This prevents **data races** at compile time. A data race occurs when:
+
+1. Two or more pointers access the same data
+2. At least one is writing
+3. There's no synchronization
+
+**Example of the compiler catching a data race:**
+
+```rust
+let mut s = String::from("hello");
+
+let r1 = &s;     // immutable borrow #1
+let r2 = &s;     // immutable borrow #2
+let r3 = &mut s; // ❌ ERROR: cannot borrow `s` as mutable
+
+println!("{}, {}, {}", r1, r2, r3);
+```
+
+**Compiler Error:**
+```
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+   |
+3  | let r1 = &s;
+   |          -- immutable borrow occurs here
+4  | let r2 = &s;
+   |          -- immutable borrow occurs here
+5  | let r3 = &mut s;
+   |          ^^^^^^ mutable borrow occurs here
+7  | println!("{}, {}, {}", r1, r2, r3);
+   |          -- immutable borrows later used here
+```
+
+**Why the error?** `r1` and `r2` expect the data to remain unchanged while they hold their references. `r3` wants to modify it. Rust says: "No. Pick one."
+
+### Non-Lexical Lifetimes (NLL)
+
+Modern Rust is smart about when borrows *actually* end:
+
+```rust
+let mut s = String::from("hello");
+
+let r1 = &s;
+let r2 = &s;
+println!("{} and {}", r1, r2);
+// r1 and r2 are no longer used after this point
+
+let r3 = &mut s; //  This is fine! r1 and r2's borrows have ended.
+println!("{}", r3);
+```
+
+The borrow ends when the reference is last *used*, not when it goes out of scope.
+
+---
+
+## 5. Slices: Zero-Cost Views into Memory
+
+In our Vector DB, we'll work with massive arrays of floats. We don't want to copy them. We don't want to transfer ownership just to read them.
+
+We use **slices**, lightweight views into contiguous memory.
+
+### String Slices (`&str`)
+
+```rust
+let s = String::from("hello world");
+
+let hello: &str = &s[0..5];      // View of bytes 0-4
+let world: &str = &s[6..11];     // View of bytes 6-10
+
+println!("{} {}", hello, world); // "hello world"
+```
+
+A `&str` is just a pointer + length. It doesn't own any data.
+
+### Vector Slices (`&[T]`)
+
+![Slices - Zero Copy Views](diagrams/slices-zero-copy.svg)
+
+```rust
+fn main() {
+    let embedding: Vec<f32> = vec![0.1, 0.2, 0.3, 0.4, 0.5];
+    
+    // Pass a slice - zero-cost, no copying
+    let sum = sum_slice(&embedding);
+    
+    // We can also pass a sub-slice
+    let partial_sum = sum_slice(&embedding[0..3]); // Just first 3 elements
+    
+    println!("Full sum: {}, Partial: {}", sum, partial_sum);
+}
+
+fn sum_slice(values: &[f32]) -> f32 {
+    let mut total = 0.0;
+    for &val in values {
+        total += val;
+    }
+    total
+}
+```
+
+**Try This:** What happens if you try to modify the data through an immutable slice?
+
+```rust
+fn main() {
+    let embedding: Vec<f32> = vec![0.1, 0.2, 0.3];
+    modify_slice(&embedding);  // ERROR
+}
+
+fn modify_slice(values: &[f32]) {
+    values[0] = 0.5;  // Trying to modify through immutable slice
+}
+```
+
+**Compiler Error:**
+```
+error[E0596]: cannot borrow `*values` as mutable, as it is behind a shared reference
+   |
+8  | fn modify_slice(values: &[f32]) {
+   |                          ------ this parameter is an immutable shared reference
+9  |     values[0] = 0.5;
+   |     ^^^^^^^^^ cannot assign through an immutable slice
+```
+
+**Solution:** Use a mutable slice:
+
+```rust
+fn main() {
+    let mut embedding: Vec<f32> = vec![0.1, 0.2, 0.3];
+    modify_slice(&mut embedding);  // Pass mutable slice
+    println!("{:?}", embedding);   // [0.5, 0.2, 0.3]
+}
+
+fn modify_slice(values: &mut [f32]) {
+    values[0] = 0.5;  // Now it works
+}
+
+fn sum_slice(values: &[f32]) -> f32 {
+    values.iter().sum()
+}
+```
+
+### Why Slices Matter for Our Database
+
+Remember our cosine similarity function from Post #1?
+
+```rust
+// Takes slices, not owned Vecs!
+fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
+    assert_eq!(a.len(), b.len(), "Vectors must have same dimension");
+    
+    let dot: f32 = a.iter().zip(b).map(|(x, y)| x * y).sum();
+    let norm_a: f32 = a.iter().map(|x| x * x).sum::<f32>().sqrt();
+    let norm_b: f32 = b.iter().map(|x| x * x).sum::<f32>().sqrt();
+    
+    dot / (norm_a * norm_b)
+}
+
+fn main() {
+    // Vectors live on the heap
+    let query: Vec<f32> = vec![0.1, 0.2, 0.3];
+    let doc: Vec<f32> = vec![0.4, 0.5, 0.6];
+    
+    // We pass slices - main() keeps ownership
+    let score = cosine_similarity(&query, &doc);
+    
+    // query and doc are still valid here!
+    println!("Query: {:?}, Score: {}", query, score);
+}
+```
+
+By using `&[f32]` instead of `Vec<f32>`:
+
+1. **No ownership transfer** — caller keeps their vectors
+2. **No cloning** — zero-copy access
+3. **Flexibility** — works with `Vec`, arrays, or sub-slices
+
+---
+
+## 6. Lifetimes: How Rust Tracks Reference Validity
+
+You might wonder: "How does Rust know that a reference is still valid?"
+
+The answer is **lifetimes**, the compiler's way of tracking how long each reference is valid. Most of the time, Rust infers them automatically (called **lifetime elision**).
+
+### When Lifetimes Are Invisible
+
+Rust infers the lifetime here, the returned `&str` lives as long as the input `&str`:
+
+```rust
+fn first_word(s: &str) -> &str {
+    match s.find(' ') {
+        Some(i) => &s[0..i],
+        None => s,
+    }
+}
+```
+
+### When Lifetimes Become Visible
+
+If a function takes *two* references and returns one, Rust can't guess which input the output borrows from. You must annotate:
+
+```rust
+// 'a is a lifetime parameter — it says:
+// "the returned reference lives as long as the shorter of a and b"
+fn longer_vec<'a>(a: &'a [f32], b: &'a [f32]) -> &'a [f32] {
+    if a.len() >= b.len() { a } else { b }
+}
+
+fn main() {
+    let v1 = vec![1.0, 2.0, 3.0];
+    let result;
+    {
+        let v2 = vec![4.0, 5.0];
+        result = longer_vec(&v1, &v2);
+        println!("Longer: {:?}", result); // Both v1 and v2 alive here
+    }
+    // println!("{:?}", result);          // v2 is dropped — result might dangle
+}
+```
+
+**The `'a` annotation doesn't *change* how long data lives.** It tells the compiler: "check that these references are all valid for the same scope." If they aren't, the compiler rejects the code.
+
+### The Practical Rule
+
+For Phase 1, you almost never need to write lifetime annotations. They'll appear naturally when we build the storage layer (Post 7+), where references into memory-mapped files must provably outlive the queries that use them.
+
+**If you see `missing lifetime specifier`, the compiler's error message will tell you exactly where to add `'a`.** Don't memorize rules, let the compiler guide you.
+
+---
+
+## 7. Exercises: Test Your Understanding
+
+These exercises are designed to build muscle memory with the borrow checker. Try to fix each one *before* looking at the answer.
+
+### Exercise 1: Fix the Move
+
+This code doesn't compile. Make it work **without** using `.clone()`:
+
+```rust
+fn print_length(s: String) {
+    println!("Length: {}", s.len());
+}
+
+fn main() {
+    let name = String::from("VectorDB");
+    print_length(name);
+    println!("Name: {}", name); // Error: value used after move
+}
+```
+
+<details>
+<summary><strong>Solution</strong></summary>
+
+Change `print_length` to borrow instead of taking ownership:
+
+```rust
+fn print_length(s: &String) {  // or better: s: &str
+    println!("Length: {}", s.len());
+}
+
+fn main() {
+    let name = String::from("VectorDB");
+    print_length(&name);        // Pass a reference
+    println!("Name: {}", name); // name is still valid
+}
+```
+</details>
+
+### Exercise 2: Fix the Borrow Conflict
+
+This code violates the borrowing rules. Fix it:
+
+```rust
+fn main() {
+    let mut scores = vec![0.95, 0.87, 0.72];
+    let first = &scores[0];       // immutable borrow
+    scores.push(0.99);            // mutable borrow while immutable exists
+    println!("First: {}", first);
+}
+```
+
+<details>
+<summary><strong>Solution</strong></summary>
+
+Use the immutable borrow *before* the mutable operation:
+
+```rust
+fn main() {
+    let mut scores = vec![0.95, 0.87, 0.72];
+    let first = scores[0];       // Copy the f32 value (f32 is Copy)
+    scores.push(0.99);           // No active borrows
+    println!("First: {}", first);
+}
+```
+
+Alternatively, use `first` before `push`:
+```rust
+fn main() {
+    let mut scores = vec![0.95, 0.87, 0.72];
+    let first = &scores[0];
+    println!("First: {}", first); // Use it here
+    // first's borrow ends (NLL)
+    scores.push(0.99);            // Now safe
+}
+```
+</details>
+
+### Exercise 3: Slice Challenge
+
+Write a function `max_value` that takes a `&[f32]` slice and returns the largest value. Handle the empty-slice case by returning `f32::NEG_INFINITY`.
+
+```rust
+fn max_value(values: &[f32]) -> f32 {
+    // Your code here
+    todo!()
+}
+
+fn main() {
+    let embeddings = vec![0.1, 0.9, 0.3, 0.7];
+    println!("Max: {}", max_value(&embeddings));      // 0.9
+    println!("Max: {}", max_value(&embeddings[0..2])); // 0.9
+    println!("Max: {}", max_value(&[]));               // -inf
+}
+```
+
+<details>
+<summary><strong>Solution</strong></summary>
+
+```rust
+fn max_value(values: &[f32]) -> f32 {
+    let mut max = f32::NEG_INFINITY;
+    for &val in values {
+        if val > max {
+            max = val;
+        }
+    }
+    max
+}
+
+// Or using iterators (idiomatic Rust):
+fn max_value_iter(values: &[f32]) -> f32 {
+    values.iter().copied().fold(f32::NEG_INFINITY, f32::max)
+}
+```
+</details>
+
+---
+
+## 8. Summary: The Systems Programmer's Mental Model
+
+| Concept | Mental Model |
+|---------|--------------|
+| **Owner** | The single manager responsible for freeing memory |
+| **Move** | "Here, you take responsibility for this data now" |
+| **Clone** | "Make a full copy, expensive but both are independent" |
+| **Borrow (`&T`)** | "I'm just looking. You still own it." |
+| **Mut Borrow (`&mut T`)** | "I need to modify this. Exclusive access, please." |
+| **Slice (`&[T]`)** | "A lightweight window into contiguous memory" |
+
+### The Ownership Flowchart
+
+![Ownership Decision Flowchart](diagrams/ownership-flowchart.svg)
+
+```
+Do you need to modify the data?
+│
+├─ NO ──→ Do you need ownership to persist beyond this function?
+│         │
+│         ├─ NO ──→ Use &T (immutable borrow)
+│         │
+│         └─ YES ─→ Do you need a separate copy?
+│                   │
+│                   ├─ NO ──→ Move ownership
+│                   └─ YES ─→ Clone
+│
+└─ YES ─→ Use &mut T (mutable borrow)
+          Make sure no other references exist!
+```
+
+---
+
+## 9. What's Next?
+
+### End-of-Post Checkpoint
+
+You should now be able to answer these questions confidently:
+
+1. **What happens when you assign `let s2 = s1;` where `s1` is a `String`?** → Ownership moves. `s1` is invalid.
+2. **How many mutable references can exist at once?** → Exactly one.
+3. **Why does `cosine_similarity` take `&[f32]` instead of `Vec<f32>`?** → Borrows a slice. No copying, no ownership transfer, works with any contiguous float data.
+
+If any of these feel shaky, re-read the relevant section. These concepts are used in **every single post** from here on.
+
+You've survived the borrow checker conceptually, at least. Now we need to put this knowledge into practice.
+
+In **Post #4**, we'll design the core data structures for our database:
+
+- **Structs** — How to define `Vector`, `Collection`, `SearchResult`
+- **Enums** — How to represent `DistanceMetric::Cosine | Euclidean | Dot`
+- **Error Handling** — Replace `.unwrap()` with proper `Result<T, E>` handling
+
+We'll write real code for our database, and the borrow checker will guide us.
+
+---
+
+*The borrow checker isn't your enemy, it's a senior engineer reviewing your memory management at compile time. Learn to listen to it.*
+
+---
+
+## Common pitfalls
+
+- **Reaching for `.clone()` the moment the compiler complains.** The error `E0382: borrow of moved value` tempts you to silence it by cloning. In a vector database that means copying 3KB per 768-dimensional embedding, and 30MB for a 10,000-vector batch. Before cloning, ask whether a borrow (`&T`) would do: most "value used after move" errors disappear once the callee takes `&String` or `&[f32]` instead of an owned value.
+- **Passing `Vec<f32>` where a slice belongs.** Writing `fn cosine_similarity(a: Vec<f32>, b: Vec<f32>)` forces the caller to surrender ownership (or clone) every call. Accept `&[f32]` instead: it is a pointer plus length, works with `Vec`, fixed-size arrays, and sub-slices alike, and the caller keeps their data.
+- **Assuming `let y = x` always moves.** It moves for heap-backed types like `String` and `Vec<f32>`, but `Copy` types (`i32`, `f32`, `bool`, `char`, fixed-size arrays of Copy types) are bit-copied, so `x` stays valid. Exercise 2's fix relies on exactly this: `let first = scores[0]` copies the `f32` instead of borrowing the vector.
+- **Holding an immutable borrow across a mutation.** Taking `let first = &scores[0]` and then calling `scores.push(...)` triggers `E0502`, because `push` needs a mutable borrow while `first` still holds a shared one. Thanks to non-lexical lifetimes, the fix is often just to *use* `first` (or copy it out) before the mutating call, so its borrow ends first.
+- **Trying to write through a shared reference.** Assigning `values[0] = 0.5` when `values: &[f32]` fails with `E0596`. A `&[T]` is read-only by design. If the function must mutate, its parameter has to be `&mut [T]` and the caller must pass `&mut`.
+- **Writing lifetime annotations too early.** Sprinkling `'a` everywhere because a tutorial showed it usually produces noise, not safety. In Phase 1 you almost never need them; let the `missing lifetime specifier` error tell you precisely where one is required, as it will when references into memory-mapped files must outlive the queries that read them.
+
+---
+
+## What to read next
+
+- **[Structs, Enums, and Error Handling](../04-structs-enums-error-handling/index.md)**: now that ownership is in your hands, we define the real database types (`Vector`, `Collection`, `DistanceMetric`) and replace `.unwrap()` with proper `Result<T, E>` error handling.
+
+---
+
+## Further reading
+
+- The Rust Programming Language ("the Book"), Steve Klabnik and Carol Nichols, chapters 4 ("Understanding Ownership") and 10.3 ("Validating References with Lifetimes"): https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html
+- The Rustonomicon (advanced ownership, aliasing, and lifetimes): https://doc.rust-lang.org/nomicon/
+- Rust by Example, sections on ownership, borrowing, and slices: https://doc.rust-lang.org/rust-by-example/scope.html
+
+Full citations in [REFERENCES.md](../../REFERENCES.md).

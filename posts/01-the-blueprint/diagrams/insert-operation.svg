@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 380" role="img" aria-labelledby="t d">
+  <title id="t">Insert Operation Flow</title>
+  <desc id="d">A flow diagram for an upsert request in the vector database. The request is written first to the write-ahead log for durability, then the vector index (HNSW) and metadata index are updated, and finally the write is acknowledged. A separate asynchronous background process periodically compacts the WAL into memory-mapped segments persisted to disk, so the write path stays fast while durability is preserved.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.on-fill-sm{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:9px;fill:#FFFFFF;}
+.mono-sm{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:9px;fill:#FFFFFF;}
+.box-alert{fill:var(--vdb-alert);stroke:var(--vdb-ink);stroke-width:1.5;}
+.label-sm{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:9px;fill:var(--vdb-ink-muted);}
+.head-on{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:11px;fill:var(--vdb-ink);}
+]]></style>
+
+  <rect class="bg" x="0" y="0" width="750" height="380"/>
+
+  <defs>
+    <marker id="arrowDark" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-ink)"/>
+    </marker>
+    <marker id="arrowMuted" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-ink-muted)"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" class="title">Insert Operation Flow</text>
+  <text x="375" y="48" text-anchor="middle" class="label">Upsert Request &#8594; WAL &#8594; Indexes &#8594; Response</text>
+
+  <!-- Input Box -->
+  <rect x="30" y="80" width="140" height="80" rx="6" class="box-primary"/>
+  <text x="100" y="108" text-anchor="middle" class="on-fill">Upsert Request</text>
+  <text x="100" y="128" text-anchor="middle" class="mono-sm">{id, vector,</text>
+  <text x="100" y="143" text-anchor="middle" class="mono-sm">metadata}</text>
+
+  <!-- Arrow 1 -->
+  <line x1="170" y1="120" x2="204" y2="120" class="flow" marker-end="url(#arrowDark)"/>
+
+  <!-- Step 1: Write to WAL -->
+  <rect x="210" y="80" width="140" height="80" rx="6" class="box-alert"/>
+  <text x="280" y="105" text-anchor="middle" class="on-fill">1. Write to WAL</text>
+  <text x="280" y="125" text-anchor="middle" class="on-fill-sm">FIRST (durability)</text>
+  <text x="280" y="145" text-anchor="middle" class="on-fill-sm">Append-only log</text>
+
+  <!-- Arrow 2 -->
+  <line x1="350" y1="120" x2="384" y2="95" class="flow" marker-end="url(#arrowDark)"/>
+
+  <!-- Step 2: Update Vector Index -->
+  <rect x="390" y="70" width="140" height="50" rx="6" class="box"/>
+  <text x="460" y="92" text-anchor="middle" class="head">2. Vector Index</text>
+  <text x="460" y="108" text-anchor="middle" class="label-sm">Update HNSW graph</text>
+
+  <!-- Arrow 3 -->
+  <line x1="460" y1="120" x2="460" y2="145" class="flow" marker-end="url(#arrowDark)"/>
+
+  <!-- Step 3: Update Metadata Index -->
+  <rect x="390" y="150" width="140" height="50" rx="6" class="box"/>
+  <text x="460" y="172" text-anchor="middle" class="head">3. Metadata Index</text>
+  <text x="460" y="188" text-anchor="middle" class="label-sm">Index attributes</text>
+
+  <!-- Arrow 4 -->
+  <line x1="530" y1="175" x2="564" y2="175" class="flow" marker-end="url(#arrowDark)"/>
+
+  <!-- Step 4: Acknowledge -->
+  <rect x="570" y="150" width="150" height="50" rx="6" class="box-success"/>
+  <text x="645" y="172" text-anchor="middle" class="on-fill">4. Acknowledge</text>
+  <circle cx="608" cy="185" r="4" fill="#FFFFFF"/>
+  <text x="650" y="188" text-anchor="middle" class="on-fill-sm">Return success</text>
+
+  <!-- Background Process Section -->
+  <rect x="30" y="240" width="690" height="120" rx="6" class="box" stroke-dasharray="5 5"/>
+  <circle cx="56" cy="261" r="4" fill="none" stroke="var(--vdb-ink-muted)" stroke-width="1"/>
+  <line x1="56" y1="261" x2="56" y2="258.5" stroke="var(--vdb-ink-muted)" stroke-width="1"/>
+  <line x1="56" y1="261" x2="58" y2="261" stroke="var(--vdb-ink-muted)" stroke-width="1"/>
+  <text x="68" y="265" class="head" fill="var(--vdb-ink-muted)">Background Process (async)</text>
+
+  <!-- Periodic Compaction -->
+  <rect x="60" y="285" width="180" height="55" rx="6" class="box"/>
+  <text x="150" y="308" text-anchor="middle" class="head" fill="var(--vdb-primary)">Periodic Compaction</text>
+  <text x="150" y="326" text-anchor="middle" class="label-sm">When WAL grows large</text>
+
+  <!-- Dashed arrow from WAL down into background process -->
+  <line x1="280" y1="160" x2="280" y2="312" class="flow-muted"/>
+  <line x1="280" y1="312" x2="245" y2="312" class="flow-muted" marker-end="url(#arrowMuted)"/>
+
+  <!-- Arrow compaction to segments -->
+  <line x1="240" y1="312" x2="314" y2="312" class="flow" marker-end="url(#arrowDark)"/>
+
+  <!-- WAL to Segments -->
+  <rect x="320" y="285" width="180" height="55" rx="6" class="box-success"/>
+  <text x="410" y="308" text-anchor="middle" class="on-fill">WAL &#8594; Segments</text>
+  <text x="410" y="326" text-anchor="middle" class="on-fill-sm">Memory-mapped files</text>
+
+  <!-- Arrow to disk -->
+  <line x1="500" y1="312" x2="534" y2="312" class="flow" marker-end="url(#arrowDark)"/>
+
+  <!-- Disk -->
+  <rect x="540" y="285" width="160" height="55" rx="6" class="box"/>
+  <ellipse cx="585" cy="306" rx="9" ry="3.5" fill="none" stroke="var(--vdb-ink)" stroke-width="1"/>
+  <path d="M576,306 v6 a9,3.5 0 0 0 18,0 v-6" fill="none" stroke="var(--vdb-ink)" stroke-width="1"/>
+  <text x="612" y="310" text-anchor="middle" class="head">Disk</text>
+  <text x="620" y="326" text-anchor="middle" class="label-sm">Optimized binary files</text>
+</svg>

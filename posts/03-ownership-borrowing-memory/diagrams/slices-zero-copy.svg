@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 320" role="img" aria-labelledby="t d">
+  <title id="t">Slices: Zero-Copy Views into Data</title>
+  <desc id="d">A Vec&lt;f32&gt; owner holds a pointer and length (5) into five heap elements (0.1 through 0.5). Three slices &amp;embedding[..], &amp;embedding[0..3], and &amp;embedding[2..] borrow overlapping ranges of that same heap array. The takeaway: slicing copies no data; each slice is just a pointer plus length (16 bytes on 64-bit).</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.mono-sm{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:9px;fill:var(--vdb-ink-muted);}
+.mono-cell{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:10px;fill:var(--vdb-ink);}
+.idx{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:8px;fill:var(--vdb-ink-subtle);}
+.cap{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:9px;fill:var(--vdb-ink-muted);}
+]]></style>
+
+  <rect class="bg" x="0" y="0" width="700" height="320"/>
+
+  <defs>
+    <marker id="sliceArrow" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-ink)"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="350" y="25" text-anchor="middle" class="title">Slices: Zero-Copy Views into Data</text>
+  <text x="350" y="45" text-anchor="middle" class="label">Borrow a portion without copying</text>
+
+  <!-- Owner section -->
+  <rect x="40" y="65" width="180" height="100" rx="8" class="box"/>
+  <rect x="40" y="65" width="6" height="100" rx="3" fill="var(--vdb-accent)"/>
+  <text x="130" y="90" text-anchor="middle" class="head">Owner: Vec&lt;f32&gt;</text>
+  <text x="55" y="115" class="mono-cell">embedding</text>
+  <text x="55" y="132" class="mono-cell">├─ ptr</text>
+  <text x="55" y="149" class="mono-cell">├─ len: 5</text>
+
+  <!-- Heap data -->
+  <rect x="250" y="65" width="410" height="75" rx="8" class="box"/>
+  <rect x="250" y="65" width="6" height="75" rx="3" fill="var(--vdb-primary)"/>
+  <text x="455" y="88" text-anchor="middle" class="head">Heap Data</text>
+
+  <!-- Array elements -->
+  <g transform="translate(275, 105)">
+    <rect x="0" y="0" width="60" height="30" class="box-primary"/>
+    <text x="30" y="20" text-anchor="middle" class="on-fill">0.1</text>
+    <text x="30" y="45" text-anchor="middle" class="idx">[0]</text>
+
+    <rect x="65" y="0" width="60" height="30" class="box-primary"/>
+    <text x="95" y="20" text-anchor="middle" class="on-fill">0.2</text>
+    <text x="95" y="45" text-anchor="middle" class="idx">[1]</text>
+
+    <rect x="130" y="0" width="60" height="30" class="box-primary"/>
+    <text x="160" y="20" text-anchor="middle" class="on-fill">0.3</text>
+    <text x="160" y="45" text-anchor="middle" class="idx">[2]</text>
+
+    <rect x="195" y="0" width="60" height="30" class="box-primary"/>
+    <text x="225" y="20" text-anchor="middle" class="on-fill">0.4</text>
+    <text x="225" y="45" text-anchor="middle" class="idx">[3]</text>
+
+    <rect x="260" y="0" width="60" height="30" class="box-primary"/>
+    <text x="290" y="20" text-anchor="middle" class="on-fill">0.5</text>
+    <text x="290" y="45" text-anchor="middle" class="idx">[4]</text>
+  </g>
+
+  <!-- Owner arrow -->
+  <line x1="220" y1="120" x2="272" y2="120" class="flow" marker-end="url(#sliceArrow)"/>
+
+  <!-- Slices section -->
+  <rect x="40" y="175" width="620" height="130" rx="8" class="box"/>
+  <rect x="40" y="175" width="6" height="130" rx="3" fill="var(--vdb-success)"/>
+  <text x="60" y="198" class="head">Slices - Zero-Copy Views:</text>
+
+  <!-- Slice 1: Full -->
+  <rect x="60" y="210" width="175" height="40" rx="4" class="box"/>
+  <text x="148" y="227" text-anchor="middle" class="mono-cell">&amp;embedding[..]</text>
+  <text x="148" y="243" text-anchor="middle" class="cap">Full slice (all 5)</text>
+
+  <!-- Slice 1 bracket -->
+  <path d="M275 155 L275 205 L595 205 L595 155" class="flow-muted"/>
+  <line x1="235" y1="230" x2="275" y2="195" class="flow-muted"/>
+
+  <!-- Slice 2: First 3 -->
+  <rect x="250" y="210" width="175" height="40" rx="4" class="box"/>
+  <text x="338" y="227" text-anchor="middle" class="mono-cell">&amp;embedding[0..3]</text>
+  <text x="338" y="243" text-anchor="middle" class="cap">First 3 elements</text>
+
+  <!-- Slice 2 bracket -->
+  <path d="M275 157 L275 175 L465 175 L465 157" class="flow-muted"/>
+  <line x1="338" y1="210" x2="370" y2="175" class="flow-muted"/>
+
+  <!-- Slice 3: Last 3 -->
+  <rect x="440" y="210" width="175" height="40" rx="4" class="box"/>
+  <text x="528" y="227" text-anchor="middle" class="mono-cell">&amp;embedding[2..]</text>
+  <text x="528" y="243" text-anchor="middle" class="cap">Last 3 elements</text>
+
+  <!-- Slice 3 bracket -->
+  <path d="M405 157 L405 185 L595 185 L595 157" class="flow-muted"/>
+  <line x1="528" y1="210" x2="500" y2="185" class="flow-muted"/>
+
+  <!-- Key insight -->
+  <rect x="60" y="260" width="590" height="35" rx="4" fill="var(--vdb-neutral-1)" stroke="var(--vdb-border)" stroke-width="1"/>
+  <circle cx="78" cy="277" r="4" fill="var(--vdb-success)" stroke="var(--vdb-ink)" stroke-width="0.75"/>
+  <text x="355" y="282" text-anchor="middle" class="head">No data is copied! Each slice is just a pointer + length (16 bytes on 64-bit)</text>
+</svg>

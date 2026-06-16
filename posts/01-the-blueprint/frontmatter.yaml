@@ -1,0 +1,7 @@
+slug: 01-the-blueprint
+title: "The Blueprint: Designing a Production-Grade Vector Database from Scratch"
+date: 2026-01-04
+tags: [vector-database, architecture, rust, introduction]
+hero: diagrams/architecture.svg
+reading_time: 15
+part: "Part I — Foundations"

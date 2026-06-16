@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 550" role="img" aria-labelledby="t d">
+  <title id="t">HNSW Insertion Algorithm</title>
+  <desc id="d">A four-step pipeline for inserting a new node Q into an HNSW graph: assign a random level, find the entry point by greedy descent, search each layer with beam search, then connect to the M best neighbors. Below the steps, a before-and-after pair of small graphs shows node Q added with M=2 new bidirectional edges. The takeaway is that insertion reuses the same layered search used for queries and only adds a bounded number of edges per node.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.step-sub{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:10px;fill:var(--vdb-ink-muted);}
+.step-mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:9px;fill:var(--vdb-ink);}
+.tiny{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:9px;fill:var(--vdb-ink-subtle);}
+.node-fill{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.node-new{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.edge-existing{stroke:var(--vdb-success);stroke-width:1.5;fill:none;}
+.edge-faded{stroke:var(--vdb-border);stroke-width:1;fill:none;}
+.edge-new{stroke:var(--vdb-primary);stroke-width:1.5;fill:none;}
+]]></style>
+
+  <rect class="bg" x="0" y="0" width="800" height="550"/>
+
+  <defs>
+    <marker id="arrowDown" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto">
+      <path d="M0,0 L0,9 L8,4.5 z" fill="var(--vdb-ink)"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" class="title">HNSW Insertion Algorithm</text>
+  <text x="400" y="52" text-anchor="middle" class="label">4 steps to insert a new node into the graph</text>
+
+  <!-- Step 1 -->
+  <rect x="40" y="80" width="170" height="110" rx="8" class="box"/>
+  <rect x="40" y="80" width="170" height="26" rx="8" class="box-primary"/>
+  <rect x="40" y="94" width="170" height="12" class="box-primary"/>
+  <text x="55" y="98" class="on-fill">Step 1: Assign Level</text>
+  <text x="125" y="128" text-anchor="middle" class="step-sub">Draw random level using</text>
+  <text x="125" y="142" text-anchor="middle" class="step-sub">exponential distribution:</text>
+  <text x="125" y="160" text-anchor="middle" class="step-mono">floor(-ln(rand()) x mL)</text>
+  <text x="125" y="178" text-anchor="middle" class="tiny">Most nodes - Layer 0 only</text>
+
+  <!-- Arrow 1->2 -->
+  <line x1="212" y1="135" x2="236" y2="135" class="flow" marker-end="url(#arrowDown)"/>
+
+  <!-- Step 2 -->
+  <rect x="240" y="80" width="170" height="110" rx="8" class="box"/>
+  <rect x="240" y="80" width="170" height="26" rx="8" class="box-accent"/>
+  <rect x="240" y="94" width="170" height="12" class="box-accent"/>
+  <text x="255" y="98" class="on-fill">Step 2: Find Entry</text>
+  <text x="325" y="128" text-anchor="middle" class="step-sub">Start at entry point</text>
+  <text x="325" y="142" text-anchor="middle" class="step-sub">(top layer). Greedy</text>
+  <text x="325" y="156" text-anchor="middle" class="step-sub">descend to insert level:</text>
+  <text x="325" y="174" text-anchor="middle" class="step-mono">ef = 1, greedy_closest()</text>
+
+  <!-- Arrow 2->3 -->
+  <line x1="412" y1="135" x2="436" y2="135" class="flow" marker-end="url(#arrowDown)"/>
+
+  <!-- Step 3 -->
+  <rect x="440" y="80" width="170" height="110" rx="8" class="box"/>
+  <rect x="440" y="80" width="170" height="26" rx="8" class="box-success"/>
+  <rect x="440" y="94" width="170" height="12" class="box-success"/>
+  <text x="455" y="98" class="on-fill">Step 3: Search Layer</text>
+  <text x="525" y="128" text-anchor="middle" class="step-sub">At each layer &#8804; insert</text>
+  <text x="525" y="142" text-anchor="middle" class="step-sub">level, run beam search</text>
+  <text x="525" y="156" text-anchor="middle" class="step-sub">to find ef_construction</text>
+  <text x="525" y="174" text-anchor="middle" class="step-mono">nearest neighbors</text>
+
+  <!-- Arrow 3->4 -->
+  <line x1="612" y1="135" x2="636" y2="135" class="flow" marker-end="url(#arrowDown)"/>
+
+  <!-- Step 4 -->
+  <rect x="640" y="80" width="140" height="110" rx="8" class="box"/>
+  <rect x="640" y="80" width="140" height="26" rx="8" class="box-primary"/>
+  <rect x="640" y="94" width="140" height="12" class="box-primary"/>
+  <text x="655" y="98" class="on-fill">Step 4: Connect</text>
+  <text x="710" y="128" text-anchor="middle" class="step-sub">Select M best</text>
+  <text x="710" y="142" text-anchor="middle" class="step-sub">neighbors (heuristic)</text>
+  <text x="710" y="156" text-anchor="middle" class="step-sub">Add bidirectional</text>
+  <text x="710" y="174" text-anchor="middle" class="step-mono">edges on each layer</text>
+
+  <!-- Before: existing graph -->
+  <rect x="40" y="220" width="340" height="300" rx="8" class="box"/>
+  <text x="210" y="246" text-anchor="middle" class="head">Before Insertion</text>
+
+  <!-- Existing edges -->
+  <line x1="138" y1="320" x2="232" y2="290" class="edge-existing"/>
+  <line x1="268" y1="290" x2="292" y2="340" class="edge-existing"/>
+  <line x1="300" y1="358" x2="300" y2="392" class="edge-existing"/>
+  <line x1="138" y1="335" x2="145" y2="425" class="edge-existing"/>
+  <line x1="178" y1="440" x2="282" y2="410" class="edge-existing"/>
+
+  <!-- Existing nodes -->
+  <circle cx="120" cy="320" r="18" class="node-fill"/>
+  <text x="120" y="324" text-anchor="middle" class="on-fill">A</text>
+  <circle cx="250" cy="290" r="18" class="node-fill"/>
+  <text x="250" y="294" text-anchor="middle" class="on-fill">B</text>
+  <circle cx="300" cy="410" r="18" class="node-fill"/>
+  <text x="300" y="414" text-anchor="middle" class="on-fill">C</text>
+  <circle cx="160" cy="440" r="18" class="node-fill"/>
+  <text x="160" y="444" text-anchor="middle" class="on-fill">D</text>
+  <circle cx="310" cy="340" r="18" class="node-fill"/>
+  <text x="310" y="344" text-anchor="middle" class="on-fill">E</text>
+
+  <!-- After: graph with new node -->
+  <rect x="420" y="220" width="360" height="300" rx="8" class="box"/>
+  <text x="600" y="246" text-anchor="middle" class="head">After Insertion (M=2)</text>
+
+  <!-- Existing edges (faded) -->
+  <line x1="518" y1="320" x2="612" y2="290" class="edge-faded"/>
+  <line x1="648" y1="290" x2="672" y2="340" class="edge-faded"/>
+  <line x1="680" y1="358" x2="680" y2="392" class="edge-faded"/>
+  <line x1="518" y1="335" x2="525" y2="425" class="edge-faded"/>
+  <line x1="558" y1="440" x2="662" y2="410" class="edge-faded"/>
+
+  <!-- New edges -->
+  <line x1="598" y1="365" x2="672" y2="345" class="edge-new"/>
+  <line x1="595" y1="380" x2="662" y2="405" class="edge-new"/>
+
+  <!-- Same nodes -->
+  <circle cx="500" cy="320" r="18" class="node-fill"/>
+  <text x="500" y="324" text-anchor="middle" class="on-fill">A</text>
+  <circle cx="630" cy="290" r="18" class="node-fill"/>
+  <text x="630" y="294" text-anchor="middle" class="on-fill">B</text>
+  <circle cx="680" cy="410" r="18" class="node-fill"/>
+  <text x="680" y="414" text-anchor="middle" class="on-fill">C</text>
+  <circle cx="540" cy="440" r="18" class="node-fill"/>
+  <text x="540" y="444" text-anchor="middle" class="on-fill">D</text>
+  <circle cx="690" cy="340" r="18" class="node-fill"/>
+  <text x="690" y="344" text-anchor="middle" class="on-fill">E</text>
+
+  <!-- NEW NODE -->
+  <circle cx="580" cy="370" r="20" class="node-new"/>
+  <text x="580" y="374" text-anchor="middle" class="on-fill">Q</text>
+  <text x="580" y="402" text-anchor="middle" class="tiny">new</text>
+
+  <!-- Legend -->
+  <line x1="440" y1="500" x2="462" y2="500" class="edge-existing"/>
+  <text x="468" y="504" class="label">Existing edge</text>
+  <line x1="560" y1="500" x2="582" y2="500" class="edge-new"/>
+  <text x="588" y="504" class="label">New edges (M=2 neighbors)</text>
+</svg>

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420" role="img" aria-labelledby="t d">
+  <title id="t">Hybrid Search: Combining Vector and Text Retrieval</title>
+  <desc id="d">A query "fast python web framework" is split down two parallel paths: vector search using HNSW for semantic understanding (returning FastAPI, Starlette, Sanic) and text search using Tantivy with BM25 keyword matching (returning Flask, Django, FastAPI). Both result sets feed into a Reciprocal Rank Fusion (RRF) step that merges them into a single ranked list. The takeaway is that combining semantic and keyword retrieval yields better results than either alone.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.head-sm{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:9px;fill:var(--vdb-ink);}
+.label-sm{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:9px;fill:var(--vdb-ink-muted);}
+.on-fill-sm{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:11px;fill:#FFFFFF;}
+.mono-sm{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:8px;}
+]]></style>
+
+  <defs>
+    <marker id="hybridArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="var(--vdb-ink)"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect class="bg" x="0" y="0" width="750" height="420"/>
+
+  <!-- Title -->
+  <text class="title" x="375" y="30" text-anchor="middle">Hybrid Search: Combining Vector + Text</text>
+  <text class="label" x="375" y="48" text-anchor="middle">Best of both worlds: semantic understanding + keyword precision</text>
+
+  <!-- Query -->
+  <rect class="box-primary" x="275" y="70" width="200" height="40" rx="8"/>
+  <text class="on-fill" x="375" y="95" text-anchor="middle">Query: "fast python web framework"</text>
+
+  <!-- Split arrows -->
+  <line class="flow" x1="325" y1="110" x2="180" y2="145" marker-end="url(#hybridArrow)"/>
+  <line class="flow" x1="425" y1="110" x2="570" y2="145" marker-end="url(#hybridArrow)"/>
+
+  <!-- Vector Search Path -->
+  <rect class="box" x="50" y="150" width="260" height="170" rx="10"/>
+  <path class="box-success" d="M50,180 L50,160 a10,10 0 0 1 10,-10 L300,150 a10,10 0 0 1 10,10 L310,180 Z"/>
+  <text class="on-fill-sm" x="180" y="172" text-anchor="middle">Vector Search (HNSW)</text>
+
+  <text class="head-sm" x="70" y="205">Semantic Understanding:</text>
+  <text class="label-sm" x="70" y="225">• "fast" → performance, speed, quick</text>
+  <text class="label-sm" x="70" y="245">• "framework" → library, toolkit</text>
+  <text class="label-sm" x="70" y="265">• Context-aware matching</text>
+
+  <rect class="box" x="70" y="285" width="220" height="25" rx="4"/>
+  <text class="mono mono-sm" x="180" y="302" text-anchor="middle" fill="var(--vdb-success)">Results: FastAPI, Starlette, Sanic</text>
+
+  <!-- Text Search Path -->
+  <rect class="box" x="440" y="150" width="260" height="170" rx="10"/>
+  <path class="box-primary" d="M440,180 L440,160 a10,10 0 0 1 10,-10 L690,150 a10,10 0 0 1 10,10 L700,180 Z"/>
+  <text class="on-fill-sm" x="570" y="172" text-anchor="middle">Text Search (Tantivy)</text>
+
+  <text class="head-sm" x="460" y="205">Keyword Matching:</text>
+  <text class="label-sm" x="460" y="225">• BM25 scoring</text>
+  <text class="label-sm" x="460" y="245">• Exact phrase: "python"</text>
+  <text class="label-sm" x="460" y="265">• Inverted index lookup</text>
+
+  <rect class="box" x="460" y="285" width="220" height="25" rx="4"/>
+  <text class="mono mono-sm" x="570" y="302" text-anchor="middle" fill="var(--vdb-primary)">Results: Flask, Django, FastAPI</text>
+
+  <!-- Merge -->
+  <line class="flow" x1="180" y1="320" x2="320" y2="355" marker-end="url(#hybridArrow)"/>
+  <line class="flow" x1="570" y1="320" x2="430" y2="355" marker-end="url(#hybridArrow)"/>
+
+  <!-- Fusion -->
+  <rect class="box" x="200" y="355" width="350" height="55" rx="10"/>
+  <path class="box-accent" d="M200,380 L200,365 a10,10 0 0 1 10,-10 L540,355 a10,10 0 0 1 10,10 L550,380 Z"/>
+  <text class="on-fill-sm" x="375" y="373" text-anchor="middle">Reciprocal Rank Fusion (RRF)</text>
+
+  <text class="mono mono-sm" x="375" y="398" text-anchor="middle" fill="var(--vdb-ink-muted)">score = Σ 1/(k + rank_i) → FastAPI: 0.95, Starlette: 0.72, Django: 0.65</text>
+</svg>

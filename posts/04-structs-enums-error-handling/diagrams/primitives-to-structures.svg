@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 380" role="img" aria-labelledby="t d">
+  <title id="t">From Primitives to Structures</title>
+  <desc id="d">Raw primitive types (f32, String, usize, Vec&lt;T&gt;) on the left are organized into meaningful structured types on the right: a struct Vector grouping related data, an enum DistanceMetric of mutually exclusive choices, a Result&lt;T, E&gt; type for success or failure, and an Option&lt;T&gt; type for presence or absence. The takeaway is that structuring primitives produces meaningful, type-safe, self-documenting types.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.head-c{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:11px;fill:var(--vdb-ink);}
+.mono-sm{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:11px;fill:var(--vdb-ink);}
+.mono-xs{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:400;font-size:9px;fill:var(--vdb-ink-muted);}
+.label-xs{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:8px;fill:var(--vdb-ink-subtle);}
+.label-foot{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:10px;fill:var(--vdb-success);}
+.label-sub{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:10px;fill:var(--vdb-ink-subtle);}
+]]></style>
+
+  <defs>
+    <marker id="orgArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="var(--vdb-ink)"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="750" height="380"/>
+
+  <!-- Title -->
+  <text class="title" x="375" y="30" text-anchor="middle">From Primitives to Structures</text>
+  <text class="label-sub" x="375" y="50" text-anchor="middle">Organizing raw data into meaningful types</text>
+
+  <!-- Primitives Section -->
+  <rect class="box" x="40" y="75" width="200" height="280" rx="10"/>
+  <path class="box-accent" d="M50,75 h180 a10,10 0 0 1 10,10 v25 h-200 v-25 a10,10 0 0 1 10,-10 z"/>
+  <text class="on-fill" x="140" y="98" text-anchor="middle">Raw Primitives</text>
+
+  <rect class="box" x="60" y="125" width="160" height="40" rx="6"/>
+  <text class="mono-sm" x="140" y="150" text-anchor="middle">f32</text>
+
+  <rect class="box" x="60" y="175" width="160" height="40" rx="6"/>
+  <text class="mono-sm" x="140" y="200" text-anchor="middle">String</text>
+
+  <rect class="box" x="60" y="225" width="160" height="40" rx="6"/>
+  <text class="mono-sm" x="140" y="250" text-anchor="middle">usize</text>
+
+  <rect class="box" x="60" y="275" width="160" height="40" rx="6"/>
+  <text class="mono-sm" x="140" y="300" text-anchor="middle">Vec&lt;T&gt;</text>
+
+  <text class="label-sub" x="140" y="340" text-anchor="middle">Unorganized, no context</text>
+
+  <!-- Arrow -->
+  <line class="flow" x1="250" y1="215" x2="320" y2="215" marker-end="url(#orgArrow)"/>
+  <text class="label" x="285" y="200" text-anchor="middle">organize</text>
+  <text class="label" x="285" y="235" text-anchor="middle">into</text>
+
+  <!-- Structures Section -->
+  <rect class="box" x="330" y="75" width="390" height="280" rx="10"/>
+  <path class="box-success" d="M340,75 h370 a10,10 0 0 1 10,10 v25 h-390 v-25 a10,10 0 0 1 10,-10 z"/>
+  <text class="on-fill" x="525" y="98" text-anchor="middle">Structured Types</text>
+
+  <!-- Vector struct -->
+  <rect class="box" x="350" y="120" width="160" height="90" rx="6"/>
+  <text class="head-c" x="430" y="140" text-anchor="middle">struct Vector</text>
+  <text class="mono-xs" x="365" y="158">├─ id: String</text>
+  <text class="mono-xs" x="365" y="173">├─ data: Vec&lt;f32&gt;</text>
+  <text class="mono-xs" x="365" y="188">└─ dimension: usize</text>
+  <text class="label-xs" x="430" y="205" text-anchor="middle">Grouping related data</text>
+
+  <!-- DistanceMetric enum -->
+  <rect class="box" x="540" y="120" width="160" height="90" rx="6"/>
+  <text class="head-c" x="620" y="140" text-anchor="middle">enum DistanceMetric</text>
+  <text class="mono-xs" x="555" y="158">├─ Cosine</text>
+  <text class="mono-xs" x="555" y="173">├─ Euclidean</text>
+  <text class="mono-xs" x="555" y="188">└─ Dot</text>
+  <text class="label-xs" x="620" y="205" text-anchor="middle">Mutually exclusive choices</text>
+
+  <!-- Result type -->
+  <rect class="box" x="350" y="220" width="160" height="90" rx="6"/>
+  <text class="head-c" x="430" y="240" text-anchor="middle">Result&lt;T, E&gt;</text>
+  <text class="mono-xs" x="365" y="258">├─ Ok(value)</text>
+  <text class="mono-xs" x="365" y="273">└─ Err(error)</text>
+  <text class="label-xs" x="430" y="305" text-anchor="middle">Success or failure</text>
+
+  <!-- Option type -->
+  <rect class="box" x="540" y="220" width="160" height="90" rx="6"/>
+  <text class="head-c" x="620" y="240" text-anchor="middle">Option&lt;T&gt;</text>
+  <text class="mono-xs" x="555" y="258">├─ Some(value)</text>
+  <text class="mono-xs" x="555" y="273">└─ None</text>
+  <text class="label-xs" x="620" y="305" text-anchor="middle">Presence or absence</text>
+
+  <text class="label-foot" x="525" y="340" text-anchor="middle">Meaningful, type-safe, self-documenting</text>
+</svg>

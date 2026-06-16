@@ -1,0 +1,7 @@
+slug: 02-setting-up-the-forge
+title: "Setting Up the Forge: Rust Toolchain, Project Structure, and Development Environment"
+date: 2026-01-04
+tags: [rust, tooling, project-setup, cargo]
+hero: diagrams/project-structure.svg
+reading_time: 10
+part: "Part I — Foundations"

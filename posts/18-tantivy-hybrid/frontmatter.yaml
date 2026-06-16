@@ -1,0 +1,7 @@
+slug: 18-tantivy-hybrid
+title: "The Hybrid Engine: Integrating Tantivy for High-Speed Metadata Filtering"
+date: 2026-03-10
+tags: [tantivy, hybrid-search, metadata-filtering, integration]
+hero: diagrams/hybrid-search.svg
+reading_time: 20
+part: "Part IV — Hybrid Search & Production"

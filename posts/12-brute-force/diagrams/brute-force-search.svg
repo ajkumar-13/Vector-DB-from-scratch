@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" role="img" aria-labelledby="t d">
+  <title id="t">Brute Force Search: The O(N) Baseline</title>
+  <desc id="d">A query vector is compared against every one of 1,000,000 stored vectors, each scored by similarity and marked as high (keep) or low (skip). The complexity panels contrast brute force at O(N x D) — roughly 768M operations and 50-100ms latency — against HNSW at O(log N x D), roughly 15K operations and 1-5ms latency. The takeaway: exhaustive scanning is simple but scales linearly, motivating approximate indexes.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.cell-keep{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:0.75;}
+.cell-skip{fill:var(--vdb-neutral-1);stroke:var(--vdb-border);stroke-width:0.75;}
+.cell-num{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:8px;fill:var(--vdb-ink);}
+.cell-num-keep{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:600;font-size:8px;fill:#FFFFFF;}
+.alert-bar{fill:var(--vdb-alert);}
+.success-bar{fill:var(--vdb-success);}
+]]></style>
+
+  <rect class="bg" x="0" y="0" width="750" height="400"/>
+
+  <!-- Title -->
+  <text x="375" y="28" text-anchor="middle" class="title">Brute Force Search: The O(N) Baseline</text>
+  <text x="375" y="47" text-anchor="middle" class="label">Compare query against EVERY vector — simple but slow</text>
+
+  <!-- Query vector -->
+  <rect x="50" y="80" width="120" height="50" rx="8" class="box-primary"/>
+  <text x="110" y="103" text-anchor="middle" class="on-fill">Query</text>
+  <text x="110" y="120" text-anchor="middle" class="cell-num-keep" font-size="9">[0.5, 0.3, ...]</text>
+
+  <!-- Arrow to vectors -->
+  <text x="190" y="98" text-anchor="middle" class="label">vs</text>
+  <line x1="172" y1="105" x2="216" y2="105" class="flow" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="var(--vdb-ink)"/>
+    </marker>
+  </defs>
+
+  <!-- All vectors panel -->
+  <rect x="220" y="70" width="480" height="160" rx="10" class="box"/>
+  <text x="460" y="92" text-anchor="middle" class="head">All N Vectors (1,000,000 vectors)</text>
+
+  <!-- Vector grid -->
+  <g transform="translate(240, 108)">
+    <!-- Row 1 -->
+    <rect x="0" y="0" width="40" height="25" rx="3" class="cell-keep"/>
+    <text x="20" y="16" text-anchor="middle" class="cell-num-keep">0.91</text>
+
+    <rect x="50" y="0" width="40" height="25" rx="3" class="cell-skip"/>
+    <text x="70" y="16" text-anchor="middle" class="cell-num">0.45</text>
+
+    <rect x="100" y="0" width="40" height="25" rx="3" class="cell-keep"/>
+    <text x="120" y="16" text-anchor="middle" class="cell-num-keep">0.88</text>
+
+    <rect x="150" y="0" width="40" height="25" rx="3" class="cell-skip"/>
+    <text x="170" y="16" text-anchor="middle" class="cell-num">0.32</text>
+
+    <rect x="200" y="0" width="40" height="25" rx="3" class="cell-skip"/>
+    <text x="220" y="16" text-anchor="middle" class="cell-num">0.51</text>
+
+    <rect x="250" y="0" width="40" height="25" rx="3" class="cell-keep"/>
+    <text x="270" y="16" text-anchor="middle" class="cell-num-keep">0.95</text>
+
+    <rect x="300" y="0" width="40" height="25" rx="3" class="cell-skip"/>
+    <text x="320" y="16" text-anchor="middle" class="cell-num">0.28</text>
+
+    <rect x="350" y="0" width="40" height="25" rx="3" class="cell-skip"/>
+    <text x="370" y="16" text-anchor="middle" class="cell-num">0.67</text>
+
+    <!-- Row 2 -->
+    <rect x="0" y="35" width="40" height="25" rx="3" class="cell-skip"/>
+    <text x="20" y="51" text-anchor="middle" class="cell-num">0.43</text>
+
+    <rect x="50" y="35" width="40" height="25" rx="3" class="cell-keep"/>
+    <text x="70" y="51" text-anchor="middle" class="cell-num-keep">0.89</text>
+
+    <rect x="100" y="35" width="40" height="25" rx="3" class="cell-skip"/>
+    <text x="120" y="51" text-anchor="middle" class="cell-num">0.55</text>
+
+    <rect x="150" y="35" width="40" height="25" rx="3" class="cell-skip"/>
+    <text x="170" y="51" text-anchor="middle" class="cell-num">0.61</text>
+
+    <rect x="200" y="35" width="100" height="25" rx="3" fill="var(--vdb-neutral-1)" stroke="var(--vdb-border)" stroke-width="0.75"/>
+    <text x="250" y="51" text-anchor="middle" class="label">... 999,988 more ...</text>
+
+    <rect x="310" y="35" width="40" height="25" rx="3" class="cell-skip"/>
+    <text x="330" y="51" text-anchor="middle" class="cell-num">0.39</text>
+
+    <rect x="360" y="35" width="40" height="25" rx="3" class="cell-keep"/>
+    <text x="380" y="51" text-anchor="middle" class="cell-num-keep">0.92</text>
+
+    <!-- Legend -->
+    <rect x="130" y="80" width="11" height="11" rx="2" class="cell-keep"/>
+    <text x="147" y="89" class="label">High similarity (keep)</text>
+    <rect x="130" y="96" width="11" height="11" rx="2" class="cell-skip"/>
+    <text x="147" y="105" class="label">Low similarity (skip)</text>
+  </g>
+
+  <!-- Complexity comparison: Brute Force -->
+  <rect x="50" y="250" width="300" height="130" rx="10" class="box"/>
+  <rect x="50" y="250" width="6" height="130" rx="3" class="alert-bar"/>
+  <text x="200" y="278" text-anchor="middle" class="head">Brute Force</text>
+  <text x="200" y="304" text-anchor="middle" class="mono" font-size="15">O(N × D)</text>
+  <text x="200" y="328" text-anchor="middle" class="label">N = 1M vectors, D = 768 dims</text>
+  <text x="200" y="348" text-anchor="middle" class="head" font-size="11">768M operations per query!</text>
+  <text x="200" y="368" text-anchor="middle" class="label">~50-100ms latency</text>
+
+  <!-- Complexity comparison: HNSW -->
+  <rect x="400" y="250" width="300" height="130" rx="10" class="box"/>
+  <rect x="400" y="250" width="6" height="130" rx="3" class="success-bar"/>
+  <text x="550" y="278" text-anchor="middle" class="head">HNSW (next post!)</text>
+  <text x="550" y="304" text-anchor="middle" class="mono" font-size="15">O(log N × D)</text>
+  <text x="550" y="328" text-anchor="middle" class="label">Only ~20 comparisons needed</text>
+  <text x="550" y="348" text-anchor="middle" class="head" font-size="11">15K operations per query!</text>
+  <text x="550" y="368" text-anchor="middle" class="label">~1-5ms latency</text>
+</svg>

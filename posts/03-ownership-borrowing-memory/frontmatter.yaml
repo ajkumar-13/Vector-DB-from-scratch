@@ -1,0 +1,7 @@
+slug: 03-ownership-borrowing-memory
+title: "Rust Crash Course Part 1: Ownership, Borrowing, and Memory Management"
+date: 2026-01-05
+tags: [rust, ownership, borrowing, memory-management]
+hero: diagrams/borrowing-rules.svg
+reading_time: 15
+part: "Part I — Foundations"

@@ -1,0 +1,7 @@
+slug: 05-async-axum
+title: "The Async Runtime: Understanding Tokio, Futures, and Building a Real HTTP Server with Axum"
+date: 2026-01-04
+tags: [async, tokio, axum, http-api]
+hero: diagrams/sync-vs-async.svg
+reading_time: 20
+part: "Part II — Storage & Persistence"

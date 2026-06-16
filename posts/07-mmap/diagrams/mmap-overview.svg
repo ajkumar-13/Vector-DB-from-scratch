@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420" role="img" aria-labelledby="t d">
+  <title id="t">Memory-Mapped I/O (mmap)</title>
+  <desc id="d">A process's virtual memory (with stack, heap, an mmap region exposing file bytes as a slice, and code) is linked by mmap() to a file on disk (vectors.seg) whose pages are managed by the OS kernel page cache. Accessing an unloaded address triggers a page fault that loads that page on demand. The takeaway: mmap lets the OS handle file I/O efficiently, giving zero-copy, lazy, shared, and simple slice-based access.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.sub{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:10px;fill:var(--vdb-ink-subtle);}
+.cap{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:11px;fill:var(--vdb-success);}
+.monosm{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:10px;fill:var(--vdb-ink-muted);}
+  ]]></style>
+
+  <rect class="bg" x="0" y="0" width="750" height="420"/>
+
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" class="title">Memory-Mapped I/O (mmap)</text>
+  <text x="375" y="48" text-anchor="middle" class="label">Let the OS handle file I/O efficiently</text>
+
+  <!-- Process Virtual Memory -->
+  <rect class="box" x="50" y="70" width="280" height="270" rx="8"/>
+  <path class="box-primary" d="M50 78 a8 8 0 0 1 8 -8 h264 a8 8 0 0 1 8 8 v22 h-280 z"/>
+  <text x="190" y="92" text-anchor="middle" class="on-fill">Process Virtual Memory</text>
+
+  <!-- Stack -->
+  <rect class="box" x="70" y="115" width="240" height="35" rx="4"/>
+  <text x="190" y="137" text-anchor="middle" class="label">Stack</text>
+
+  <!-- Heap -->
+  <rect class="box" x="70" y="160" width="240" height="35" rx="4"/>
+  <text x="190" y="182" text-anchor="middle" class="label">Heap</text>
+
+  <!-- mmap region -->
+  <rect class="box-success" x="70" y="205" width="240" height="60" rx="4"/>
+  <text x="190" y="232" text-anchor="middle" class="on-fill">mmap Region</text>
+  <text x="190" y="252" text-anchor="middle" class="on-fill" style="font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-weight:500;font-size:11px">&amp;[u8] &#8594; file bytes!</text>
+
+  <!-- Code -->
+  <rect class="box" x="70" y="275" width="240" height="35" rx="4"/>
+  <text x="190" y="297" text-anchor="middle" class="label">Code</text>
+
+  <!-- Disk -->
+  <rect class="box" x="420" y="70" width="280" height="270" rx="8"/>
+  <path d="M420 78 a8 8 0 0 1 8 -8 h264 a8 8 0 0 1 8 8 v22 h-280 z" fill="var(--vdb-ink-muted)" stroke="var(--vdb-ink)" stroke-width="1.5"/>
+  <!-- disk platter marker -->
+  <ellipse cx="438" cy="85" rx="6" ry="6" fill="var(--vdb-surface)" stroke="none"/>
+  <circle cx="438" cy="85" r="2" fill="var(--vdb-ink-muted)"/>
+  <text x="566" y="89" text-anchor="middle" class="on-fill">Disk (SSD/HDD)</text>
+
+  <!-- File on disk -->
+  <rect class="box" x="440" y="115" width="240" height="80" rx="6" fill="var(--vdb-neutral-1)"/>
+  <text x="560" y="140" text-anchor="middle" class="head">vectors.seg</text>
+
+  <rect class="box-accent" x="455" y="155" width="50" height="30" rx="2"/>
+  <text x="480" y="174" text-anchor="middle" class="on-fill" style="font-size:9px">Page 0</text>
+  <rect class="box-primary" x="510" y="155" width="50" height="30" rx="2"/>
+  <text x="535" y="174" text-anchor="middle" class="on-fill" style="font-size:9px">Page 1</text>
+  <rect class="box-success" x="565" y="155" width="50" height="30" rx="2"/>
+  <text x="590" y="174" text-anchor="middle" class="on-fill" style="font-size:9px">Page 2</text>
+  <rect class="box" x="620" y="155" width="45" height="30" rx="2" fill="var(--vdb-surface)"/>
+  <text x="642" y="174" text-anchor="middle" class="sub">...</text>
+
+  <!-- OS/Kernel -->
+  <rect class="box" x="440" y="210" width="240" height="110" rx="6"/>
+  <text x="560" y="235" text-anchor="middle" class="head" style="fill:var(--vdb-warn)">OS Kernel</text>
+
+  <text x="460" y="260" class="head" style="font-size:10px">Page Cache</text>
+  <rect class="box-success" x="460" y="270" width="80" height="25" rx="3"/>
+  <text x="500" y="287" text-anchor="middle" class="on-fill" style="font-size:9px">Cached</text>
+  <rect class="box" x="545" y="270" width="60" height="25" rx="3" fill="var(--vdb-neutral-1)"/>
+  <text x="575" y="287" text-anchor="middle" class="sub">Cold</text>
+  <rect class="box" x="610" y="270" width="60" height="25" rx="3" fill="var(--vdb-neutral-1)"/>
+  <text x="640" y="287" text-anchor="middle" class="sub">Cold</text>
+
+  <text x="560" y="312" text-anchor="middle" class="label" style="font-size:9px">Loads pages on demand</text>
+
+  <!-- mmap connection -->
+  <path class="flow-muted" d="M310 235 Q 365 235, 420 175" style="stroke:var(--vdb-success);stroke-width:1.5;stroke-dasharray:6 3"/>
+  <text x="365" y="195" class="cap" style="font-size:10px">mmap()</text>
+
+  <!-- Access arrow -->
+  <defs>
+    <marker id="mmapArrow" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-primary)"/>
+    </marker>
+  </defs>
+  <path d="M310 235 Q 380 260, 460 280" class="flow" style="stroke:var(--vdb-primary);stroke-width:1.5" marker-end="url(#mmapArrow)"/>
+  <text x="385" y="280" class="label" style="font-size:9px;fill:var(--vdb-primary)">page fault &#8594; load</text>
+
+  <!-- Benefits box -->
+  <rect class="box" x="50" y="355" width="650" height="55" rx="8"/>
+
+  <circle cx="76" cy="374" r="3" fill="var(--vdb-success)"/>
+  <text x="86" y="378" class="cap">Zero-copy:</text>
+  <text x="160" y="378" class="label" style="font-size:10px">No memcpy from kernel to user space</text>
+
+  <circle cx="76" cy="394" r="3" fill="var(--vdb-success)"/>
+  <text x="86" y="398" class="cap">Lazy loading:</text>
+  <text x="175" y="398" class="label" style="font-size:10px">OS loads only accessed pages</text>
+
+  <circle cx="376" cy="374" r="3" fill="var(--vdb-success)"/>
+  <text x="386" y="378" class="cap">Shared cache:</text>
+  <text x="485" y="378" class="label" style="font-size:10px">Multiple processes share pages</text>
+
+  <circle cx="376" cy="394" r="3" fill="var(--vdb-success)"/>
+  <text x="386" y="398" class="cap">Simple API:</text>
+  <text x="475" y="398" class="label" style="font-size:10px">Use slice &amp;[u8] like normal memory</text>
+</svg>

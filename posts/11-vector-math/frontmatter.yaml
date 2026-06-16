@@ -1,0 +1,7 @@
+slug: 11-vector-math
+title: "Vector Math for Developers: Linear Algebra Basics, Dot Product, and Cosine Similarity"
+date: 2026-03-10
+tags: [vector-math, linear-algebra, cosine-similarity, embeddings]
+hero: diagrams/cosine-similarity.svg
+reading_time: 15
+part: "Part III — Vector Search & Indexing"

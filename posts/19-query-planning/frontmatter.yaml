@@ -1,0 +1,7 @@
+slug: 19-query-planning
+title: "Query Planning: Designing an Optimizer to Choose Between Vector-First and Filter-First Execution"
+date: 2026-03-10
+tags: [query-planning, optimizer, execution-strategy, performance]
+hero: diagrams/query-planner.svg
+reading_time: 15
+part: "Part IV — Hybrid Search & Production"

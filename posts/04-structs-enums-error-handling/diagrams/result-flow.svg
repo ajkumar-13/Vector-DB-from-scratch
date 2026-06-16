@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" role="img" aria-labelledby="t d">
+  <title id="t">Result&lt;T, E&gt; Control Flow</title>
+  <desc id="d">A flow diagram showing how a fallible call such as parse_vector(input) returns a Result&lt;Vector, ParseError&gt;, which a match expression splits into an Ok(v) success path and an Err(e) error path. The bottom panel shows the ? operator as a shortcut that unwraps Ok or returns early with Err. The takeaway is that Rust forces both success and failure to be handled explicitly.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.box-alert{fill:var(--vdb-alert);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-decision{fill:var(--vdb-neutral-1);stroke:var(--vdb-ink);stroke-width:1.5;}
+.mono-sm{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono-on{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:11px;fill:#FFFFFF;}
+.flow-ok{stroke:var(--vdb-success);stroke-width:1.5;fill:none;}
+.flow-err{stroke:var(--vdb-alert);stroke-width:1.5;fill:none;}
+.head-ok{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:11px;fill:var(--vdb-success);}
+.head-err{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:11px;fill:var(--vdb-alert);}
+]]></style>
+
+  <defs>
+    <marker id="flowArrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-ink)"/>
+    </marker>
+    <marker id="okArrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-success)"/>
+    </marker>
+    <marker id="errArrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-alert)"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="700" height="400"/>
+
+  <!-- Title -->
+  <text class="title" x="350" y="26" text-anchor="middle">Result&lt;T, E&gt; Control Flow</text>
+  <text class="label" x="350" y="44" text-anchor="middle">Handling success and failure explicitly</text>
+
+  <!-- Function call -->
+  <rect class="box-primary" x="250" y="62" width="200" height="44" rx="8"/>
+  <text class="mono-on" x="350" y="88" text-anchor="middle">parse_vector(input)</text>
+
+  <!-- Arrow down to Result -->
+  <line class="flow" x1="350" y1="106" x2="350" y2="140" marker-end="url(#flowArrow)"/>
+  <text class="label" x="362" y="128">returns</text>
+
+  <!-- Result type -->
+  <rect class="box-accent" x="240" y="143" width="220" height="44" rx="8"/>
+  <text class="mono-on" x="350" y="170" text-anchor="middle">Result&lt;Vector, ParseError&gt;</text>
+
+  <!-- Diamond decision -->
+  <polygon class="box-decision" points="350,206 402,240 350,274 298,240"/>
+  <text class="head" x="350" y="244" text-anchor="middle">match</text>
+
+  <!-- OK path -->
+  <line class="flow-ok" x1="402" y1="240" x2="502" y2="240" marker-end="url(#okArrow)"/>
+  <text class="head-ok" x="452" y="231" text-anchor="middle">Ok(v)</text>
+
+  <rect class="box-success" x="512" y="210" width="160" height="60" rx="8"/>
+  <circle cx="532" cy="232" r="5" fill="#FFFFFF"/>
+  <text class="on-fill" x="548" y="236" text-anchor="start">Success Path</text>
+  <text class="mono-on" x="592" y="256" text-anchor="middle">Use vector v</text>
+
+  <!-- Err path -->
+  <line class="flow-err" x1="298" y1="240" x2="198" y2="240" marker-end="url(#errArrow)"/>
+  <text class="head-err" x="248" y="231" text-anchor="middle">Err(e)</text>
+
+  <rect class="box-alert" x="28" y="210" width="160" height="60" rx="8"/>
+  <rect x="44" y="227" width="10" height="10" fill="#FFFFFF"/>
+  <text class="on-fill" x="62" y="236" text-anchor="start">Error Path</text>
+  <text class="mono-on" x="108" y="256" text-anchor="middle">Handle error e</text>
+
+  <!-- ? operator shortcut -->
+  <rect class="box" x="170" y="300" width="360" height="84" rx="8"/>
+  <text class="head" x="350" y="324" text-anchor="middle">The ? Operator (Shortcut)</text>
+  <text class="mono" x="350" y="349" text-anchor="middle">let v = parse_vector(input)?;</text>
+  <text class="label" x="350" y="373" text-anchor="middle">Returns early with Err if failure, unwraps Ok if success</text>
+</svg>

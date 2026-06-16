@@ -1,0 +1,7 @@
+slug: 12.5-heaps-deep-dive
+title: "Heaps and Queues: Optimizing Top-K Retrieval using Binary Heaps"
+date: 2026-03-10
+tags: [heaps, priority-queue, top-k, data-structures]
+hero: diagrams/binary-heap.svg
+reading_time: 10
+part: "Part III — Vector Search & Indexing"

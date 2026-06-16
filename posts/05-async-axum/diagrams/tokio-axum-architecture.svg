@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="t d">
+  <title id="t">Tokio + Axum Architecture</title>
+  <desc id="d">A vertical request pipeline showing how the HTTP server handles a request: an incoming HTTP request enters the Tokio runtime layer (task spawner, thread pool, I/O driver, timer), then passes into the Axum framework layer where it flows through router, extractors, and handler into our vector engine, and finally returns a JSON response. The takeaway is that Tokio provides the async scheduling engine beneath Axum, which routes and dispatches each request to application logic.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.subhead{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:9px;fill:var(--vdb-ink);}
+.codesm{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:9px;fill:var(--vdb-ink-muted);}
+.on-fill-sub{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:10px;fill:#FFFFFF;}
+.comp{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:10px;fill:var(--vdb-ink);}
+]]></style>
+
+  <defs>
+    <marker id="layerArrow" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="var(--vdb-ink)"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="800" height="500"/>
+
+  <!-- Title -->
+  <text class="title" x="400" y="30" text-anchor="middle">Tokio + Axum Architecture</text>
+  <text class="label" x="400" y="50" text-anchor="middle">How our HTTP server processes requests</text>
+
+  <!-- HTTP Request -->
+  <rect class="box" x="320" y="70" width="160" height="40" rx="6"/>
+  <text class="head" x="400" y="95" text-anchor="middle">HTTP Request</text>
+
+  <!-- Arrow to Tokio -->
+  <line class="flow" x1="400" y1="110" x2="400" y2="146" marker-end="url(#layerArrow)"/>
+
+  <!-- Tokio Runtime Layer -->
+  <rect class="box" x="100" y="150" width="600" height="100" rx="8"/>
+  <rect class="box-primary" x="100" y="150" width="600" height="33" rx="8"/>
+  <rect x="100" y="171" width="600" height="12" fill="var(--vdb-primary)"/>
+  <text class="on-fill" x="130" y="172" font-size="13">TOKIO RUNTIME</text>
+  <text class="on-fill-sub" x="670" y="172" text-anchor="end">Async Task Scheduler</text>
+
+  <!-- Tokio components -->
+  <rect class="box" x="130" y="200" width="130" height="35" rx="5"/>
+  <text class="comp" x="195" y="222" text-anchor="middle">Task Spawner</text>
+
+  <rect class="box" x="280" y="200" width="130" height="35" rx="5"/>
+  <text class="comp" x="345" y="222" text-anchor="middle">Thread Pool</text>
+
+  <rect class="box" x="430" y="200" width="130" height="35" rx="5"/>
+  <text class="comp" x="495" y="222" text-anchor="middle">I/O Driver</text>
+
+  <rect class="box" x="580" y="200" width="100" height="35" rx="5"/>
+  <text class="comp" x="630" y="222" text-anchor="middle">Timer</text>
+
+  <!-- Arrow to Axum -->
+  <line class="flow" x1="400" y1="250" x2="400" y2="286" marker-end="url(#layerArrow)"/>
+
+  <!-- Axum Layer -->
+  <rect class="box" x="100" y="290" width="600" height="120" rx="8"/>
+  <rect class="box-success" x="100" y="290" width="600" height="33" rx="8"/>
+  <rect x="100" y="311" width="600" height="12" fill="var(--vdb-success)"/>
+  <text class="on-fill" x="130" y="312" font-size="13">AXUM FRAMEWORK</text>
+  <text class="on-fill-sub" x="670" y="312" text-anchor="end">HTTP Router + Handlers</text>
+
+  <!-- Axum request flow -->
+  <rect class="box" x="130" y="340" width="100" height="55" rx="5"/>
+  <text class="subhead" x="180" y="362" text-anchor="middle">Router</text>
+  <text class="codesm" x="180" y="380" text-anchor="middle">/search</text>
+  <text class="codesm" x="180" y="392" text-anchor="middle">/upsert</text>
+
+  <line class="flow" x1="230" y1="367" x2="258" y2="367" marker-end="url(#layerArrow)"/>
+
+  <rect class="box" x="260" y="340" width="100" height="55" rx="5"/>
+  <text class="subhead" x="310" y="362" text-anchor="middle">Extractors</text>
+  <text class="codesm" x="310" y="380" text-anchor="middle">Json&lt;T&gt;</text>
+  <text class="codesm" x="310" y="392" text-anchor="middle">State&lt;S&gt;</text>
+
+  <line class="flow" x1="360" y1="367" x2="388" y2="367" marker-end="url(#layerArrow)"/>
+
+  <rect class="box" x="390" y="340" width="100" height="55" rx="5"/>
+  <text class="subhead" x="440" y="362" text-anchor="middle">Handler</text>
+  <text class="codesm" x="440" y="380" text-anchor="middle">async fn</text>
+  <text class="codesm" x="440" y="392" text-anchor="middle">search()</text>
+
+  <line class="flow" x1="490" y1="367" x2="518" y2="367" marker-end="url(#layerArrow)"/>
+
+  <rect class="box-accent" x="520" y="340" width="160" height="55" rx="5"/>
+  <text class="on-fill" x="600" y="362" text-anchor="middle" font-size="10">Our Engine</text>
+  <text class="on-fill-sub" x="600" y="380" text-anchor="middle" font-size="9">VectorIndex</text>
+  <text class="on-fill-sub" x="600" y="392" text-anchor="middle" font-size="9">Storage</text>
+
+  <!-- Response -->
+  <line class="flow" x1="400" y1="410" x2="400" y2="446" marker-end="url(#layerArrow)"/>
+
+  <rect class="box-success" x="320" y="450" width="160" height="40" rx="6"/>
+  <text class="on-fill" x="400" y="475" text-anchor="middle">JSON Response</text>
+</svg>

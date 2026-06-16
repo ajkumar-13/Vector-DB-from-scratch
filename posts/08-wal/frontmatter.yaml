@@ -1,0 +1,7 @@
+slug: 08-wal
+title: "The Append-Only Log: Implementing a Write-Ahead Log (WAL)"
+date: 2026-03-10
+tags: [write-ahead-log, durability, crash-safety, storage]
+hero: diagrams/wal-safety.svg
+reading_time: 15
+part: "Part II — Storage & Persistence"

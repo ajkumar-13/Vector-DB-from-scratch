@@ -1,0 +1,7 @@
+slug: 17-inverted-indexes
+title: "Inverted Indexes Explained: How Text Search and Keyword Filtering Actually Work"
+date: 2026-03-10
+tags: [inverted-index, text-search, keyword-filtering, indexing]
+hero: diagrams/inverted-index.svg
+reading_time: 15
+part: "Part IV — Hybrid Search & Production"

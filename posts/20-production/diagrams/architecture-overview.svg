@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420" role="img" aria-labelledby="t d">
+  <title id="t">Production Architecture Overview</title>
+  <desc id="d">A layered diagram of the complete vector database system: clients call an HTTP API (Axum + Tokio) exposing /search, /upsert, /delete and /query, which drives the VectorDB engine (RwLock + Arc). The engine holds the HNSW index, inverted index, Tantivy index and query planner above a storage layer of WAL, mmap segment storage and a checkpoint manager. All of it persists down to SSD-backed durable storage, showing how indexing, concurrency and persistence fit together end to end.</desc>
+  <style><![CDATA[
+:root{--vdb-bg:#FAFAF7;--vdb-surface:#FFFFFF;--vdb-ink:#1A1A1A;--vdb-ink-muted:#5C5C5C;--vdb-ink-subtle:#9A9A9A;--vdb-border:#D9D9D4;--vdb-primary:#5B7FBF;--vdb-accent:#D98E5F;--vdb-success:#5C9E78;--vdb-warn:#B8895A;--vdb-alert:#C66B5E;--vdb-neutral-1:#EAEAE4;}
+@media (prefers-color-scheme:dark){:root{--vdb-bg:#0E0F12;--vdb-surface:#16181C;--vdb-ink:#F2F2EE;--vdb-ink-muted:#B4B4AE;--vdb-ink-subtle:#6E6E68;--vdb-border:#2A2D33;--vdb-primary:#8BA8E0;--vdb-accent:#E8B088;--vdb-success:#7FBF9B;--vdb-warn:#D0A271;--vdb-alert:#D98579;--vdb-neutral-1:#1F2229;}}
+.bg{fill:var(--vdb-bg);}
+.title{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:20px;fill:var(--vdb-ink);}
+.head{font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:12px;fill:var(--vdb-ink);}
+.label{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:11px;fill:var(--vdb-ink-muted);}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:13px;fill:var(--vdb-ink);}
+.box{fill:var(--vdb-surface);stroke:var(--vdb-border);stroke-width:1.5;}
+.box-primary{fill:var(--vdb-primary);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-accent{fill:var(--vdb-accent);stroke:var(--vdb-ink);stroke-width:1.5;}
+.box-success{fill:var(--vdb-success);stroke:var(--vdb-ink);stroke-width:1.5;}
+.flow{stroke:var(--vdb-ink);stroke-width:1.5;fill:none;}
+.flow-muted{stroke:var(--vdb-ink-muted);stroke-width:1;fill:none;stroke-dasharray:4 3;}
+.on-fill{font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:12px;fill:#FFFFFF;}
+.submono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;font-size:9px;fill:var(--vdb-ink-muted);}
+.sublabel{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:9px;fill:var(--vdb-ink-muted);}
+]]></style>
+
+  <!-- Background -->
+  <rect class="bg" x="0" y="0" width="750" height="420"/>
+
+  <!-- Title -->
+  <text class="title" x="375" y="30" text-anchor="middle">Production Architecture Overview</text>
+  <text class="label" x="375" y="48" text-anchor="middle">Complete vector database system we built</text>
+
+  <!-- Client -->
+  <rect class="box" x="320" y="65" width="110" height="40" rx="8"/>
+  <text class="head" x="375" y="89" text-anchor="middle">Clients</text>
+
+  <!-- Arrow to API -->
+  <line class="flow" x1="375" y1="105" x2="375" y2="130"/>
+
+  <!-- API Layer -->
+  <rect class="box" x="200" y="135" width="350" height="55" rx="10"/>
+  <rect class="box-primary" x="200" y="135" width="350" height="25" rx="10"/>
+  <rect class="box-primary" x="200" y="148" width="350" height="12"/>
+  <text class="on-fill" x="375" y="153" text-anchor="middle">HTTP API (Axum + Tokio)</text>
+  <text class="submono" x="240" y="180">/search</text>
+  <text class="submono" x="320" y="180">/upsert</text>
+  <text class="submono" x="400" y="180">/delete</text>
+  <text class="submono" x="480" y="180">/query</text>
+
+  <!-- Arrow to Engine -->
+  <line class="flow" x1="375" y1="190" x2="375" y2="210"/>
+
+  <!-- Main Engine Box -->
+  <rect class="box" x="50" y="215" width="650" height="150" rx="10" stroke-width="1.5"/>
+  <rect class="box-success" x="50" y="215" width="650" height="25" rx="10"/>
+  <rect class="box-success" x="50" y="228" width="650" height="12"/>
+  <text class="on-fill" x="375" y="233" text-anchor="middle">VectorDB Engine (RwLock + Arc)</text>
+
+  <!-- Sub-components -->
+  <rect class="box" x="70" y="255" width="140" height="50" rx="6"/>
+  <text class="head" x="140" y="278" text-anchor="middle">HNSW Index</text>
+  <text class="sublabel" x="140" y="295" text-anchor="middle">O(log N) search</text>
+
+  <rect class="box" x="230" y="255" width="140" height="50" rx="6"/>
+  <text class="head" x="300" y="278" text-anchor="middle">Inverted Index</text>
+  <text class="sublabel" x="300" y="295" text-anchor="middle">Metadata filters</text>
+
+  <rect class="box" x="390" y="255" width="140" height="50" rx="6"/>
+  <text class="head" x="460" y="278" text-anchor="middle">Tantivy Index</text>
+  <text class="sublabel" x="460" y="295" text-anchor="middle">Full-text search</text>
+
+  <rect class="box" x="550" y="255" width="130" height="50" rx="6"/>
+  <text class="head" x="615" y="278" text-anchor="middle">Query Planner</text>
+  <text class="sublabel" x="615" y="295" text-anchor="middle">Hybrid fusion</text>
+
+  <!-- Storage components -->
+  <rect class="box" x="70" y="315" width="200" height="40" rx="6"/>
+  <text class="head" x="170" y="340" text-anchor="middle">WAL (Write-Ahead Log)</text>
+
+  <rect class="box" x="290" y="315" width="200" height="40" rx="6"/>
+  <text class="head" x="390" y="340" text-anchor="middle">Segment Storage (mmap)</text>
+
+  <rect class="box" x="510" y="315" width="170" height="40" rx="6"/>
+  <text class="head" x="595" y="340" text-anchor="middle">Checkpoint Manager</text>
+
+  <!-- Disk -->
+  <rect class="box-accent" x="200" y="380" width="350" height="30" rx="6"/>
+  <text class="on-fill" x="375" y="400" text-anchor="middle">Persistent Storage (SSD)</text>
+</svg>

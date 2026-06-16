@@ -1,0 +1,7 @@
+slug: 06-binary-file-formats
+title: "Binary File Formats: Designing a Custom Segment Layout"
+date: 2026-01-10
+tags: [storage, binary-format, serialization, file-layout]
+hero: diagrams/segment-format.svg
+reading_time: 15
+part: "Part II — Storage & Persistence"
